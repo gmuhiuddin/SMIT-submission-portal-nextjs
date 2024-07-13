@@ -11,8 +11,7 @@ export const SignInValidation = z.object({
   code: z.optional(z.string())
 })
 
-export const SignUpValidation = z
-  .object({
+export const SignUpValidation = z.object({
     name: z.string()
       .min(1, "Username is required")
       .max(50, "Username must be less than 50 characters"),
@@ -60,7 +59,7 @@ export const ResetPasswordValidation = z
     email: z.optional(z.string().email("Invalid email")),
     password: z.optional(validatePassword),
     newPassword: z.optional(validatePassword),
-    role: z.enum([UserRole.ADMIN, UserRole.USER]),
+    role: z.enum([UserRole.STUDENT, UserRole.UNDEFINED, UserRole.TEACHER]),
     isTwoFactorEnabled: z.optional(z.boolean())
   })
   .refine((data) => {

@@ -1,8 +1,9 @@
+import { Button } from "@/components/ui/button"
 import { SettingsForm } from "../_components/settings-form"
 
-const SettingsPage = async() => {
+const SettingsPage = async () => {
   return (
-    <section className="w-full">
+    <section className="flex justify-center items-center h-full w-full">
       <SettingsForm />
     </section>
   )

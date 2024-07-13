@@ -1,5 +1,4 @@
 import Link from "next/link"
-
 import { SiAuth0 } from "react-icons/si"
 import { MainNav } from "@/components/shared/main-nav"
 import { ModeToggle } from "@/components/shared/mode-toggle"
@@ -20,4 +19,18 @@ export const Navbar = () => {
       </nav>
     </header>
   )
-}
+};
+
+export const TeacherNavbar = () => {
+
+  return (
+    <header className="w-full bg-gray-800 text-white py-4 px-6 flex justify-between items-center">
+        <div className="text-2xl font-bold">Teacher Dashboard</div>
+        <Link href="/create-classroom">
+        <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+          Create Classroom
+        </button>
+        </Link>
+      </header>
+  )
+};

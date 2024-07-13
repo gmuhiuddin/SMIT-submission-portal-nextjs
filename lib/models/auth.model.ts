@@ -18,8 +18,8 @@ export const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["admin", "user"],
-    default: "user"
+    enum: ["superAdmin", "student", "teacher", "undefined"],
+    default: "undefined"
   },
   provider: {
     type: String,
@@ -34,6 +34,12 @@ export const userSchema = new mongoose.Schema({
     default: false
   }
 }, { timestamps: true })
+
+userSchema.pre("save", function () {
+  if (this.isModified("role") && this.role != "undefined") {
+    return { error: "Role cannot be changeble" }
+  };
+});
 
 const User = mongoose.models?.User || mongoose.model("User", userSchema)
 

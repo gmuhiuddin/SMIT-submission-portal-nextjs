@@ -6,6 +6,7 @@ import "./globals.css"
 
 import ThemeProvider from "@/providers/theme-provider"
 import { Navbar } from "@/components/shared/navbar"
+import { TeacherNavbar } from "@/components/shared/navbar"
 import { Footer } from "@/components/shared/footer"
 import { Toaster } from "@/components/ui/toaster"
 
@@ -33,12 +34,16 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Navbar />
+            {session?.user.role == "teacher" ? 
+            <TeacherNavbar />
+          :
+          <Navbar />
+          }
             <main className="flex h-full flex-col items-center justify-center">
               {children}
             </main>
-            <Footer />
-            <Toaster />
+            {/* <Footer /> */}
+            {/* <Toaster /> */}
           </ThemeProvider>
         </body>
       </html>

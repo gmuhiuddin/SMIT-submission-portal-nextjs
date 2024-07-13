@@ -81,4 +81,4 @@ export const newPassword = async (
   // await PasswordResetToken.findByIdAndDelete(existingToken._id)
 
   // return { success: "Password updated!" }
-}
+};

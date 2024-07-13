@@ -150,7 +150,43 @@ const SelectSeparator = React.forwardRef<
 ))
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName
 
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {}
+
+const SelectTag = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, role, ...field }, ref) => {
+
+    const fields = { ...field };
+
+    if(role!= "undefined"){
+      fields.disabled = true;
+    };
+    
+    const optValues = ["student", "teacher"];
+    return (
+      <select
+        // type={type}
+        // onChange={field.onChange}
+        {...fields}
+        className={cn(
+          "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+          className
+        )}
+        // ref={ref}
+      >
+        <option selected value={"undefined"}>Please select Student / Teacher</option>
+        {optValues.map(element => {
+          return <option value={element}>{element}</option>
+        })}
+      </select>
+    )
+  }
+);
+
+SelectTag.displayName = "Select"
+
 export {
+  SelectTag,
   Select,
   SelectGroup,
   SelectValue,

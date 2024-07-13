@@ -70,35 +70,20 @@ export const settings = async (values: SettingsInput) => {
     return { success: "Verification email sent!" }
   }
 
-  if (values.password && values.newPassword && existingUser.password) {
-    const passwordsMatch = await bcrypt.compare(
-      values.password,
-      existingUser.password
-    )
-
-    if (!passwordsMatch) {
-      return { error: "Incorrect password!" }
-    }
-
-    const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(values.newPassword, salt)
-
-    values.password = hashedPassword
-    values.newPassword = undefined
-  }
-
   for (const key in values) {
     if (values[key] === "") {
       values[key] = undefined
     }
   }
-
-  // console.log({values})
+  
+  if(!values.role){
+    return { error: "Student / teacher is required" }
+  }
 
   await User.findByIdAndUpdate(
     user._id,
     { ...values }
-  )
+  );
 
   return { success: "Settings Updated!" }
-}
+};

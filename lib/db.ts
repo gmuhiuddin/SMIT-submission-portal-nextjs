@@ -19,6 +19,6 @@ const connectDB = async () => {
     console.error("🔴 Failed to connect to MongoDB:", error)
     return false
   }
-}
+};
 
 export default connectDB

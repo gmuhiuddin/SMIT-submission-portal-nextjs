@@ -24,6 +24,7 @@ import {
   FormDescription,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { SelectTag } from "@/components/ui/select"
 // import {
 //   Select,
 //   SelectContent,
@@ -37,9 +38,8 @@ import { FormError } from "@/components/shared/form-error"
 import { FormSuccess } from "@/components/shared/form-success"
 
 export const SettingsForm = () => {
-  const { data: session, status, update } = useSession({ required: true })
-  const user = session?.user
-  // console.log({user})
+  const { data: session, status, update } = useSession({ required: true });
+  const user = session?.user;
 
   const [error, setError] = useState<string | undefined>("")
   const [success, setSuccess] = useState<string | undefined>("")
@@ -50,9 +50,7 @@ export const SettingsForm = () => {
     defaultValues: {
       name: user?.name || "",
       email: user?.email || "",
-      password: "",
-      newPassword: "",
-      role: user?.role || UserRole.USER,
+      role: user?.role || UserRole.UNDEFINED,
       isTwoFactorEnabled: user?.isTwoFactorEnabled || false
     }
   })
@@ -65,6 +63,8 @@ export const SettingsForm = () => {
     startTransition(() => {
       settings(values)
         .then((data) => {
+          console.log(data);
+
           if (data?.error) {
             setError(data.error)
           } else if (data?.success) {
@@ -81,10 +81,10 @@ export const SettingsForm = () => {
   }
 
   return (
-    <Card className="w-[350px]">
+    <Card className="w-[350px] mt-2">
       <CardHeader>
         <p className="text-2xl font-semibold text-center">
-          Settings
+          Profile Settings
         </p>
       </CardHeader>
       <CardContent>
@@ -127,44 +127,26 @@ export const SettingsForm = () => {
                       </FormItem>
                     )}
                   />
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Password</FormLabel>
-                        <FormControl>
-                          <Input
-                            disabled={isPending}
-                            type="password"
-                            placeholder="your password"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="newPassword"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>New password</FormLabel>
-                        <FormControl>
-                          <Input
-                            disabled={isPending}
-                            type="password"
-                            placeholder="new password"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
                 </>
               )}
+              <FormField
+                    name="role"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Student / Teacher</FormLabel>
+                        <FormControl>
+                          <SelectTag
+                            disabled={isPending}
+                            // placeholder="your password"
+                            role={user?.role}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
               {/* <FormField
                 control={form.control}
                 name="role"
@@ -196,25 +178,25 @@ export const SettingsForm = () => {
               /> */}
               {user?.provider === "credentials" && (
                 <FormField
-                control={form.control}
-                name="isTwoFactorEnabled"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                    <div className="space-y-0.5">
-                      <FormLabel>Two Factor Authentication</FormLabel>
-                      <FormDescription>
-                        Enable two factor authentication
-                      </FormDescription>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        disabled={isPending}
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
+                  control={form.control}
+                  name="isTwoFactorEnabled"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                      <div className="space-y-0.5">
+                        <FormLabel>Two Factor Authentication</FormLabel>
+                        <FormDescription>
+                          Enable two factor authentication
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          disabled={isPending}
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
                 />
               )}
             </div>
@@ -233,4 +215,4 @@ export const SettingsForm = () => {
       </CardContent>
     </Card>
   )
-}
+};

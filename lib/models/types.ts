@@ -1,15 +1,15 @@
 import { Document } from "mongoose"
 
 export enum UserRole {
-  ADMIN = "admin",
-  USER = "user"
+  STUDENT = "student",
+  TEACHER = "teacher",
+  UNDEFINED = "undefined"
 }
 
 export enum UserProvider {
   GOOGLE = "google",
   CREDENTIALS = "credentials"
 }
-
 
 export interface IUser extends Document {
   name: string
