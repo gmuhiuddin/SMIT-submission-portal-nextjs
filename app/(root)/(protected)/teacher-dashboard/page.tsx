@@ -11,7 +11,6 @@ const TeacherDashboard = async () => {
   const user = await currentUser();
 
   const classRooms = await getTeacherClassrooms();
-  // console.log(classRooms);
   
   return (
     <div className="flex justify-center flex-wrap class-room-main-container">
