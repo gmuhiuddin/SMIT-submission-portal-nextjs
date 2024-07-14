@@ -63,12 +63,11 @@ export const SettingsForm = () => {
     startTransition(() => {
       settings(values)
         .then((data) => {
-          console.log(data);
 
           if (data?.error) {
             setError(data.error)
           } else if (data?.success) {
-            update()
+            update();
             setSuccess(data.success)
           }
         })

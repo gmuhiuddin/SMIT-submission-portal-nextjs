@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
-const { Schema, model } = mongoose;
+const { Schema, model, models } = mongoose;
 
 const classRoomSchema = new Schema({
     timeAndLocation: {
-        type: Object,
+        type: {},
         required: true
     },
     batch: {
@@ -19,8 +19,10 @@ const classRoomSchema = new Schema({
         type: String,
         required: true
     },
+}, {
+    timestamps: true
 });
 
-const ClassRoom = model("classroom", classRoomSchema);
+const ClassRoom = models.classRooms || model("classRooms", classRoomSchema);
 
 export default ClassRoom;

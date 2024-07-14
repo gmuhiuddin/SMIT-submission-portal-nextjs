@@ -32,13 +32,25 @@ export const userSchema = new mongoose.Schema({
   isTwoFactorEnabled: {
     type: Boolean,
     default: false
-  }
+  },
+  lastActivity: String
 }, { timestamps: true })
 
-userSchema.pre("save", function () {
-  if (this.isModified("role") && this.role != "undefined") {
-    return { error: "Role cannot be changeble" }
+userSchema.pre("save", function (next) {
+  // if (!this.isModified("lastActivity")) {
+  //   const date = new Date();
+  //   const dateFormated = `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? "0"+date.getMonth() + 1 : date.getMonth() + 1}-${date.getDay() < 10 ? "0"+date.getDay() :date.getDay()}`;
+
+  //   this.lastActivity = dateFormated;
+  // };
+
+  const originalValue = this.get('role');
+  
+  if (this.isModified("role") && originalValue !== "undefined") {
+    return { error: "Role cannot be changeble" };
   };
+
+  next();
 });
 
 const User = mongoose.models?.User || mongoose.model("User", userSchema)

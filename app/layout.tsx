@@ -35,7 +35,7 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             {session?.user.role == "teacher" ? 
-            <TeacherNavbar />
+            <Navbar />
           :
           <Navbar />
           }
