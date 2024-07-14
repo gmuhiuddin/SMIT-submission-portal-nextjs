@@ -12,7 +12,7 @@ const classRoomSchema = new Schema({
         required: true
     },
     teacher: {
-        type: Schema.Types.ObjectId,
+        type: String,
         required: true
     },
     title: {

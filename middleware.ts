@@ -23,11 +23,11 @@ export default withAuthMiddleware(async (req) => {
     return Response.redirect(new URL(`/${userRole}-dashboard`, nextUrl))
   };
 
-  if(userRole == "student" && nextUrl.pathname == "/teacher-dashboard"){
+  if(userRole == "student" && nextUrl.pathname == "/teacher-dashboard" || nextUrl.pathname == "/create-classroom/:class_room_id"){
     return Response.redirect(new URL("/", nextUrl))
   };
 
-  if(userRole == "teacher" && nextUrl.pathname == "/"){
+  if(userRole == "teacher" && nextUrl.pathname == "/" || nextUrl.pathname == "/student-dashboard"){
     return Response.redirect(new URL("/teacher-dashboard", nextUrl))
   };
 

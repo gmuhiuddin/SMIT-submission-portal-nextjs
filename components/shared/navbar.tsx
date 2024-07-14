@@ -24,7 +24,7 @@ export const Navbar = () => {
 export const TeacherNavbar = () => {
 
   return (
-    <header className="w-full bg-gray-800 text-white py-4 px-6 flex justify-between items-center ">
+    <header className="w-full bg-gray-800 text-white py-4 px-6 flex justify-between items-center">
         <div className="text-2xl font-bold">Teacher Dashboard</div>
         <Link href="/create-classroom">
         <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">

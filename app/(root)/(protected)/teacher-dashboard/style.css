@@ -1,0 +1,49 @@
+.class-room-main-container{
+    position: absolute;
+    top: 9%;
+}
+
+.class-room-card{
+    width: 25em;
+}
+
+.teacher-name{
+    overflow-wrap: break-word;
+    width: 100%;
+}
+
+@media screen and (max-height: 854px) {
+    .class-room-main-container{
+        top: 13%;
+    }
+}
+
+@media screen and (max-height: 515px) {
+    .class-room-main-container{
+        top: 17%;
+    }
+}
+
+@media screen and (max-height: 429px) {
+    .class-room-main-container{
+        top: 21%;
+    }
+}
+
+@media screen and (max-height: 325px) {
+    .class-room-main-container{
+        top: 27%;
+    }
+}
+
+@media screen and (max-height: 245px) {
+    .class-room-main-container{
+        top: 33%;
+    }
+}
+
+@media screen and (max-height: 205px) {
+    .class-room-main-container{
+        top: 39%;
+    }
+}

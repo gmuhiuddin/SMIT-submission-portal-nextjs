@@ -4,13 +4,11 @@ const { model, Schema, models } = mongoose;
 
 const assignmentSchema = new Schema({
     teacher: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
+        type: String,
         required: true,
     },
     classRoom: {
-        type: Schema.Types.ObjectId,
-        ref: "classRooms",
+        type: String,
         required: true
     },
     dueDate: {

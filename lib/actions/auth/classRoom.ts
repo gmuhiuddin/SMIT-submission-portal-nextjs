@@ -104,9 +104,10 @@ export const getTeacherClassroom = async (classRoomId?: string | number) => {
         };
 
         const classRoom = await ClassRoom.findOne({
-            teacher: user._id, _id: classRoomId
+            _id: classRoomId,
+            teacher: user?._id
         });
-    
+
         return { success: "Class was create", classRoom }
     } catch (error) {
         console.log("error", error);

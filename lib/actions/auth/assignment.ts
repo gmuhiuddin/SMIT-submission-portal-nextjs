@@ -10,11 +10,12 @@ import Assignment from "@/lib/models/assignment";
 interface Assignment {
     teacher?: string | number;
     classRoom?: string | number;
-    dueDate?: string;
-    title?: string;
-    description?: string;
-    webScrnShot?: string;
-    content?: string;
+    dueDate?: string | undefined;
+    title?: string | undefined;
+    description?: string | undefined;
+    webScrnShot?: string | undefined;
+    url?: string | undefined;
+    file?: any;
 }
 
 export const addAssignment = async (values: Assignment) => {
@@ -24,7 +25,7 @@ export const addAssignment = async (values: Assignment) => {
         if (!user) {
             return { error: "Unauthorized" }
         };
-    
+    console.log(values?.file)
         await connectDB();
     
         const existingUser = await User.findById(user?._id);
@@ -37,11 +38,11 @@ export const addAssignment = async (values: Assignment) => {
             return { error: "All fields are required" };
         };
     
-        const assignment = await Assignment.create({
+        await Assignment.create({
             ...values
         });
-    
-        return { success: "Assignment was create", assignment }
+
+        return { success: "Assignment was create" }
     } catch (error) {
         return error instanceof Error ? { error: error.message } : { error: "Something went wrong!" };
     };
@@ -62,12 +63,13 @@ export const getTeacherAssignments = async (classRoomId?: string | number) => {
         if (!existingUser || existingUser.role == "student") {
             return { error: "Unauthorized" }
         };
-
-        const assignments = await Assignment.find({
-            teacher: user._id, classRoom: classRoomId
+        
+        const assignmentsRes = await Assignment.find({
+            classRoom: classRoomId,
+            teacher: user._id
         });
     
-        return { success: "Assignments fetched successfully", assignments }
+        return { success: "Assignments fetched successfully", assignments: assignmentsRes }
     } catch (error) {
         console.log("error", error);
     }

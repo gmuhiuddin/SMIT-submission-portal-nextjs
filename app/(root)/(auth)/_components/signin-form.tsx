@@ -52,7 +52,7 @@ export const SignInForm = () => {
           } else if (data?.success) {
             setSuccess(data.success)
           } else if (data?.url) {
-            window.location.assign(data?.url)
+            window.location.assign("/")
           }
 
           if (data?.twoFactor) {
