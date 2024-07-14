@@ -175,8 +175,8 @@ const SelectTag = React.forwardRef<HTMLInputElement, InputProps>(
         // ref={ref}
       >
         <option selected value={"undefined"}>Please select Student / Teacher</option>
-        {optValues.map(element => {
-          return <option value={element}>{element}</option>
+        {optValues.map((element, index) => {
+          return <option key={index} value={element}>{element}</option>
         })}
       </select>
     )

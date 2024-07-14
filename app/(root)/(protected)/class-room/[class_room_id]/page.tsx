@@ -41,9 +41,9 @@ const ClassRoom: React.FC<ClassRoomInterface> = async ({params: { class_room_id 
     return (
         <div>
             Class room
-            {assignments?.assignments?.map(element => {
+            {assignments?.assignments?.map((element, index) => {
                 return (
-                    <p>{element?.title}</p>
+                    <p key={index}>{element?.title}</p>
                 );
             })}
         </div>
