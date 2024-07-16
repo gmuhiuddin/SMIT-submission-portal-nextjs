@@ -21,7 +21,7 @@ const MultiInputForm: React.FC<MultiInputProps> = ({ id, options }) => {
 
   return (
     <div>
-      <label>Speaker name:</label>
+      {/* <label>Speaker name:</label>
       <multi-input>
         <input list={id} ref={inputRef} />
         <datalist id={id}>
@@ -32,7 +32,8 @@ const MultiInputForm: React.FC<MultiInputProps> = ({ id, options }) => {
       </multi-input>
       <button id="get" onClick={handleGetValues}>
         Get
-      </button>
+      </button> */}
+      multi input
     </div>
   );
 };
