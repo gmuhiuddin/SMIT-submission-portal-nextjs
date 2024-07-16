@@ -8,10 +8,11 @@ interface Tag {
 
 interface TagInputProps {
   tags: Tag[];
+  disabled?: boolean;
   setTags: (newTags: Tag[]) => void;
 }
 
-const TagInputComponent: React.FC<TagInputProps> = ({ tags, setTags }) => {
+const TagInputComponent: React.FC<TagInputProps> = ({ tags, setTags, disabled }) => {
   const [inputValue, setInputValue] = useState('');
 
   const handleAddTag = (tag: string) => {
@@ -56,6 +57,7 @@ const TagInputComponent: React.FC<TagInputProps> = ({ tags, setTags }) => {
           </div>
         ))}
         <input
+        disabled={disabled}
           type="text"
           placeholder="Enter emails..."
           value={inputValue}

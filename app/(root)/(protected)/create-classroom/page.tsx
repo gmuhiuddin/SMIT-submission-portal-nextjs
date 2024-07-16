@@ -16,16 +16,11 @@ const CreateClassroomPage = () => {
   const [location, setLoca] = useState<string | undefined>();
   const [day, setDay] = useState<string | undefined>();
   const [tags, setTags] = useState<{ id: string; value: string }[]>([]);
-  const [requestSent, setRequestSent] = useState(false);
+  const [isPending, setIsPending] = useState<boolean>(false);
+console.log(isPending);
 
   const { data: session, status, update } = useSession({ required: true });
   const user = session?.user;
-
-  interface timeAndLocation {
-    time: string;
-    location: string;
-    days: string;
-  }
 
   const timeOptValue = ["09:00 - 11:00", "11:00 - 13:00", "14:00 - 16:00", "17:00 - 19:00", "19:00 - 21:00", "21:00 - 23:00"];
   const dayOptValue = ["MWF", "TW", "SS"];
@@ -35,17 +30,19 @@ const CreateClassroomPage = () => {
 
     try {
       const res = await addClassRoom({
-        title, batch, timeAndLocation: {
-          time: "11-00:13-00",
-          location: "Bahadurabad",
-          days: "weeekdays"
-        }, teacher: user?._id
+        title, description: description as string, batch, timeAndLocation: {
+          time: time as string,
+          location: location as string,
+          days: day as string,
+        }, teacher: user?._id, studentsEmail: tags
       });
+      setIsPending(true);
       
       if (res?.error) {
         console.log("error", res.error);
+      setIsPending(false);
       } else {
-        console.log(res);
+      setIsPending(false);
         window.location.href = "/teacher-dashboard";
       };
     } catch (error) {
@@ -85,6 +82,7 @@ const CreateClassroomPage = () => {
                     id="class-name"
                     name="class-name"
                     autoComplete="class-name"
+                    disabled={isPending}
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
@@ -97,6 +95,7 @@ const CreateClassroomPage = () => {
                   </label>
                   <input
                     type="number"
+                    disabled={isPending}
                     id="class-name"
                     name="class-name"
                     autoComplete="class-name"
@@ -111,6 +110,7 @@ const CreateClassroomPage = () => {
                     Day
                   </label>
                   <select
+                    disabled={isPending}
         className={cn(
           'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
         )}
@@ -130,6 +130,7 @@ const CreateClassroomPage = () => {
                   Time
                   </label>
                   <select
+                    disabled={isPending}
         className={cn(
           'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
         )}
@@ -149,6 +150,7 @@ const CreateClassroomPage = () => {
                   Location
                   </label>
                   <select
+                    disabled={isPending}
         className={cn(
           'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
         )}
@@ -172,7 +174,7 @@ const CreateClassroomPage = () => {
                     id="description"
                     name="description"
                     rows={3}
-                    value={batch}
+                    value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     className="border border-slate-500 px-3 py-2 rounded-md focus:outline-none focus:border-slate-950 w-full"
                   ></textarea>
@@ -182,14 +184,14 @@ const CreateClassroomPage = () => {
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                     Email for Connection Request
                   </label>
-                  {requestSent && (
-                    <p className="text-sm text-green-600 mt-2">Connection requestes sent</p>
-                  )}
                 </div>
               </div>
-                <TagInputComponent tags={tags} setTags={handleTagsChange} />
+                <TagInputComponent tags={tags} 
+              disabled={isPending}
+                  setTags={handleTagsChange} />
               <div className="mt-5 sm:mt-6">
                 <button
+                    disabled={isPending}
                   type="submit"
                   className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   onClick={handleSubmit}

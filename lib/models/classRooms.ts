@@ -19,6 +19,10 @@ const classRoomSchema = new Schema({
         type: String,
         required: true
     },
+    students: {
+        type: [],
+        default: []
+    }
 }, {
     timestamps: true
 });
