@@ -140,6 +140,7 @@ export const SettingsForm = () => {
                             // placeholder="your password"
                             role={user?.role}
                             {...field}
+                            optValues={["teacher", "student"]}
                           />
                         </FormControl>
                         <FormMessage />

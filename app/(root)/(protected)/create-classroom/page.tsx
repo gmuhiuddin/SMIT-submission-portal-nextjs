@@ -4,12 +4,18 @@ import Head from 'next/head';
 import { useSession } from "next-auth/react"
 import { addClassRoom } from "@/lib/actions/auth/classRoom"
 import { useState } from 'react';
-import { useRouter } from 'next/router';
+import TagInputComponent from '@/components/ui/tagInput';
+import { cn } from '@/lib/utils';
+import './style.css';
 
 const CreateClassroomPage = () => {
-  const [className, setClassName] = useState('');
-  const [description, setDescription] = useState('');
-  const [email, setEmail] = useState('');
+  const [title, setTitle] = useState<string | undefined>();
+  const [description, setDescription] = useState<string | undefined>();
+  const [batch, setBatch] = useState<string | undefined>();
+  const [time, setTime] = useState<string | undefined>();
+  const [location, setLoca] = useState<string | undefined>();
+  const [day, setDay] = useState<string | undefined>();
+  const [tags, setTags] = useState<{ id: string; value: string }[]>([]);
   const [requestSent, setRequestSent] = useState(false);
 
   const { data: session, status, update } = useSession({ required: true });
@@ -21,12 +27,11 @@ const CreateClassroomPage = () => {
     days: string;
   }
 
-  const [title, setTitle] = useState<string | undefined>();
-  const [batch, setBatch] = useState<string | undefined>();
-  const [timeAndLoca, setTimeAndLoca] = useState<string | undefined>();
+  const timeOptValue = ["09:00 - 11:00", "11:00 - 13:00", "14:00 - 16:00", "17:00 - 19:00", "19:00 - 21:00", "21:00 - 23:00"];
+  const dayOptValue = ["MWF", "TW", "SS"];
+  const LocaiotnOptValue = ["Gulshan", "Bahadurabad", "Numaish"];
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
 
     try {
       const res = await addClassRoom({
@@ -36,7 +41,6 @@ const CreateClassroomPage = () => {
           days: "weeekdays"
         }, teacher: user?._id
       });
-      console.log(res);
       
       if (res?.error) {
         console.log("error", res.error);
@@ -50,14 +54,12 @@ const CreateClassroomPage = () => {
 
   };
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    // Reset request status if email is changed
-    setRequestSent(false);
+  const handleTagsChange = (newTags: { id: string; value: string; }[]) => {
+    setTags(newTags);
   };
-
+  
   return (
-    <>
+    <div className='main-containers create-class-room-main-container'>
     <Head>
         <title>Create Classroom - Your App Name</title>
         <meta name="description" content="Create a new classroom on Your App Name" />
@@ -72,7 +74,6 @@ const CreateClassroomPage = () => {
             </p>
           </div>
           <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
-            <form onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-8">
                 {/* Classroom Name */}
                 <div>
@@ -87,8 +88,80 @@ const CreateClassroomPage = () => {
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
-                    className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    className="border border-slate-500 px-3 py-1 rounded-md focus:outline-none focus:border-slate-950 w-full"
                   />
+                </div>
+                <div>
+                  <label htmlFor="class-name" className="block text-sm font-medium text-gray-700">
+                    Batch
+                  </label>
+                  <input
+                    type="number"
+                    id="class-name"
+                    name="class-name"
+                    autoComplete="class-name"
+                    value={batch}
+                    onChange={(e) => setBatch(e.target.value)}
+                    required
+                    className="border border-slate-500 px-3 py-1 rounded-md focus:outline-none focus:border-slate-950 w-full"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="class-name" className="block text-sm font-medium text-gray-700">
+                    Day
+                  </label>
+                  <select
+        className={cn(
+          'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
+        )}
+        value={day}
+        onChange={e => setDay(e.target.value)}
+      >
+        <option value="undefined" selected disabled>Please days</option>
+        {dayOptValue.map((element, index) => (
+          <option key={index} value={element}>
+            {element}
+          </option>
+        ))}
+      </select>
+      </div>
+                <div>
+                  <label htmlFor="class-name" className="block text-sm font-medium text-gray-700">
+                  Time
+                  </label>
+                  <select
+        className={cn(
+          'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
+        )}
+        value={time}
+        onChange={e => setTime(e.target.value)}
+      >
+        <option value="undefined" selected disabled>Please select time</option>
+        {timeOptValue.map((element, index) => (
+          <option key={index} value={element}>
+            {element}
+          </option>
+        ))}
+      </select>
+                </div>
+                <div>
+                  <label htmlFor="class-name" className="block text-sm font-medium text-gray-700">
+                  Location
+                  </label>
+                  <select
+        className={cn(
+          'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
+        )}
+        value={location}
+        onChange={e => setLoca(e.target.value)}
+      >
+        <option value="undefined" selected disabled>Please select locaiton</option>
+        {LocaiotnOptValue.map((element, index) => (
+          <option key={index} value={element}>
+            {element}
+          </option>
+        ))}
+      </select>
                 </div>
                 {/* Description */}
                 <div className="sm:col-span-2">
@@ -100,43 +173,34 @@ const CreateClassroomPage = () => {
                     name="description"
                     rows={3}
                     value={batch}
-                    onChange={(e) => setBatch(e.target.value)}
-                    className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="border border-slate-500 px-3 py-2 rounded-md focus:outline-none focus:border-slate-950 w-full"
                   ></textarea>
                 </div>
                 
-                {/* Email for Connection Request */}
                 <div className="sm:col-span-2">
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                     Email for Connection Request
                   </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    autoComplete="email"
-                    value={email}
-                    onChange={(e) => e.preventDefault()}
-                    className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                  />
                   {requestSent && (
-                    <p className="text-sm text-green-600 mt-2">Connection request sent to {email}</p>
+                    <p className="text-sm text-green-600 mt-2">Connection requestes sent</p>
                   )}
                 </div>
               </div>
+                <TagInputComponent tags={tags} setTags={handleTagsChange} />
               <div className="mt-5 sm:mt-6">
                 <button
                   type="submit"
                   className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  onClick={handleSubmit}
                 >
                   Create Classroom
                 </button>
               </div>
-            </form>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
