@@ -4,8 +4,9 @@ import React from "react"
 import { currentUser } from "@/lib/session"
 import connectDB from "@/lib/db"
 import { User } from "@/lib/models/auth.model"
+import ClassRoom from "@/lib/models/classRooms"
 
-const setStudentForTeacherClassRoom = async (classRoomId: number | string) => {
+const getStudentForTeacherClassRoom = async (classRoomId: number | string) => {
     try {
         const user = await currentUser();
     
@@ -21,18 +22,26 @@ const setStudentForTeacherClassRoom = async (classRoomId: number | string) => {
             return { error: "Unauthorized" }
         };
 
-        const students = await User.find({
-            classRoom: classRoomId,
-            role: "student"
-        });
+        const classRoom = await ClassRoom.findById(classRoomId).populate("students");
+console.log(classRoom);
 
-        return { success: "Students fetched successfully", students};
+    // const stds = [];
+
+    // classRoom?.students?.forEach(async stdId => {
+    //     const students = await User.find({
+    //             _id: stdId,
+    //             role: "student"
+    //         }).populate();
+            
+    // });
+
+        // return { success: "Students fetched successfully", students};
     } catch (error) {
       return error instanceof Error ? { error: error.message} : { error: "Some thing went wrong!"}; 
     };
 };
 
-export { setStudentForTeacherClassRoom };
+export { getStudentForTeacherClassRoom };
 // export const addClassRoom = async (values: classRoom) => {
 //     try {
 //         const user = await currentUser();

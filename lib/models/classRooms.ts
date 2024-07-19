@@ -19,10 +19,7 @@ const classRoomSchema = new Schema({
         type: String,
         required: true
     },
-    students: {
-        type: [],
-        default: []
-    }
+    students: [{type: Schema.Types.ObjectId, ref: "User"}],
 }, {
     timestamps: true
 });

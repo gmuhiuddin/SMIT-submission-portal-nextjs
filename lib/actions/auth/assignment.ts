@@ -25,7 +25,7 @@ export const addAssignment = async (values: Assignment) => {
         if (!user) {
             return { error: "Unauthorized" }
         };
-    console.log(values?.file)
+        
         await connectDB();
     
         const existingUser = await User.findById(user?._id);

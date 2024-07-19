@@ -17,7 +17,6 @@ const CreateClassroomPage = () => {
   const [day, setDay] = useState<string | undefined>();
   const [tags, setTags] = useState<{ id: string; value: string }[]>([]);
   const [isPending, setIsPending] = useState<boolean>(false);
-console.log(isPending);
 
   const { data: session, status, update } = useSession({ required: true });
   const user = session?.user;
