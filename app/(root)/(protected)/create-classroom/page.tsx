@@ -56,7 +56,6 @@ const CreateClassroomPage = () => {
   const handleTagsChange = (newTags: { id: string; value: string; }[]) => {
     setTags(newTags);
   };
-
   
   return (
     <>
