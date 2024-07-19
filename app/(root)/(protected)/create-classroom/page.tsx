@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react"
 import { addClassRoom } from "@/lib/actions/auth/classRoom"
 import TagInputComponent from '@/components/ui/tagInput';
 import { cn } from '@/lib/utils';
-import BlurLoader from '@/components/shared/BlurLoader'
+import BlurLoader from '@/components/shared/blurLoader'
 import { Button } from "@/components/ui/button";
 import './style.css';
 
