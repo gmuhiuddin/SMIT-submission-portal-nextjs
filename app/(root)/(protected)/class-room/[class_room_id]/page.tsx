@@ -2,7 +2,6 @@ import { getTeacherAssignments } from '@/lib/actions/auth/assignment';
 import { getTeacherClassroom } from '@/lib/actions/auth/classRoom';
 import React from 'react';
 import { currentUser } from '@/lib/session';
-import { getStudentForTeacherClassRoom } from '@/lib/actions/auth/student';
 
 interface ClassRoomId {
     class_room_id: string | number;
@@ -36,10 +35,14 @@ const ClassRoom: React.FC<ClassRoomInterface> = async ({params: { class_room_id 
     const classRoom = await getTeacherClassroom(class_room_id);
     if(!classRoom?.success) return <p>404</p>;
     const assignments = await getTeacherAssignments(class_room_id);
-    const students = await getStudentForTeacherClassRoom(class_room_id);
     
     return (
         <div>
+            {classRoom?.students?.map(element => {
+                return (
+                    <p>{element.name}</p>
+                );
+            })}
             Class room
             {assignments?.assignments?.map((element, index) => {
                 return (

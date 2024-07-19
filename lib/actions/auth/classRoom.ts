@@ -76,7 +76,7 @@ export const addClassRoom = async (values: classRoom) => {
       ...classroomData,
     });
 
-    values?.studentsEmail?.forEach(async (element) => {
+    values?.studentsEmail?.forEach(async (element, index) => {
       const user = await User.findOne({
         email: element.value,
         role: "student",
@@ -85,14 +85,16 @@ export const addClassRoom = async (values: classRoom) => {
       if (user) {
         classRoom.students.push(user?._id);
 
-        await classRoom.save();
-
         await transporter.sendMail({
           from: '"SMIT-Student-submission-portal" <noreply@smit.com>', // Sender address
           to: user?.email, // List of receivers
           subject: "Class room adding email", // Subject line
           text: "Your successfully adding on a SMIT submission web", // Plain text body
         });
+      };
+
+      if (values?.studentsEmail?.length == index + 1) {
+        await classRoom.save();
       };
     });
 
@@ -149,7 +151,12 @@ export const getTeacherClassroom = async (classRoomId?: string | number) => {
       teacher: user?._id,
     });
 
-    return { success: "Class was create", classRoom };
+    const students = await User.find({
+      _id: classRoom?.students,
+      role: "student"
+    });
+
+    return { success: "Class was create", classRoom, students };
   } catch (error) {
     console.log("error", error);
   }
