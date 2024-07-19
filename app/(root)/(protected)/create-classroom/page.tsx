@@ -1,11 +1,14 @@
 "use client"
 
+import { useState } from 'react';
 import Head from 'next/head';
+import Link from "next/link";
 import { useSession } from "next-auth/react"
 import { addClassRoom } from "@/lib/actions/auth/classRoom"
-import { useState } from 'react';
 import TagInputComponent from '@/components/ui/tagInput';
 import { cn } from '@/lib/utils';
+import BlurLoader from '@/components/shared/BlurLoader'
+import { Button } from "@/components/ui/button";
 import './style.css';
 
 const CreateClassroomPage = () => {
@@ -26,6 +29,7 @@ const CreateClassroomPage = () => {
   const LocaiotnOptValue = ["Gulshan", "Bahadurabad", "Numaish"];
 
   const handleSubmit = async () => {
+    setIsPending(true);
 
     try {
       const res = await addClassRoom({
@@ -35,17 +39,16 @@ const CreateClassroomPage = () => {
           days: day as string,
         }, teacher: user?._id, studentsEmail: tags
       });
-      setIsPending(true);
       
       if (res?.error) {
         console.log("error", res.error);
       setIsPending(false);
       } else {
-      setIsPending(false);
         window.location.href = "/teacher-dashboard";
       };
     } catch (error) {
       console.log("error", error instanceof Error && error.message);
+      setIsPending(false);
     };
 
   };
@@ -53,9 +56,19 @@ const CreateClassroomPage = () => {
   const handleTagsChange = (newTags: { id: string; value: string; }[]) => {
     setTags(newTags);
   };
+
   
   return (
+    <>
+    <Link href="/">
+    <Button
+        size="lg"
+        className="mt-16 absolute left-3 top-3 text-white px-4 py-2 rounded-md"
+      >
+        Go Dashboard
+      </Button></Link>
     <div className='main-containers create-class-room-main-container'>
+      {isPending && <BlurLoader />}
     <Head>
         <title>Create Classroom - Your App Name</title>
         <meta name="description" content="Create a new classroom on Your App Name" />
@@ -202,6 +215,7 @@ const CreateClassroomPage = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

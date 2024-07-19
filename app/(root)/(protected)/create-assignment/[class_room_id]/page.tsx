@@ -54,7 +54,7 @@
 //     }>({
 //                 image: null,
 //     });
-    
+
 //     const handleCreateAssignment = async (e: React.FormEvent<HTMLFormElement>) => {
 //         e.preventDefault();
 //         setErr("")
@@ -91,7 +91,7 @@
 
 //     async function handleChangeImage(e: ChangeEvent<HTMLInputElement>) {
 //                 const file = e.currentTarget.files && e.currentTarget.files[0];
-                
+
 //                 if (file) {
 //                     if (file.size / 1024 / 1024 > 50) {
 //                         setErr('File size too big (max 50MB)')
@@ -251,7 +251,7 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
 
     async function handleChangeImage(e: ChangeEvent<HTMLInputElement>) {
         const file = e.currentTarget.files && e.currentTarget.files[0];
-        
+
         if (file) {
             if (file.size / 1024 / 1024 > 50) {
                 setErr('File size too big (max 50MB)')
@@ -266,7 +266,9 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
         }
     };
 
-    if (classRoom && !Object.keys(classRoom).length) return <p>404</p>;
+    if (!classRoom) return <p>loading</p>;
+
+    if (!Object.keys(classRoom).length) return <p>404</p>;
 
     return (
         <div className='flex justify-center w-full bg-#000'>
