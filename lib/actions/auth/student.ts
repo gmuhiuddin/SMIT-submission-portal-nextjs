@@ -23,7 +23,7 @@ const getStudentForTeacherClassRoom = async (classRoomId: number | string) => {
         };
 
         const classRoom = await ClassRoom.findById(classRoomId).populate("students");
-console.log(classRoom);
+console.log(classRoom.students);
 
     // const stds = [];
 
