@@ -161,10 +161,12 @@ interface AssignmentRes {
     error?: string | undefined;
 };
 
-interface ClassroomRes {
-    success?: any;
-    error?: any;
-    classRoom?: any;
+interface Images {
+    files: File[];
+}
+
+interface ImagesData {
+    image: string | null;
 }
 
 const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_room_id } }) => {
@@ -184,14 +186,11 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
     }>({
         image: null,
     });
-    const [imageData, setImageData] = useState<{
-
-        image: string | null
-    }>({
+    const [imageData, setImagesData] = useState<ImagesData[]>([{
         image: null,
-    });
+    }]);
     const [file, setFile] = useState<File | null>(null);
-    const [image, setImage] = useState<File | null>(null);
+    const [images, setImages] = useState<Images>({ files: [] });
 
     const handleCreateAssignment = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -201,7 +200,7 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
         try {
             const formData = new FormData();
             formData.append('file', file as File);
-            formData.append('image', image as File);
+            formData.append('image', images as File);
             formData.append('title', title as string);
             formData.append('description', description as string);
             formData.append('teacher', user?._id as string);
@@ -256,10 +255,10 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
             if (file.size / 1024 / 1024 > 50) {
                 setErr('File size too big (max 50MB)')
             } else {
-                setImage(file);
+                setImages({ files: [...images?.files, file] });
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    setImageData((prev) => ({ ...prev, image: e.target?.result as string }))
+                    setImagesData((prev) => ([...prev, { image: e.target?.result as string }]))
                 };
                 reader.readAsDataURL(file);
             }
@@ -278,7 +277,9 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
                     <input placeholder='description' value={description as string} onChange={e => setDescription(e.target.value)} type="text" />
                     {/* <input placeholder='due date' value={dueDate} onChange={e => setDueDate(e.target.value)} type="date" />
                     <input placeholder='content' value={content} onChange={e => setContent(e.target.value)} type="text" /> */}
-                    <img className="w-20" src={imageData?.image as string} />
+                    {imageData?.map(element => {
+                        return <img className="w-20" src={element?.image as string} />
+                    })}
                     <input placeholder='Image' accept="image/*" onChange={handleChangeImage} type="file" />
 
                     <img src={fileData?.image as string} />

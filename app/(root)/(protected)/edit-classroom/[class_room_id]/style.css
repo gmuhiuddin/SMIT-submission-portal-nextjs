@@ -1,0 +1,40 @@
+.create-class-room-main-container{
+    position: absolute;
+    top: 9%;
+}
+
+@media screen and (max-height: 854px) {
+    .create-class-room-main-container{
+        top: 15%;
+    }
+}
+
+@media screen and (max-height: 515px) {
+    .create-class-room-main-container{
+        top: 17%;
+    }
+}
+
+@media screen and (max-height: 429px) {
+    .create-class-room-main-container{
+        top: 21%;
+    }
+}
+
+@media screen and (max-height: 325px) {
+    .create-class-room-main-container{
+        top: 27%;
+    }
+}
+
+@media screen and (max-height: 245px) {
+    .create-class-room-main-container{
+        top: 33%;
+    }
+}
+
+@media screen and (max-height: 205px) {
+    .create-class-room-main-container{
+        top: 39%;
+    }
+}

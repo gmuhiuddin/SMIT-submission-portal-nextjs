@@ -1,5 +1,5 @@
 import React from "react";
-import styles from './blur.loader.module.css';
+import styles from './Blur.loader.module.css';
 
 const Loading = () => {
   return (
