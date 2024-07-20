@@ -29,6 +29,12 @@ const TeacherDashboard = async () => {
                   sx={{ background: '#8BC34A', py: 2, px: 4, mt: 2, borderRadius: '30px', ":hover": { background: '#4CAF50' } }}>
                   See Activity</Button>
               </Link>
+              <Link href={`/edit-classroom/${element?._id}`}>
+                <Button
+                  variant='contained'
+                  sx={{ background: '#8BC34A', py: 2, px: 4, mt: 2, ml: 2, borderRadius: '30px', ":hover": { background: '#4CAF50' } }}>
+                  Edit class</Button>
+              </Link>
             </Typography>
             <CardMedia
               sx={{ height: 'auto' }}

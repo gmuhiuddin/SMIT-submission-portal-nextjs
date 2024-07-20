@@ -7,6 +7,10 @@ const classRoomSchema = new Schema({
         type: {},
         required: true
     },
+    description: {
+        type: String,
+        required: true
+    },
     batch: {
         type: Object,
         required: true

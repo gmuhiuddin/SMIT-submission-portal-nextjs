@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Link from "next/link";
 import { useSession } from "next-auth/react"
-import { addClassRoom } from "@/lib/actions/auth/classRoom"
+import { editClassRoom } from "@/lib/actions/auth/classRoom"
 import TagInputComponent from '@/components/ui/tagInput';
 import { getTeacherClassroom } from '@/lib/actions/auth/classRoom';
 import { cn } from '@/lib/utils';
@@ -20,6 +20,13 @@ interface CreateAssignmentPorps {
   params: ClassRoomId;
 }
 
+interface Students {
+  name: string;
+  _id: string;
+  image: string;
+  email: string;
+}
+
 const EditClassroomPage: React.FC<CreateAssignmentPorps> = ({ params: { class_room_id } }) => {
   const [title, setTitle] = useState<string | undefined>();
   const [description, setDescription] = useState<string | undefined>();
@@ -30,6 +37,7 @@ const EditClassroomPage: React.FC<CreateAssignmentPorps> = ({ params: { class_ro
   const [tags, setTags] = useState<{ id: string; value: string }[]>([]);
   const [isPending, setIsPending] = useState<boolean>(false);
   const [classRoom, setClassRoom] = useState<any>("");
+  const [ students, setStudents ] = useState<Students[]>();
 
   const { data: session, status, update } = useSession({ required: true });
   const user = session?.user;
@@ -46,6 +54,7 @@ async function checkClassRoom() {
     try {
         const classRoomRes = await getTeacherClassroom(class_room_id);
 
+  setStudents(classRoomRes?.students || []);
         setClassRoom(classRoomRes?.classRoom || {});
     } catch (error) {
         console.log(error);
@@ -54,18 +63,23 @@ async function checkClassRoom() {
 
 useEffect(() => {
   setTitle(classRoom?.title);
-}, [classRoom])
+  setBatch(classRoom?.batch);
+  setDescription(classRoom?.description);
+  setDay(classRoom?.timeAndLocation?.days);
+  setTime(classRoom?.timeAndLocation?.time);
+  setLoca(classRoom?.timeAndLocation?.location);
+}, [classRoom]);
 
   const handleSubmit = async () => {
     setIsPending(true);
 
     try {
-      const res = await addClassRoom({
+      const res = await editClassRoom({
         title, description: description as string, batch, timeAndLocation: {
           time: time as string,
           location: location as string,
           days: day as string,
-        }, teacher: user?._id, studentsEmail: tags
+        }, teacher: user?._id, studentsEmail: tags, _id: class_room_id
       });
       
       if (res?.error) {
@@ -222,6 +236,16 @@ useEffect(() => {
                     className="border border-slate-500 px-3 py-2 rounded-md focus:outline-none focus:border-slate-950 w-full"
                   ></textarea>
                 </div>
+                <div className="sm:col-span-2">
+                  <p className="block text-sm font-medium text-gray-700">
+                    Students
+                  </p>
+{students ? students.length ? students.map(element => {
+  return(
+    <p>{element.name}</p>
+  )
+}) : "No students" : "Students fetching"}
+                </div>
                 
                 <div className="sm:col-span-2">
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -239,7 +263,7 @@ useEffect(() => {
                   className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   onClick={handleSubmit}
                 >
-                  Create Classroom
+                Edit Classroom
                 </button>
               </div>
           </div>

@@ -29,13 +29,23 @@ interface StudentEmail {
   id: string | number;
 }
 
-interface classRoom {
+interface ClassRoom {
   title?: string;
   batch?: string | number;
   description?: string;
   teacher?: string | number;
   studentsEmail?: StudentEmail[];
   timeAndLocation: classRoomTimeAndLocation;
+}
+
+interface EditClassRoom {
+  title?: string;
+  batch?: string | number;
+  description?: string;
+  teacher?: string | number;
+  studentsEmail?: StudentEmail[];
+  timeAndLocation: classRoomTimeAndLocation;
+  _id: number | string;
 }
 
 const transporter = nodemailer.createTransport({
@@ -48,7 +58,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const addClassRoom = async (values: classRoom) => {
+export const addClassRoom = async (values: ClassRoom) => {
   try {
     const user = await currentUser();
 
@@ -75,6 +85,63 @@ export const addClassRoom = async (values: classRoom) => {
     const classRoom = await ClassRoom.create({
       ...classroomData,
     });
+
+    values?.studentsEmail?.forEach(async (element, index) => {
+      const user = await User.findOne({
+        email: element.value,
+        role: "student",
+      });
+
+      if (user) {
+        classRoom.students.push(user?._id);
+
+        await transporter.sendMail({
+          from: '"SMIT-Student-submission-portal" <noreply@smit.com>', // Sender address
+          to: user?.email, // List of receivers
+          subject: "Class room adding email", // Subject line
+          text: "Your successfully adding on a SMIT submission web", // Plain text body
+        });
+      };
+
+      if (values?.studentsEmail?.length == index + 1) {
+        await classRoom.save();
+      };
+    });
+
+    return { success: "Class was create", classRoom };
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const editClassRoom = async (values: EditClassRoom) => {
+  try {
+    const user = await currentUser();
+
+    if (!user) {
+      return { error: "Unauthorized" };
+    }
+
+    await connectDB();
+
+    const existingUser = await User.findById(user?._id);
+
+    if (!existingUser || existingUser.role == "student") {
+      return { error: "Unauthorized" };
+    }
+
+    if (Object.keys(values).length < 6) {
+      return { error: "All fields are required" };
+    };
+
+    const classroomData = { ...values };
+
+    delete classroomData.studentsEmail;
+
+    const classRoom = await ClassRoom.findByIdAndUpdate(values._id, {
+      ...classroomData,
+    });
+console.log(classroomData);
 
     values?.studentsEmail?.forEach(async (element, index) => {
       const user = await User.findOne({
@@ -154,7 +221,7 @@ export const getTeacherClassroom = async (classRoomId?: string | number) => {
     const students = await User.find({
       _id: classRoom?.students,
       role: "student"
-    });
+    }).select("-password -isTwoFactorEnabled -emailVerified -provider -role -lastActivity");
 
     return { success: "Class was create", classRoom, students };
   } catch (error) {
