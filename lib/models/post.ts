@@ -19,9 +19,8 @@ const postSchema = new Schema({
         type: String,
         required: true
     },
-    imageDownloadUrl: String,
-    imageUrl: String,
-    FileDownloadUrl: String,
+    imageUrls: [],
+    FileUrls: [],
 },
     {
         timestamps: true

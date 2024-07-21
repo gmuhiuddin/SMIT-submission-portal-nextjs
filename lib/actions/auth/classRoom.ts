@@ -99,7 +99,7 @@ export const addClassRoom = async (values: ClassRoom) => {
           from: '"SMIT-Student-submission-portal" <noreply@smit.com>', // Sender address
           to: user?.email, // List of receivers
           subject: "Class room adding email", // Subject line
-          text: "Your successfully adding on a SMIT submission web", // Plain text body
+          text: "You are successfully adding on a SMIT submission web", // Plain text body
         });
       };
 
@@ -223,6 +223,59 @@ export const getTeacherClassroom = async (classRoomId?: string | number) => {
     }).select("-password -isTwoFactorEnabled -emailVerified -provider -role -lastActivity");
 
     return { success: "Class was create", classRoom, students };
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const getStudentClassrooms = async () => {
+  try {
+    const user = await currentUser();
+
+    if (!user) {
+      return { error: "Unauthorized" };
+    }
+
+    await connectDB();
+
+    const existingUser = await User.findById(user?._id);
+
+    if (!existingUser || existingUser.role == "teacher") {
+      return { error: "Unauthorized" };
+    }
+
+    const classRooms = await ClassRoom.find({
+      students: user._id,
+    });
+
+    return { success: "Class was create", classRooms };
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const getStudentClassroom = async (classRoomId?: string | number) => {
+  try {
+    const user = await currentUser();
+
+    if (!user) {
+      return { error: "Unauthorized" };
+    }
+
+    await connectDB();
+
+    const existingUser = await User.findById(user?._id);
+
+    if (!existingUser || existingUser.role == "teacher") {
+      return { error: "Unauthorized" };
+    }
+
+    const classRoom = await ClassRoom.findOne({
+      _id: classRoomId,
+      students: user?._id,
+    });
+
+    return { success: "Class was create", classRoom };
   } catch (error) {
     console.log("error", error);
   }

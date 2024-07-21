@@ -2,10 +2,9 @@ import React from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { IconButton, Card, CardActions, CardContent, CardMedia, Typography, Button, Box, } from '@mui/material';
-import { FolderOutlined as FolderOutlinedIcon, PermContactCalendarOutlined as PermContactCalendarOutlinedIcon } from '@mui/icons-material'; ``
 import { getTeacherClassrooms } from '@/lib/actions/auth/classRoom';
-import "./style.css";
 import { currentUser } from '@/lib/session';
+import "./style.css";
 
 const TeacherDashboard = async () => {
   const user = await currentUser();
@@ -15,7 +14,7 @@ const TeacherDashboard = async () => {
   return (
     <div className="flex justify-center flex-wrap class-room-main-container">
 
-      {classRooms?.classRooms && classRooms?.classRooms?.map((element, index) => {
+      {classRooms?.classRooms && classRooms.classRooms.length ? classRooms?.classRooms?.map((element, index) => {
         return (
 
           <Box key={index} className="m-1 class-room-card" sx={{ Py: 6, background: '#0976A9', color: 'white', borderRadius: '20px' }}>
@@ -45,8 +44,11 @@ const TeacherDashboard = async () => {
             </CardContent>
           </Box>
         )
-      })}
-    </div >
+      })
+    :
+    "No class rooms"
+    }
+    </div>
   );
 };
 

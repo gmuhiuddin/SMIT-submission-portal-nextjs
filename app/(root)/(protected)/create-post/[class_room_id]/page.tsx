@@ -5,9 +5,10 @@ import { put } from '@vercel/blob';
 // import { revalidatePath } from 'next/cache';
 import { getTeacherClassroom } from '@/lib/actions/auth/classRoom';
 import { useSession } from 'next-auth/react';
-import { Try } from '@mui/icons-material';
+import { FormError } from "@/components/shared/form-error"
+import { FormSuccess } from "@/components/shared/form-success"
 import { Button } from '@mui/material';
-import { addPost } from '@/lib/actions/auth/addPost';
+import { addPost } from '@/lib/actions/auth/post';
 // import MultiInput from '@/components/ui/MultiInput'
 
 interface ClassRoomId {
@@ -41,22 +42,29 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
     // const [dueDate, setDueDate] = useState<string | null>("");
     // const [content, setContent] = useState<string | null>("");
     const [classRoom, setClassRoom] = useState<any>("");
-    const [err, setErr] = useState<string | null>();
-    const [success, setSuccess] = useState<string | null>();
+    const [errMsg, setErr] = useState<string>("");
+    const [successMsg, setSuccess] = useState<string>("");
     const [filesData, setFilesData] = useState<ImagesData[]>([]);
     const [imageData, setImagesData] = useState<ImagesData[]>([]);
     const [files, setFiles] = useState<Images>({ files: [] });
     const [images, setImages] = useState<Images>({ files: [] });
 
-    const handleCreateAssignment = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleCreatePost = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setErr("");
         setSuccess("");
 
         try {
             const formData = new FormData();
-            // formData.append('file', file as File);
-            // formData.append('image', images as File);
+            
+            formData.append('image-length', images.files.length.toString());
+            formData.append('file-length', files?.files?.length.toString());
+            images?.files.forEach((element, index) => {
+                formData.append(`image-${index+1}`, element);
+            });
+            files?.files.forEach((element, index) => {
+                formData.append(`file-${index+1}`, element);
+            })
             formData.append('title', title as string);
             formData.append('description', description as string);
             formData.append('teacher', user?._id as string);
@@ -67,8 +75,8 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
             if (res?.success) {
                 setSuccess(res?.success);
             } else {
-                setErr(res?.error);
-            };
+                setErr(res?.error || "Some thing went wrong!");
+            };  
         } catch (error) {
             setErr(error instanceof Error ? error.message : "Some thing went wrong!")
         };
@@ -150,7 +158,7 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
     return (
         <div className='flex justify-center w-full bg-#000'>
             <div className='flex p-6 bg-#000'>
-                <form className='flex-col flex' onSubmit={handleCreateAssignment}>
+                <form className='flex-col flex' onSubmit={handleCreatePost}>
                     <input placeholder='Title' value={title as string} onChange={e => setTitle(e.target.value)} type="text" />
                     <input placeholder='description' value={description as string} onChange={e => setDescription(e.target.value)} type="text" />
                     {/* <input placeholder='due date' value={dueDate} onChange={e => setDueDate(e.target.value)} type="date" />
@@ -171,6 +179,8 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
                             <p key={index}>{element?.name} <span className='cursor-pointer' onClick={() => deleteFile(index)}>x</span></p>
                         )
                     })}
+                     <FormError message={errMsg} />
+                     <FormSuccess message={successMsg} />
                     <Button
                         className="mt-16 bg-black hover:bg-zinc-700 text-white px-4 py-2 rounded-md"
                         type="submit"
