@@ -7,7 +7,6 @@ import { put } from '@vercel/blob';
 import { getTeacherClassroom } from '@/lib/actions/auth/classRoom';
 import { useSession } from 'next-auth/react';
 import { Try } from '@mui/icons-material';
-import { setStudentForTeacherClassRoom } from '@/lib/actions/auth/student';
 import { Button } from '@/components/ui/button';
 // import MultiInput from '@/components/ui/MultiInput'
 
