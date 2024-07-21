@@ -43,15 +43,9 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
     const [classRoom, setClassRoom] = useState<any>("");
     const [err, setErr] = useState<string | null>();
     const [success, setSuccess] = useState<string | null>();
-    const [fileData, setFileData] = useState<{
-        image: string | null
-    }>({
-        image: null,
-    });
-    const [imageData, setImagesData] = useState<ImagesData[]>([{
-        image: null,
-    }]);
-    const [file, setFile] = useState<File | null>(null);
+    const [filesData, setFilesData] = useState<ImagesData[]>([]);
+    const [imageData, setImagesData] = useState<ImagesData[]>([]);
+    const [files, setFiles] = useState<Images>({ files: [] });
     const [images, setImages] = useState<Images>({ files: [] });
 
     const handleCreateAssignment = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -61,7 +55,7 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
 
         try {
             const formData = new FormData();
-            formData.append('file', file as File);
+            // formData.append('file', file as File);
             // formData.append('image', images as File);
             formData.append('title', title as string);
             formData.append('description', description as string);
@@ -100,10 +94,10 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
             if (file.size / 1024 / 1024 > 50) {
                 setErr('File size too big (max 50MB)')
             } else {
-                setFile(file);
+                setFiles({ files: [...files?.files, file] });
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    setFileData((prev) => ({ ...prev, image: e.target?.result as string }))
+                    setFilesData((prev) => ([...prev, { image: e.target?.result as string }]))
                 };
                 reader.readAsDataURL(file);
             }
@@ -127,6 +121,28 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
         }
     };
 
+    const deleteImage = (index: number) => {
+        const imagesCopy = [ ...imageData ];
+        const imagesFileCopy = [ ...images?.files ];
+
+        imagesFileCopy.splice(index, 1);
+        imagesCopy.splice(index, 1);
+
+        setImages({ files: imagesFileCopy});
+        setImagesData(imagesCopy);
+    };
+
+    const deleteFile = (index: number) => {
+        const filesCopy = [ ...filesData ];
+        const filesFileCopy = [ ...files.files ];
+
+        filesFileCopy.splice(index, 1);
+        filesCopy.splice(index, 1);
+
+        setFiles({ files: filesFileCopy});
+        setFilesData(filesCopy);
+    };
+
     if (!classRoom) return <p>loading</p>;
 
     if (!Object.keys(classRoom).length) return <p>404</p>;
@@ -139,13 +155,22 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
                     <input placeholder='description' value={description as string} onChange={e => setDescription(e.target.value)} type="text" />
                     {/* <input placeholder='due date' value={dueDate} onChange={e => setDueDate(e.target.value)} type="date" />
                     <input placeholder='content' value={content} onChange={e => setContent(e.target.value)} type="text" /> */}
-                    {imageData?.map((element, index) => {
-                        return <img className="w-20" key={index} src={element?.image as string} />
-                    })}
                     <input placeholder='Image' accept="image/*" onChange={handleChangeImage} type="file" />
+                    {imageData?.map((element, index) => {
+                        return (
+                            <>
+                                <img className="w-20" key={index} src={element?.image as string} />
+                                <p className='cursor-pointer' onClick={() => deleteImage(index)}>x</p>
+                            </>
+                        )
+                    })}
 
-                    <img src={fileData?.image as string} />
-                    <input accept=".jpg,.jpeg,.png,.gif,.txt" className="h-12" placeholder='File' onChange={handleChangeFile} type="file" />
+                    <input accept=".pdf,.doc,.gif,.txt" className="h-12" placeholder='File' onChange={handleChangeFile} type="file" />
+                    {files?.files?.map((element, index) => {
+                        return(
+                            <p key={index}>{element?.name} <span className='cursor-pointer' onClick={() => deleteFile(index)}>x</span></p>
+                        )
+                    })}
                     <Button
                         className="mt-16 bg-black hover:bg-zinc-700 text-white px-4 py-2 rounded-md"
                         type="submit"

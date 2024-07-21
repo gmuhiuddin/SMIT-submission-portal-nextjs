@@ -12,7 +12,7 @@ import { Toaster } from "@/components/ui/toaster"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Nextjs fullstack Authentication",
+  title: "SMIT-submission-portal",
   description: "Sign-Up and Sign-In with Nextjs",
 }
 
