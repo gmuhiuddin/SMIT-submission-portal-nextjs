@@ -21,6 +21,7 @@ const postSchema = new Schema({
     },
     imageUrls: [],
     FileUrls: [],
+    reactions: []
 },
     {
         timestamps: true

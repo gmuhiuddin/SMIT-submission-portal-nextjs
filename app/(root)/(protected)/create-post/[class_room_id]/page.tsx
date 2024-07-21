@@ -9,6 +9,7 @@ import { FormError } from "@/components/shared/form-error"
 import { FormSuccess } from "@/components/shared/form-success"
 import { Button } from '@mui/material';
 import { addPost } from '@/lib/actions/auth/post';
+import BlurLoader from '@/components/shared/blurLoader'
 // import MultiInput from '@/components/ui/MultiInput'
 
 interface ClassRoomId {
@@ -48,22 +49,24 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
     const [imageData, setImagesData] = useState<ImagesData[]>([]);
     const [files, setFiles] = useState<Images>({ files: [] });
     const [images, setImages] = useState<Images>({ files: [] });
+    const [isPending, setIsPending] = useState<boolean>(false);
 
     const handleCreatePost = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setIsPending(true);
         setErr("");
         setSuccess("");
 
         try {
             const formData = new FormData();
-            
+
             formData.append('image-length', images.files.length.toString());
             formData.append('file-length', files?.files?.length.toString());
             images?.files.forEach((element, index) => {
-                formData.append(`image-${index+1}`, element);
+                formData.append(`image-${index + 1}`, element);
             });
             files?.files.forEach((element, index) => {
-                formData.append(`file-${index+1}`, element);
+                formData.append(`file-${index + 1}`, element);
             })
             formData.append('title', title as string);
             formData.append('description', description as string);
@@ -74,11 +77,15 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
 
             if (res?.success) {
                 setSuccess(res?.success);
+                setIsPending(false);
+                window.location.href = `/class-room/${class_room_id}`;
             } else {
                 setErr(res?.error || "Some thing went wrong!");
+                setIsPending(false);
             };
         } catch (error) {
-            setErr(error instanceof Error ? error.message : "Some thing went wrong!")
+            setErr(error instanceof Error ? error.message : "Some thing went wrong!");
+            setIsPending(false);
         };
     };
 
@@ -130,24 +137,24 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
     };
 
     const deleteImage = (index: number) => {
-        const imagesCopy = [ ...imageData ];
-        const imagesFileCopy = [ ...images?.files ];
+        const imagesCopy = [...imageData];
+        const imagesFileCopy = [...images?.files];
 
         imagesFileCopy.splice(index, 1);
         imagesCopy.splice(index, 1);
 
-        setImages({ files: imagesFileCopy});
+        setImages({ files: imagesFileCopy });
         setImagesData(imagesCopy);
     };
 
     const deleteFile = (index: number) => {
-        const filesCopy = [ ...filesData ];
-        const filesFileCopy = [ ...files.files ];
+        const filesCopy = [...filesData];
+        const filesFileCopy = [...files.files];
 
         filesFileCopy.splice(index, 1);
         filesCopy.splice(index, 1);
 
-        setFiles({ files: filesFileCopy});
+        setFiles({ files: filesFileCopy });
         setFilesData(filesCopy);
     };
 
@@ -157,6 +164,7 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
 
     return (
         <div className='flex justify-center w-full bg-#000'>
+            {isPending && <BlurLoader />}
             <div className='flex p-6 bg-#000'>
                 <form className='flex-col flex' onSubmit={handleCreatePost}>
                     <input placeholder='Title' value={title as string} onChange={e => setTitle(e.target.value)} type="text" />
@@ -175,12 +183,12 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
 
                     <input accept=".pdf,.doc,.gif,.txt" className="h-12" placeholder='File' onChange={handleChangeFile} type="file" />
                     {files?.files?.map((element, index) => {
-                        return(
+                        return (
                             <p key={index}>{element?.name} <span className='cursor-pointer' onClick={() => deleteFile(index)}>x</span></p>
                         )
                     })}
-                     <FormError message={errMsg} />
-                     <FormSuccess message={successMsg} />
+                    <FormError message={errMsg} />
+                    <FormSuccess message={successMsg} />
                     <Button
                         className="mt-16 bg-black hover:bg-zinc-700 text-white px-4 py-2 rounded-md"
                         type="submit"

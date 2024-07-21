@@ -1,8 +1,5 @@
 "use server";
 
-import { string, z } from "zod";
-import bcrypt from "bcryptjs";
-
 import { currentUser } from "@/lib/session";
 import connectDB from "@/lib/db";
 import { User } from "@/lib/models/auth.model";
@@ -12,6 +9,8 @@ import { generateToken } from "@/lib/jwt-token";
 import { sendVerificationEmail } from "@/lib/mailer";
 import ClassRoom from "@/lib/models/classRooms";
 import nodemailer from "nodemailer";
+import Post from "@/lib/models/post";
+import Assignment from "@/lib/models/assignment";
 // import { sendVerificationEmail } from "@/lib/mail"
 
 // type SettingsInput = z.infer<typeof SettingsValidation> & {
@@ -202,7 +201,7 @@ export const getTeacherClassroom = async (classRoomId?: string | number) => {
 
     if (!user) {
       return { error: "Unauthorized" };
-    }
+    };
 
     await connectDB();
 
@@ -222,7 +221,11 @@ export const getTeacherClassroom = async (classRoomId?: string | number) => {
       role: "student"
     }).select("-password -isTwoFactorEnabled -emailVerified -provider -role -lastActivity");
 
-    return { success: "Class was create", classRoom, students };
+    const posts = await Post.find({
+      classRoom: classRoom._id,
+    });
+
+    return { success: "Class was create", classRoom, students, posts };
   } catch (error) {
     console.log("error", error);
   }
@@ -275,7 +278,15 @@ export const getStudentClassroom = async (classRoomId?: string | number) => {
       students: user?._id,
     });
 
-    return { success: "Class was create", classRoom };
+    const assignments = await Assignment.find({
+      classRoom: classRoom._id,
+    });
+
+    const posts = await Post.find({
+      classRoom: classRoom._id,
+    });
+
+    return { success: "Class was create", classRoom, posts, assignments };
   } catch (error) {
     console.log("error", error);
   }

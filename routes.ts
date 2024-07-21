@@ -12,14 +12,14 @@ export const routes = {
   ],
   student: [
     "/student-dashboard",
-    "/class-room/:class_room_id",
+    "/std-class-room/:class_room_id",
   ],
   teacher: [
     "/teacher-dashboard",
     "/create-classroom",
     "/class-room/:class_room_id",
     "/crate-assignment/:class_room_id",
-    "/crate-post/:class_room_id",
+    "/create-post/:class_room_id",
   ],
   apiAuthPrefix: "/api/auth",
   defaultLoginRedirect: "/settings",

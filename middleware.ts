@@ -3,7 +3,13 @@ import { routes } from "@/routes"
 import authConfig from "@/auth.config"
 import { currentRole } from "./lib/session"
 
-const { auth: withAuthMiddleware } = NextAuth(authConfig)
+const { auth: withAuthMiddleware } = NextAuth(authConfig);
+
+const matchRoute = (pathname: string, route: string) => {
+  const dynamicSegmentRegex = /:\w+/g;
+  const routePattern = new RegExp(`^${route.replace(dynamicSegmentRegex, '[^/]+')}$`);
+  return routePattern.test(pathname);
+};
 
 export default withAuthMiddleware(async (req) => {
   const isLoggedIn = !!req.auth;
@@ -11,10 +17,10 @@ export default withAuthMiddleware(async (req) => {
   const userRole = await currentRole();
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(routes.apiAuthPrefix);
-  const isAuthRoute = routes.auth.includes(nextUrl.pathname);
-  const isPublicRoute = routes.public.includes(nextUrl.pathname);
-  const isTeacherRoute = routes.teacher.includes(nextUrl.pathname);
-  const isStudentRoute = routes.student.includes(nextUrl.pathname);
+  const isAuthRoute = routes.auth.some(route => matchRoute(nextUrl.pathname, route));
+  const isPublicRoute = routes.public.some(route => matchRoute(nextUrl.pathname, route));
+  const isTeacherRoute = routes.teacher.some(route => matchRoute(nextUrl.pathname, route));
+  const isStudentRoute = routes.student.some(route => matchRoute(nextUrl.pathname, route));
   const defaultUrl = new URL(routes.defaultLoginRedirect, nextUrl);
 
   if (nextUrl.pathname !== "/settings" && userRole == "undefined") {

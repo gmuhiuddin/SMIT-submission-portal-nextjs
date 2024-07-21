@@ -27,6 +27,12 @@ const nanoid = customAlphabet(
 //     file?: any;
 // }
 
+interface ReactPost {
+    _id: string;
+    icon: string;
+    studentId: string;
+}
+
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
@@ -42,7 +48,7 @@ const sendEmailToStudentsForCreateingPost = async (classRoomId: FormDataEntryVal
     const classRoom = await ClassRoom.findById(classRoomId).populate("students");
 
     classRoom?.students.forEach(async (element: { email: any; }) => {
-        
+
         await transporter.sendMail({
             from: '"SMIT-Student-submission-portal" <noreply@smit.com>', // Sender address
             to: element?.email, // List of receivers
@@ -132,41 +138,10 @@ export const addPost = async (values: FormData) => {
                 });
             };
         };
-        // const image: File | string = values.get("image") || "";
-
-        // if (typeof image !== "string") {
-        //     const imageContentType = image.type || "image/*";
-
-        //     const filename = `${nanoid()}.${imageContentType.split("/")[1]}`;
-
-        //     const blob = await put(filename, image, {
-        //         contentType: imageContentType,
-        //         access: "public",
-        //     });
-
-        //     postData.imageUrl = blob?.url;
-        //     postData.imageDownloadUrl = blob?.downloadUrl;
-        // };
-
-        // const file = values.get("file") || "";
-
-        // if (typeof file !== "string") {
-        //     const fileContentType = file?.type || "text/plain";
-
-        //     const filename = `${nanoid()}.${fileContentType.split("/")[1]}`;
-
-        //     const blob = await put(filename, file, {
-        //         contentType: fileContentType,
-        //         access: "public",
-        //     });
-
-        //     postData.FileDownloadUrl = blob?.downloadUrl;
-        // };
 
         if (Object.keys(postData).length < 5) {
             return { error: "All fields are required" };
         }
-console.log(postData);
 
         await Post.create({
             ...postData,
@@ -183,3 +158,47 @@ console.log(postData);
             : { error: "Something went wrong!" };
     };
 };
+
+export const reactPost = async (values: ReactPost) => {
+    try {
+        const user = await currentUser();
+
+        if (!user) {
+            return { error: "Unauthorized" };
+        };
+
+        await connectDB();
+
+        const existingUser = await User.findById(user?._id);
+
+        if (!existingUser || existingUser.role == "teacher") {
+            return { error: "Unauthorized" };
+        };
+
+        const post = await Post.findById(values._id);
+
+        const reactionIndex = post ? post.reactions.findIndex((element: {
+            studentId?: string;
+            icon?: string;
+        }) => element.studentId == values.studentId) : -1;
+
+        if (reactionIndex != -1) {
+            post.reactions[reactionIndex].icon = values.icon;
+
+            await post.save();
+        } else {
+            post.reactions.push({
+                icon: values.icon || "thumbs",
+                studentId: values.studentId,
+            });
+
+            await post.save();
+        };
+
+        return { success: "Reaction was added successfully" };
+    } catch (error) {
+        return { error: error instanceof Error ? error.message : "Something went wrong!" };
+    };
+};
+
+export const removeReactPost = async () => { };
