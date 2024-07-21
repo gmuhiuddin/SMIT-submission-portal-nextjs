@@ -1,16 +1,14 @@
 import React from 'react';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
 import { IconButton, Card, CardActions, CardContent, CardMedia, Typography, Button, Box, } from '@mui/material';
 import { getStudentClassrooms } from '@/lib/actions/auth/classRoom';
 import { currentUser } from '@/lib/session';
-import "./style.css";
 
 async function StudentDashboard() {
 
     const user = await currentUser();
 
-  const classRooms = await getStudentClassrooms();
+    const classRooms = await getStudentClassrooms();
 
     return (
         <div className="flex justify-center flex-wrap class-room-main-container">

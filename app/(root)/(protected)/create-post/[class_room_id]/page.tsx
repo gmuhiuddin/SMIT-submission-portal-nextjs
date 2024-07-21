@@ -76,7 +76,7 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
                 setSuccess(res?.success);
             } else {
                 setErr(res?.error || "Some thing went wrong!");
-            };  
+            };
         } catch (error) {
             setErr(error instanceof Error ? error.message : "Some thing went wrong!")
         };
