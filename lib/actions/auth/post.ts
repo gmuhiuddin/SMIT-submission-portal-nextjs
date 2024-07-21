@@ -195,7 +195,7 @@ export const reactPost = async (values: ReactPost) => {
             await post.save();
         };
 
-        return { success: "Reaction was added successfully" };
+        return { success: "Reaction was added successfully", post };
     } catch (error) {
         return { error: error instanceof Error ? error.message : "Something went wrong!" };
     };

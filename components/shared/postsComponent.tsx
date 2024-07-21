@@ -15,7 +15,6 @@ const PostsComponent: React.FC<{
     
     return (
         <>
-        <p>posts</p>
         {posts.map((element, index) => {
             return <Post key={index} postObj={element}/>
         })}

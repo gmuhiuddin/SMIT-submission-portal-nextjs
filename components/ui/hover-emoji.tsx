@@ -5,67 +5,46 @@ import './style.css'
 
 interface HoverEmojisProps {
     state: React.Dispatch<React.SetStateAction<boolean>>;
-    emojeeName: (icon: JSX.Element) => void;
+    emojeeName: (icon: string) => void;
+    emojiChange: (icon: string) => void;
 }
 
-const HoverEmojis: React.FC<HoverEmojisProps> = ({ state, emojeeName }) => {
+const HoverEmojis: React.FC<HoverEmojisProps> = ({ state, emojeeName, emojiChange }) => {
 
-    const iconClicked = (icon: JSX.Element) => {
-        emojeeName(icon);
+    const iconClicked = (icon: string) => {
+        emojiChange(icon);
+        
         setTimeout(() => {
             state(false);
         }, 500);
     };
 
     return (
-        <div onMouseLeave={() => {
+        <div onMouseEnter={() => {
+            state(true);
+        }} onMouseLeave={() => {
             setTimeout(() => {
                 state(false);
             }, 500);
         }} className='emoji-container'>
             <FontAwesomeIcon
-                onClick={() => iconClicked(
-                    <span className='txt'>
-                        <FontAwesomeIcon className='like-beside-icon heart-icon' icon={faHeart} />
-                        Heart
-                    </span>
-                )}
+                onClick={() => iconClicked("Heart")}
                 className='icon heart-icon' icon={faHeart}
             />
             <FontAwesomeIcon
-                onClick={() => iconClicked(
-                    <span className='txt'>
-                        <FontAwesomeIcon className='like-beside-icon thumbsUp-icon' icon={faThumbsUp} />
-                        Like
-                    </span>
-                )}
+                onClick={() => iconClicked("Like")}
                 className='icon thumbsUp-icon' icon={faThumbsUp}
             />
             <FontAwesomeIcon
-                onClick={() => iconClicked(
-                    <span className='txt'>
-                        <FontAwesomeIcon className='like-beside-icon laugh-icon' icon={faFaceLaugh} />
-                        Haha
-                    </span>
-                )}
+                onClick={() => iconClicked("Haha")}
                 className='icon laugh-icon' icon={faFaceLaugh}
             />
             <FontAwesomeIcon
-                onClick={() => iconClicked(
-                    <span className='txt'>
-                        <FontAwesomeIcon className='like-beside-icon sad-icon' icon={faFaceSadTear} />
-                        Sad
-                    </span>
-                )}
+                onClick={() => iconClicked("Sad")}
                 className='icon sad-icon' icon={faFaceSadTear}
             />
             <FontAwesomeIcon
-                onClick={() => iconClicked(
-                    <span className='txt'>
-                        <FontAwesomeIcon className='like-beside-icon angry-icon' icon={faFaceAngry} />
-                        Angry
-                    </span>
-                )}
+                onClick={() => iconClicked("Angry")}
                 className='icon angry-icon' icon={faFaceAngry}
             />
         </div>

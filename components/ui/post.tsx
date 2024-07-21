@@ -3,7 +3,7 @@
 import ShowMoreTxt from '../ui/showMoreTxt';
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp, faShareSquare, faComment, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faShareSquare, faComment, faPaperPlane, faHeart, faFaceSadTear, faFaceLaugh, faFaceAngry } from '@fortawesome/free-solid-svg-icons';
 import HoverEmojis from '../ui/hover-emoji';
 import './style.css';
 import { reactPost } from '@/lib/actions/auth/post';
@@ -37,30 +37,52 @@ const Post: React.FC<FbPostsProps> = ({ postObj }) => {
     const images = ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1Dw7-4lVfRq74_YEiPEt4e-bQ0_6UA2y73Q&s", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1Dw7-4lVfRq74_YEiPEt4e-bQ0_6UA2y73Q&s", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1Dw7-4lVfRq74_YEiPEt4e-bQ0_6UA2y73Q&s"];
     const [isLiked, setIsLiked] = useState(false);
     const [emoji, setEmoji] = useState(false);
-    const [emojiName, setEmojiName] = useState<JSX.Element | string>('');
+    const [emojiName, setEmojiName] = useState<string>('');
     const [inputValue, setInputValue] = useState('');
+    const [err, setErr] = useState('');
 
     const likeBtnClicked = async () => {
-        setIsLiked(!isLiked);
 
-        await reactPost({
+        const res = await reactPost({
             studentId: user?._id as string,
-            icon: emojiName as string,
+            icon: "thumbs",
             _id: postObj._id
         });
+
+        if (res.success) {
+            setIsLiked(!isLiked);
+        } else {
+            setErr(res.error || "Some thing went wrong!");
+        };
 
         setEmoji(false);
     };
 
+    const emojiChange = async (icon: string) => {
+        // setIsLiked(!isLiked);
+
+        const res = await reactPost({
+            studentId: user?._id as string,
+            icon: icon,
+            _id: postObj._id
+        });
+
+        if (res.success) {
+            setEmojiName(icon);
+        } else {
+            setErr(res.error || "Some thing went wrong!");
+        };
+    };
+
     useEffect(() => {
         const isLikedFromDb = postObj.reactions.find(element => element.studentId == user?._id);
-        
-        if(isLikedFromDb){
-            isLikedFromDb?.icon == "thumbs" ? 
-            setIsLiked(true)
-            :
-            setEmojiName(isLikedFromDb.icon);
-        }else{
+
+        if (isLikedFromDb) {
+            isLikedFromDb?.icon == "thumbs" ?
+                setIsLiked(true)
+                :
+                setEmojiName(isLikedFromDb.icon);
+        } else {
             setIsLiked(false);
         };
     }, []);
@@ -69,6 +91,20 @@ const Post: React.FC<FbPostsProps> = ({ postObj }) => {
         e.preventDefault();
 
         console.log(inputValue);
+    };
+
+    let emojiIcon: any;
+
+    if (emojiName == "Heart") {
+        emojiIcon = faHeart;
+    } else if (emojiName == "Sad") {
+        emojiIcon = faFaceSadTear;
+    } else if (emojiName == "Angry") {
+        emojiIcon = faFaceAngry;
+    } else if (emojiName == "Haha") {
+        emojiIcon = faFaceLaugh;
+    } else if (emojiName == "Like") {
+        emojiIcon = faThumbsUp;
     };
 
     return (
@@ -84,7 +120,7 @@ const Post: React.FC<FbPostsProps> = ({ postObj }) => {
                 <div className='grid-img-container flex flex-wrap justify-center'>
                     {images.map(element => <img className='m-1' src={element} />)}
                 </div>
-                {emoji && <HoverEmojis emojeeName={setEmojiName} state={setEmoji} />}
+                {emoji && <HoverEmojis emojeeName={setEmojiName} emojiChange={emojiChange} state={setEmoji} />}
             </div>
             <br />
             <div className='icon-container'>
@@ -97,7 +133,10 @@ const Post: React.FC<FbPostsProps> = ({ postObj }) => {
                     className='like-icon'
                     onClick={likeBtnClicked}
                 >
-                    {emojiName ? emojiName : <span className='txt'><FontAwesomeIcon className={!isLiked ? 'like-img' : 'liked-img'} icon={faThumbsUp} /> Like</span>}
+                    {emojiName ? <span className='txt'>
+                        <FontAwesomeIcon className='like-beside-icon heart-icon' icon={emojiIcon} />
+                        {emojiName}
+                    </span> : <span className='txt'><FontAwesomeIcon className={!isLiked ? 'like-img' : 'liked-img'} icon={faThumbsUp} /> Like</span>}
                 </div>
 
                 <div className='txt-input-container'>
