@@ -10,6 +10,8 @@ import { getTeacherClassroom } from '@/lib/actions/auth/classRoom';
 import { cn } from '@/lib/utils';
 import BlurLoader from '@/components/shared/blurLoader'
 import { Button } from "@/components/ui/button";
+import { FormError } from "@/components/shared/form-error"
+import { FormSuccess } from "@/components/shared/form-success"
 import './style.css';
 
 interface ClassRoomId {
@@ -38,6 +40,8 @@ const EditClassroomPage: React.FC<CreateAssignmentPorps> = ({ params: { class_ro
   const [isPending, setIsPending] = useState<boolean>(false);
   const [classRoom, setClassRoom] = useState<any>("");
   const [ students, setStudents ] = useState<Students[]>();
+  const [ errMsg, setErrMsg] = useState<string | undefined>("");
+  const [ successMsg, setSuccessMsg ] = useState<string | undefined>("");
 
   const { data: session, status, update } = useSession({ required: true });
   const user = session?.user;
@@ -83,13 +87,13 @@ useEffect(() => {
       });
       
       if (res?.error) {
-        console.log("error", res.error);
+      setErrMsg(res.error);
       setIsPending(false);
       } else {
         window.location.href = "/teacher-dashboard";
       };
     } catch (error) {
-      console.log("error", error instanceof Error && error.message);
+      setErrMsg(error instanceof Error ? error.message : "Something went wrong!");
       setIsPending(false);
     };
 
@@ -115,16 +119,16 @@ useEffect(() => {
     <div className='main-containers create-class-room-main-container'>
       {isPending && <BlurLoader />}
     <Head>
-        <title>Create Classroom - Your App Name</title>
+        <title>Edit Classroom - SMIT submission portal</title>
         <meta name="description" content="Create a new classroom on Your App Name" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="px-4 py-5 sm:px-6">
-            <h3 className="text-lg font-medium leading-6 text-gray-900">Create Classroom</h3>
+            <h3 className="text-lg font-medium leading-6 text-gray-900">Edit Classroom</h3>
             <p className="mt-1 max-w-2xl text-sm text-gray-500">
-              Fill in the details to create a new classroom and manage connection requests.
+              Fill in the details to update a classroom and manage connection requests.
             </p>
           </div>
           <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
@@ -256,6 +260,8 @@ useEffect(() => {
                 <TagInputComponent tags={tags} 
               disabled={isPending}
                   setTags={handleTagsChange} />
+                  <FormError message={errMsg} />
+                  <FormSuccess message={successMsg} />
               <div className="mt-5 sm:mt-6">
                 <button
                     disabled={isPending}

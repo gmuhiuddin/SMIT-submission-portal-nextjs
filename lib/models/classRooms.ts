@@ -12,7 +12,7 @@ const classRoomSchema = new Schema({
         required: true
     },
     batch: {
-        type: Object,
+        type: Number,
         required: true
     },
     teacher: {

@@ -141,7 +141,6 @@ export const editClassRoom = async (values: EditClassRoom) => {
     const classRoom = await ClassRoom.findByIdAndUpdate(values._id, {
       ...classroomData,
     });
-console.log(classroomData);
 
     values?.studentsEmail?.forEach(async (element, index) => {
       const user = await User.findOne({

@@ -20,6 +20,8 @@ const CreateClassroomPage = () => {
   const [day, setDay] = useState<string | undefined>();
   const [tags, setTags] = useState<{ id: string; value: string }[]>([]);
   const [isPending, setIsPending] = useState<boolean>(false);
+  const [ errMsg, setErrMsg] = useState<string | undefined>("");
+  const [ successMsg, setSuccessMsg ] = useState<string | undefined>("");
 
   const { data: session, status, update } = useSession({ required: true });
   const user = session?.user;
@@ -41,13 +43,13 @@ const CreateClassroomPage = () => {
       });
       
       if (res?.error) {
-        console.log("error", res.error);
+        setErrMsg(res.error);
       setIsPending(false);
       } else {
         window.location.href = "/teacher-dashboard";
       };
     } catch (error) {
-      console.log("error", error instanceof Error && error.message);
+      setErrMsg(error instanceof Error ? error.message : "Something went wrong!");
       setIsPending(false);
     };
 
