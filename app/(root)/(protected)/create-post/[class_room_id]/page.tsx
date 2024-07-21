@@ -139,8 +139,8 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
                     <input placeholder='description' value={description as string} onChange={e => setDescription(e.target.value)} type="text" />
                     {/* <input placeholder='due date' value={dueDate} onChange={e => setDueDate(e.target.value)} type="date" />
                     <input placeholder='content' value={content} onChange={e => setContent(e.target.value)} type="text" /> */}
-                    {imageData?.map(element => {
-                        return <img className="w-20" src={element?.image as string} />
+                    {imageData?.map((element, index) => {
+                        return <img className="w-20" key={index} src={element?.image as string} />
                     })}
                     <input placeholder='Image' accept="image/*" onChange={handleChangeImage} type="file" />
 
