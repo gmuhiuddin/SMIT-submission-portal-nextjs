@@ -244,11 +244,11 @@ useEffect(() => {
                   <p className="block text-sm font-medium text-gray-700">
                     Students
                   </p>
-{students ? students.length ? students.map(element => {
-  return(
-    <p>{element.name}</p>
-  )
-}) : "No students" : "Students fetching"}
+                 {students ? students.length ? students.map(( element, index ) => {
+                  return(
+                    <p key={index}>{element.name}</p>
+                  )
+                  }) : "No students" : "Students fetching"}
                 </div>
                 
                 <div className="sm:col-span-2">
