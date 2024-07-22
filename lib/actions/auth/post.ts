@@ -27,9 +27,8 @@ const nanoid = customAlphabet(
 //     file?: any;
 // }
 
-interface ReactPost {
+interface LikeOrDisLikePost {
     _id: string;
-    icon: string;
     studentId: string;
 }
 
@@ -159,7 +158,7 @@ export const addPost = async (values: FormData) => {
     };
 };
 
-export const reactPost = async (values: ReactPost) => {
+export const likePost = async (values: LikeOrDisLikePost) => {
     try {
         const user = await currentUser();
 
@@ -177,28 +176,48 @@ export const reactPost = async (values: ReactPost) => {
 
         const post = await Post.findById(values._id);
 
-        const reactionIndex = post ? post.reactions.findIndex((element: {
-            studentId?: string;
-            icon?: string;
-        }) => element.studentId == values.studentId) : -1;
+        const reactionIndex = post.reactions.indexOf(values.studentId);
 
-        if (reactionIndex != -1) {
-            post.reactions[reactionIndex].icon = values.icon;
-
-            await post.save();
-        } else {
-            post.reactions.push({
-                icon: values.icon || "thumbs",
-                studentId: values.studentId,
-            });
+        if (post && reactionIndex == -1) {
+            post.reactions.push(values.studentId);
 
             await post.save();
         };
 
-        return { success: "Reaction was added successfully", post };
+        return { success: "Reaction was added successfully" };
     } catch (error) {
         return { error: error instanceof Error ? error.message : "Something went wrong!" };
     };
 };
 
-export const removeReactPost = async () => { };
+export const disLikePost = async (values: LikeOrDisLikePost) => {
+    try {
+        const user = await currentUser();
+
+        if (!user) {
+            return { error: "Unauthorized" };
+        };
+
+        await connectDB();
+
+        const existingUser = await User.findById(user?._id);
+
+        if (!existingUser || existingUser.role == "teacher") {
+            return { error: "Unauthorized" };
+        };
+
+        const post = await Post.findById(values._id);
+
+        const reactionIndex = post.reactions.indexOf(values.studentId);
+        
+        if (post && reactionIndex != -1) {
+            post.reactions.splice(reactionIndex, 1);
+
+            await post.save();
+        };
+
+        return { success: "Reaction was added successfully" };
+    } catch (error) {
+        return { error: error instanceof Error ? error.message : "Something went wrong!" };
+    };
+};

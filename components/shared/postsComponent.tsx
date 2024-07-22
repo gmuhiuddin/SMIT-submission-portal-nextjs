@@ -14,11 +14,13 @@ const PostsComponent: React.FC<{
 }> = ({ posts }) => {
     
     return (
-        <>
+        <div 
+        //  className='main-container'
+        >
         {posts.map((element, index) => {
             return <Post key={index} postObj={element}/>
         })}
-        </>
+        </div>
     );
 };
 
