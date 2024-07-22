@@ -1,22 +1,32 @@
 import React from 'react';
 import Post from '../ui/post';
 
+interface ImageUrl {
+    url?: string;
+    downloadUrl?: string;
+    name?: string;
+}
+
 interface Post {
     title: string;
-    description: string;
-    imageUrls?: string;
-    fileUrls?: string;
     classRoom: string;
+    teacher: string;
+    __v: number;
+    _id: string;
+    description: string;
+    reactions: string[];
+    createdAt: Date;
+    updatedAt: Date;
+    imageUrls?: ImageUrl[];
+    fileUrls?: ImageUrl[];
 }
 
 const PostsComponent: React.FC<{
     posts: Post[];
 }> = ({ posts }) => {
-    
+
     return (
-        <div 
-        //  className='main-container'
-        >
+        <div>
         {posts.map((element, index) => {
             return <Post key={index} postObj={element}/>
         })}

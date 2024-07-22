@@ -2,32 +2,42 @@
 
 import ShowMoreTxt from '../ui/showMoreTxt';
 import React, { useEffect, useState } from 'react';
+import { faDownload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faShareSquare, faComment, faPaperPlane, faHeart, faFaceSadTear, faFaceLaugh, faFaceAngry } from '@fortawesome/free-solid-svg-icons';
 import './style.css';
 import { likePost, disLikePost } from '@/lib/actions/auth/post';
 import { useSession } from 'next-auth/react';
-import { sendComment } from '@/lib/actions/auth/comment';
+import { sendComment } from '@/lib/actions/auth/comment'
+import styles from './DownloadableImage.module.css';
 
-interface Reaction {
-    icon: string;
-    studentId: string;
+interface ImageUrl {
+    url?: string;
+    downloadUrl?: string;
+    name?: string;
 }
 
 interface PostObj {
     title: string;
-    // brand: string;
+    classRoom: string;
+    teacher: string;
+    __v: number;
     _id: string;
     description: string;
-    reactions: Reaction[];
-    // images: string[];
+    reactions: string[];
+    createdAt: Date;
+    updatedAt: Date;
+    imageUrls?: ImageUrl[];
+    fileUrls?: ImageUrl[];
 }
 
-interface FbPostsProps {
+interface PostProps {
     postObj: PostObj;
 }
 
-const Post: React.FC<FbPostsProps> = ({ postObj }) => {
+const Post: React.FC<PostProps> = ({ postObj }) => {
+    console.log(postObj);
+
     const { data: session, status, update } = useSession({ required: true });
     const user = session?.user;
 
@@ -73,7 +83,7 @@ const Post: React.FC<FbPostsProps> = ({ postObj }) => {
     };
 
     useEffect(() => {
-        const isLikedFromDb = postObj.reactions.includes(user?._id);
+        const isLikedFromDb = postObj.reactions.includes(user?._id as string);
 
         if (isLikedFromDb) {
             setIsLiked(true)
@@ -96,7 +106,7 @@ const Post: React.FC<FbPostsProps> = ({ postObj }) => {
             studentId: user?._id as string,
             postId: postObj?._id as string,
         });
-        
+
         if (res?.success) {
             setSuccess("Comment sent successfully");
             setInputValue("");
@@ -110,6 +120,7 @@ const Post: React.FC<FbPostsProps> = ({ postObj }) => {
     return (
         <div className='post-container'>
             <div className='img-name-container'>
+                <h1 className='title-txt'>Title: {postObj.title}</h1>
                 {/* <img className='logo-img' src={postObj.thumbnail} alt='user image' />
                 <span className='user-name'>{postObj.brand}</span> */}
             </div>
@@ -118,11 +129,34 @@ const Post: React.FC<FbPostsProps> = ({ postObj }) => {
             </span>
             <div style={{ position: 'relative', borderTop: '1px solid black' }}>
                 <div className='grid-img-container flex flex-wrap justify-center'>
-                    {images.map(element => <img className='m-1' src={element} />)}
+                    {postObj?.imageUrls?.map(element => {
+                        return (
+                            <div className={styles.imageContainer}>
+                                <img src={element.url} alt={"bala"} />
+                                <a target="_blank" href={element.downloadUrl} download className={styles.downloadIcon}>
+                                    <FontAwesomeIcon icon={faDownload} size="2x" />
+                                </a>
+                            </div>
+                            // <img className='m-1' src={element.url} />
+                        )
+                    })}
+                </div>
+                <div className='grid-img-container flex flex-wrap justify-center'>
+                    {postObj?.fileUrls?.map(element => {
+                        return (
+                            <div className={styles.imageContainer}>
+                                <img src={element.url} alt={"bala"} />
+                                <a target="_blank" href={element.downloadUrl} download className={styles.downloadIcon}>
+                                    <FontAwesomeIcon icon={faDownload} size="2x" />
+                                </a>
+                            </div>
+                            // <img className='m-1' src={element.url} />
+                        )
+                    })}
                 </div>
             </div>
             <br />
-            <div className='icon-container'>
+            <div className='like-comment-container'>
                 {likeBtnIsProcessing
                     ?
                     <div className="btn_spinner_container">

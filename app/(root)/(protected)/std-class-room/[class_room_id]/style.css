@@ -5,3 +5,9 @@
     padding-left: 3px;
     padding-right: 3px;
 }
+
+@media screen and (width <= 701px) {
+    .class-room-container{
+        width: 98vw !important;
+    }
+}

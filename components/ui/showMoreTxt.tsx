@@ -10,10 +10,10 @@ const ShowMoreLessText: React.FC<{
 
   return (
     <div>
-      <p>{displayText}</p>
+      <p>Description: {displayText}</p>
       {text.length > maxLength && (
         <span style={{ color: 'blue', cursor: 'pointer' }} onClick={() => setShowFullText(!showFullText)}>
-          {showFullText ? 'Show less' : 'Show more'}
+         {showFullText ? 'Show less' : 'Show more'}
         </span>
       )}
     </div>

@@ -1,65 +1,92 @@
 @media only screen and (max-width: 781px) {
-
-  .like-img,
-  .comment-img,
-  .share-img {
-    font-size: 23px !important;
-    margin-right: 9.5px;
+  .post-container {
+    font-size: 17px;
   }
 }
 
 @media only screen and (max-width: 701px) {
+  .post-container {
+    font-size: 15px;
+  }
 
-  .like-img,
-  .comment-img,
-  .share-img {
-    font-size: 21px !important;
-    margin-right: 9px;
+  .user-comment-txt {
+    width: 20em !important;
   }
 }
 
-@media only screen and (max-width: 601px) {
-
-  .like-img,
-  .comment-img,
-  .share-img {
-    font-size: 17px !important;
-    margin-right: 9px;
+@media only screen and (max-width: 651px) {
+  .post-container {
+    font-size: 12px;
   }
-}
 
-@media only screen and (max-width: 501px) {
+  .user-comment-txt {
+    width: 14em !important;
+  }
 
-  .like-img,
-  .comment-img,
-  .share-img {
+  .like_button, .liked_button {
+    padding: 7px 15px !important;
     font-size: 14px !important;
-    margin-right: 7px;
   }
 }
 
-@media only screen and (max-width: 471px) {
+@media only screen and (max-width: 521px) {
+  .post-container {
+    font-size: 9px;
+  }
 
-  .like-img,
-  .comment-img,
-  .share-img {
-    font-size: 12px !important;
-    margin-right: 6px;
+  .user-comment-txt {
+    width: 9em !important;
+  }
+  
+  .like_button, .liked_button {
+    padding: 5px 11px !important;
+    font-size: 11px !important;
+  }
+
+  .send-btn {
+    font-size: 15px !important;
+    padding: 5px 7px;
   }
 }
 
-@media only screen and (max-width: 399px) {
+@media only screen and (max-width: 381px) {
+  .post-container {
+    font-size: 7px;
+  }
 
-  .like-img,
-  .comment-img,
-  .share-img {
-    font-size: 10.5px !important;
-    margin-right: 5px;
+  .user-comment-txt {
+    width: 9em !important;
+    font-size: 11px !important;
+  }
+  
+  .like_button, .liked_button {
+    padding: 5px !important;
+  }
+
+  .send-btn {
+    font-size: 13px !important;
+    padding: 5px;
   }
 }
 
-.main-container{
-  font-size: 10px;
+@media only screen and (max-width: 307px) {
+  .post-container {
+    font-size: 6px;
+  }
+
+  .user-comment-txt {
+    width: 7em !important;
+    padding: 5px !important;
+  }
+  
+  .like_button, .liked_button {
+    padding: 5px !important;
+  }
+
+  .send-btn {
+    font-size: 9px !important;
+    padding: 3px;
+  }
 }
 
 .container {
@@ -98,74 +125,32 @@
   margin: 0 3px;
 }
 
+.grid-img-container img{
+  width: 13em;
+}
+
 .desc-txt {
   display: block;
   width: 99%;
-  margin: 3px;
+  margin: 3px 7px;
   overflow-wrap: break-word;
+  font-size: 1em;
 }
 
-#loader {
+.title-txt{
+  display: block;
+  width: 99%;
+  margin: 5px 7px;
+  overflow-wrap: break-word;
+  font-size: 1.2em;
+  font-weight: 700;
+}
+
+.like-comment-container{
+  border-top: 1px solid gray;
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.loader {
-  width: 191px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background:
-    radial-gradient(farthest-side, rgb(55, 25, 207) 94%, #0000) top/8px 8px no-repeat,
-    conic-gradient(#0000 30%, rgb(55, 25, 207));
-  -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 23px), #000 0);
-  animation: l13 1s infinite linear;
-}
-
-@keyframes l13 {
-  100% {
-    transform: rotate(1turn)
-  }
-}
-
-.icon-container {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  border-top: 0.3px solid rgb(193, 193, 193);
-  padding-top: 3px;
-}
-
-.like-icon,
-.share-icon,
-.comment-icon {
-  flex-grow: 1;
-  padding: 5px 0px;
-  border-radius: 7.5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.like-icon:hover,
-.share-icon:hover,
-.comment-icon:hover {
-  transition: 900ms;
-  background-color: rgb(217, 211, 211);
-}
-
-.like-img,
-.comment-img,
-.share-img {
-  transition: 800ms;
-  font-size: 25px;
-  margin-right: 13px;
-}
-
-.txt {
-  margin-top: 3px;
-  font-size: 21px;
+  padding: 7px;
 }
 
 .txt-input-container {

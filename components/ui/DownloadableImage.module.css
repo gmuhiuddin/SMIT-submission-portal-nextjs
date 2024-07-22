@@ -1,0 +1,28 @@
+.imageContainer {
+    position: relative;
+    margin: 7px;
+  }
+  
+  .image {
+    border-radius: 8px; /* Optional: Adjust to add rounded corners */
+  }
+  
+  .downloadIcon {
+    position: absolute;
+    top: 10px; /* Adjust as needed */
+    right: 15px; /* Adjust as needed */
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .downloadIcon:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  
