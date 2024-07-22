@@ -132,20 +132,19 @@ const Post: React.FC<PostProps> = ({ postObj }) => {
                     {postObj?.imageUrls?.map(element => {
                         return (
                             <div className={styles.imageContainer}>
-                                <img src={element.url} alt={"bala"} />
+                                <img src={element.url} alt={element.name} />
                                 <a target="_blank" href={element.downloadUrl} download className={styles.downloadIcon}>
                                     <FontAwesomeIcon icon={faDownload} size="2x" />
                                 </a>
                             </div>
-                            // <img className='m-1' src={element.url} />
                         )
                     })}
                 </div>
                 <div className='grid-img-container flex flex-wrap justify-center'>
                     {postObj?.fileUrls?.map(element => {
                         return (
-                            <div className={styles.imageContainer}>
-                                <img src={element.url} alt={"bala"} />
+                            <div className={styles.fileContainer}>
+                                <img src={element.url} alt={element.name} />
                                 <a target="_blank" href={element.downloadUrl} download className={styles.downloadIcon}>
                                     <FontAwesomeIcon icon={faDownload} size="2x" />
                                 </a>

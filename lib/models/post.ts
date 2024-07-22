@@ -20,7 +20,7 @@ const postSchema = new Schema({
         required: true
     },
     imageUrls: [],
-    FileUrls: [],
+    fileUrls: [],
     reactions: []
 },
     {

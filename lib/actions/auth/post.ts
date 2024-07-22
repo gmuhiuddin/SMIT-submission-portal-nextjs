@@ -81,14 +81,14 @@ export const addPost = async (values: FormData) => {
             teacher?: any;
             imageDownloadUrls?: any;
             imageUrls?: any;
-            FileUrls?: any;
+            fileUrls?: any;
         } = {
             title: values.get("title"),
             description: values.get("description"),
             classRoom: values.get("classRoom"),
             teacher: values.get("teacher"),
             imageUrls: [],
-            FileUrls: [],
+            fileUrls: [],
         };
 
         const imagesLengthStr = values.get("image-length") || 0;
@@ -130,7 +130,7 @@ export const addPost = async (values: FormData) => {
                     access: "public",
                 });
 
-                postData?.FileUrls.push({
+                postData?.fileUrls.push({
                     name: file.name,
                     url: blob?.url,
                     downloadUrl: blob?.downloadUrl,
