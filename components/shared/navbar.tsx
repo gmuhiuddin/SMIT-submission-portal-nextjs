@@ -13,13 +13,13 @@ export const Navbar = async () => {
     <header className="w-full fixed z-10 top-0 bg-gray-100 dark:bg-gray-900 border-b border-gray-200">
       <nav className="h-16 px-4 flex items-center">
         <Link href="/">
-          <SiAuth0 />
+          <img width={89} src="https://quiz.saylaniwelfare.com/images/smit.png" alt="SMIT-logo" />
         </Link>
-        <MainNav />
+        {/* <MainNav /> */}
         <div className="ml-auto flex items-center space-x-4">
-          <UserButton />
           {session?.user?.role == "teacher" && <Link href="/create-classroom"><Button size="lg">Create classroom</Button></Link>}
-          <ModeToggle />
+          <UserButton />
+          {/* <ModeToggle /> */}
         </div>
       </nav>
     </header>

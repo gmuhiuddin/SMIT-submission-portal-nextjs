@@ -36,12 +36,10 @@ interface PostProps {
 }
 
 const Post: React.FC<PostProps> = ({ postObj }) => {
-    console.log(postObj);
 
     const { data: session, status, update } = useSession({ required: true });
     const user = session?.user;
-
-    const images = ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1Dw7-4lVfRq74_YEiPEt4e-bQ0_6UA2y73Q&s", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1Dw7-4lVfRq74_YEiPEt4e-bQ0_6UA2y73Q&s", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1Dw7-4lVfRq74_YEiPEt4e-bQ0_6UA2y73Q&s"];
+    
     const [isLiked, setIsLiked] = useState(false);
     const [likeBtnIsProcessing, setLikeBtnIsProcessing] = useState(false);
     const [commentSentIsProcessing, setCommentSentIsProcessing] = useState(false);

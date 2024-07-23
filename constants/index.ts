@@ -7,9 +7,9 @@ export const mainNavLinks = [
 
 export const footerLinks = [
   {
-    title: "Shop",
+    title: "SMIt submission portal",
     links: [
-      { title: "New Arrivals", url: "/" },
+      { title: "Dashboard", url: "/" },
       { title: "Best Sellers", url: "/" },
       { title: "Sales", url: "/" },
       { title: "Categories", url: "/" }

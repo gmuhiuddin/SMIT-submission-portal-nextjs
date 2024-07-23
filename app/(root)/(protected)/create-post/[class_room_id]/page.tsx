@@ -1,16 +1,15 @@
-"use client"
+"use client";
 
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { put } from '@vercel/blob';
-// import { revalidatePath } from 'next/cache';
 import { getTeacherClassroom } from '@/lib/actions/auth/classRoom';
 import { useSession } from 'next-auth/react';
-import { FormError } from "@/components/shared/form-error"
-import { FormSuccess } from "@/components/shared/form-success"
-import { Button } from '@mui/material';
+import { FormError } from "@/components/shared/form-error";
+import { FormSuccess } from "@/components/shared/form-success";
+import { Button as MaterialBtn } from '@mui/material';
 import { addPost } from '@/lib/actions/auth/post';
-import BlurLoader from '@/components/shared/blurLoader'
-// import MultiInput from '@/components/ui/MultiInput'
+import BlurLoader from '@/components/shared/blurLoader';
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface ClassRoomId {
     class_room_id: string | number;
@@ -163,41 +162,50 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
     if (!Object.keys(classRoom).length) return <p>404</p>;
 
     return (
-        <div className='flex justify-center w-full bg-#000'>
-            {isPending && <BlurLoader />}
-            <div className='flex p-6 bg-#000'>
-                <form className='flex-col flex' onSubmit={handleCreatePost}>
-                    <input placeholder='Title' value={title as string} onChange={e => setTitle(e.target.value)} type="text" />
-                    <input placeholder='description' value={description as string} onChange={e => setDescription(e.target.value)} type="text" />
-                    {/* <input placeholder='due date' value={dueDate} onChange={e => setDueDate(e.target.value)} type="date" />
+        <>
+            <Link href="/">
+                <Button
+                    size="lg"
+                    className="mt-16 absolute left-3 top-3 text-white px-4 py-2 rounded-md"
+                >
+                    Go Dashboard
+                </Button></Link>
+            <div className='flex justify-center w-full bg-#000'>
+                {isPending && <BlurLoader />}
+                <div className='flex p-6 bg-#000'>
+                    <form className='flex-col flex' onSubmit={handleCreatePost}>
+                        <input placeholder='Title' value={title as string} onChange={e => setTitle(e.target.value)} type="text" />
+                        <input placeholder='description' value={description as string} onChange={e => setDescription(e.target.value)} type="text" />
+                        {/* <input placeholder='due date' value={dueDate} onChange={e => setDueDate(e.target.value)} type="date" />
                     <input placeholder='content' value={content} onChange={e => setContent(e.target.value)} type="text" /> */}
-                    <input placeholder='Image' accept="image/*" onChange={handleChangeImage} type="file" />
-                    {imageData?.map((element, index) => {
-                        return (
-                            <>
-                                <img className="w-20" key={index} src={element?.image as string} />
-                                <p className='cursor-pointer' onClick={() => deleteImage(index)}>x</p>
-                            </>
-                        )
-                    })}
+                        <input placeholder='Image' accept="image/*" onChange={handleChangeImage} type="file" />
+                        {imageData?.map((element, index) => {
+                            return (
+                                <>
+                                    <img className="w-20" key={index} src={element?.image as string} />
+                                    <p className='cursor-pointer' onClick={() => deleteImage(index)}>x</p>
+                                </>
+                            )
+                        })}
 
-                    <input accept=".pdf,.doc,.gif,.txt" className="h-12" placeholder='File' onChange={handleChangeFile} type="file" />
-                    {files?.files?.map((element, index) => {
-                        return (
-                            <p key={index}>{element?.name} <span className='cursor-pointer' onClick={() => deleteFile(index)}>x</span></p>
-                        )
-                    })}
-                    <FormError message={errMsg} />
-                    <FormSuccess message={successMsg} />
-                    <Button
-                        className="mt-16 bg-black hover:bg-zinc-700 text-white px-4 py-2 rounded-md"
-                        type="submit"
-                    >
-                        Create assignment
-                    </Button>
-                </form>
+                        <input accept=".pdf,.doc,.gif,.txt" className="h-12" placeholder='File' onChange={handleChangeFile} type="file" />
+                        {files?.files?.map((element, index) => {
+                            return (
+                                <p key={index}>{element?.name} <span className='cursor-pointer' onClick={() => deleteFile(index)}>x</span></p>
+                            )
+                        })}
+                        <FormError message={errMsg} />
+                        <FormSuccess message={successMsg} />
+                        <MaterialBtn
+                            className="mt-16 bg-black hover:bg-zinc-700 text-white px-4 py-2 rounded-md"
+                            type="submit"
+                        >
+                            Create assignment
+                        </MaterialBtn>
+                    </form>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

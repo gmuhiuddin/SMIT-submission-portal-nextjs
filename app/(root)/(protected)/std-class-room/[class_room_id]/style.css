@@ -1,13 +1,19 @@
 .class-room-container{
     padding-top: 67px;
     height: 100%;
-    width: 100vw;
+    width: 98vw;
     padding-left: 3px;
     padding-right: 3px;
 }
 
-@media screen and (width <= 701px) {
+@media screen and (width <= 893px) {
     .class-room-container{
-        width: 98vw !important;
+        width: 95vw !important;
+    }
+}
+
+@media screen and (width <= 357px) {
+    .class-room-container{
+        width: 93vw !important;
     }
 }
