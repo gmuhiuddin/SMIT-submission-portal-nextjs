@@ -24,7 +24,7 @@ interface Post {
 }
 
 const PostsComponent: React.FC<{
-    classRoomId: string;
+    classRoomId: string | number;
     posts: Post[];
 }> = ({ posts, classRoomId }) => {
 
