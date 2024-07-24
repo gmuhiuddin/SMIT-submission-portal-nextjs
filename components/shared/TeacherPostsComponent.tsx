@@ -1,5 +1,5 @@
 import React from 'react';
-import Post from '../ui/post';
+import PostForTeacher from '../ui/postForTeacher';
 
 interface ImageUrl {
     url?: string;
@@ -28,7 +28,7 @@ const PostsComponent: React.FC<{
     return (
         <div>
         {posts.length ? posts.map((element, index) => {
-            return <Post key={index} postObj={element}/>
+            return <PostForTeacher key={index} postObj={element}/>
         }) : "No posts"}
         </div>
     );

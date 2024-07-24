@@ -221,3 +221,33 @@ export const disLikePost = async (values: LikeOrDisLikePost) => {
         return { error: error instanceof Error ? error.message : "Something went wrong!" };
     };
 };
+
+export const deletePost = async (value: string) => {
+    try {
+        const user = await currentUser();
+
+        if (!user) {
+            return { error: "Unauthorized" };
+        };
+
+        await connectDB();
+
+        const existingUser = await User.findById(user?._id);
+
+        if (!existingUser || existingUser.role == "student") {
+            return { error: "Unauthorized" };
+        };
+
+        const post = await Post.findById(value);
+        
+        if (post) {
+            post.isDeleted = true;
+
+            await post.save();
+        };
+
+        return { success: "Post was delete successfully" };
+    } catch (error) {
+        return { error: error instanceof Error ? error.message : "Something went wrong!" };
+    };
+};

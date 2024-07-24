@@ -153,10 +153,31 @@
   padding: 7px;
 }
 
-.txt-input-container {
+.txt-input-container, .comment-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  max-height: 99px;
+  width: 78%;
+  margin-left: 9px;
+  overflow-y: auto;
+}
+
+::-webkit-scrollbar {
+  width: 8px; /* Set the width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Background of the scrollbar track */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d3d3d3; /* Color of the scrollbar thumb */
+  border-radius: 4px; /* Optional: Add border-radius for rounded corners */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b3b3b3; /* Color of the scrollbar thumb when hovered */
 }
 
 .comment-user-img {
@@ -165,8 +186,18 @@
   border-radius: 50%;
 }
 
+.std-comment-txt{
+  background-color: rgb(194, 194, 194);
+  color: black;
+  max-width: 99%;
+  padding: 3px 7px;
+  margin-left: 25px;
+  overflow-wrap: break-word;
+  border-radius: 12px;
+}
+
 .user-comment-txt {
-  width: 23em;
+  width: 21em;
   padding: 6.5px;
   border-radius: 19px;
   border: none;
@@ -177,12 +208,27 @@
 }
 
 .send-btn {
-  font-size: 17px;
+  font-size: 19px;
   margin: 0px 3px;
   box-shadow: 0px 0px 7px gray;
-  padding: 7px 11px;
+  padding: 7px 5px;
   cursor: pointer;
   border-radius: 9px;
+}
+
+.btn-for-show-likes{
+  background: #ffffff;
+  color: rgb(0, 0, 0);
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  position: relative;
+  box-shadow: 0px 0px 5px rgb(200, 200, 200);
+  margin-right: 3px;
+  z-index: 1;
+  height: 45px;
+  cursor: none;
 }
 
 @media only screen and (max-width: 1071px) {

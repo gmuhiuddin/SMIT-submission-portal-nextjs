@@ -223,6 +223,7 @@ export const getTeacherClassroom = async (classRoomId?: string | number) => {
 
     const posts = await Post.find({
       classRoom: classRoom._id,
+      isDeleted: false
     });
 
     return { success: "Class was create", classRoom, students, posts };
@@ -284,6 +285,7 @@ export const getStudentClassroom = async (classRoomId?: string | number) => {
 
     const posts = await Post.find({
       classRoom: classRoom._id,
+      isDeleted: false
     });
 
     return { success: "Class was create", classRoom, posts, assignments };

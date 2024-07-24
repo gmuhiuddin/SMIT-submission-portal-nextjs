@@ -39,7 +39,7 @@ const Post: React.FC<PostProps> = ({ postObj }) => {
 
     const { data: session, status, update } = useSession({ required: true });
     const user = session?.user;
-    
+
     const [isLiked, setIsLiked] = useState(false);
     const [likeBtnIsProcessing, setLikeBtnIsProcessing] = useState(false);
     const [commentSentIsProcessing, setCommentSentIsProcessing] = useState(false);
@@ -169,16 +169,18 @@ const Post: React.FC<PostProps> = ({ postObj }) => {
                 }
 
                 <div className='txt-input-container'>
-                    <form onSubmit={handleSendComment}>
+                    <form onSubmit={handleSendComment} className='flex items-center'>
                         <input required onChange={(e) => setInputValue(e.target.value)} value={inputValue} placeholder='Write a comment...' type='text' className='user-comment-txt' />
-                        <input style={{ display: 'none' }} id='submit-btn' type='submit' />
                         {commentSentIsProcessing
                             ?
                             <div className='btn_spinner_container'>
                                 <div className="btn_spinner"></div>
                             </div>
                             :
-                            <label htmlFor='submit-btn' className='send-btn'>Send</label>
+                            <>
+                                <input style={{ display: 'none' }} id={`post-btn-${postObj._id}`} type='submit' />
+                                <label htmlFor={`post-btn-${postObj._id}`} className='send-btn'>Send</label>
+                            </>
                         }
                     </form>
                 </div>
