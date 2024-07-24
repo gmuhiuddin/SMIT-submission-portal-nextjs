@@ -127,9 +127,9 @@ const Post: React.FC<PostProps> = ({ postObj }) => {
             </span>
             <div style={{ position: 'relative', borderTop: '1px solid black' }}>
                 <div className='grid-img-container flex flex-wrap justify-center'>
-                    {postObj?.imageUrls?.map(element => {
+                    {postObj?.imageUrls?.map((element, index) => {
                         return (
-                            <div className={styles.imageContainer}>
+                            <div key={index} className={styles.imageContainer}>
                                 <img src={element.url} alt={element.name} />
                                 <a target="_blank" href={element.downloadUrl} download className={styles.downloadIcon}>
                                     <FontAwesomeIcon icon={faDownload} size="2x" />
@@ -139,9 +139,9 @@ const Post: React.FC<PostProps> = ({ postObj }) => {
                     })}
                 </div>
                 <div className='grid-img-container flex flex-wrap justify-center'>
-                    {postObj?.fileUrls?.map(element => {
+                    {postObj?.fileUrls?.map((element, index) => {
                         return (
-                            <div className={styles.fileContainer}>
+                            <div key={index} className={styles.fileContainer}>
                                 <img src={element.url} alt={element.name} />
                                 <a target="_blank" href={element.downloadUrl} download className={styles.downloadIcon}>
                                     <FontAwesomeIcon icon={faDownload} size="2x" />
