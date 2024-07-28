@@ -5,7 +5,7 @@ const { model, Schema, models } = mongoose;
 const assignmentSchema = new Schema({
     teacher: {
         type: String,
-        required: true,
+        required: true
     },
     classRoom: {
         type: String,
@@ -19,13 +19,12 @@ const assignmentSchema = new Schema({
         type: String,
         required: true
     },
-    webScrnShot: String,
     description: {
         type: String,
         required: true
     },
-    content: {
-        type: String,
+    formFields: {
+        type: [],
         required: true
     }
 },

@@ -34,7 +34,10 @@ const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ asisgnments, 
                 </Button></Link>
             {asisgnments.length ? asisgnments.map((element: any, index: number) => {
                 return (
-                    <div key={index}>{element.title}</div>
+                    <div key={index}>
+                        {element.title}
+                        <Link href={`/assignment/${element._id}`}><Button className="ml-3">See activity</Button></Link>
+                    </div>
                 )
             }) : "No assignment"}
         </div>
