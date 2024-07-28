@@ -10,7 +10,7 @@ const TeacherDashboard = async () => {
   const user = await currentUser();
 
   const classRooms = await getTeacherClassrooms();
-  
+
   return (
     <div className="flex justify-center flex-wrap class-room-main-container">
 
@@ -45,9 +45,9 @@ const TeacherDashboard = async () => {
           </Box>
         )
       })
-    :
-    "No class rooms"
-    }
+        :
+        "No class rooms"
+      }
     </div>
   );
 };
