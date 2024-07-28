@@ -1,0 +1,44 @@
+.signup-main-container{
+    position: absolute;
+    top: 9%;
+}
+
+.signup-card{
+    width: 25em;
+}
+
+@media screen and (max-height: 854px) {
+    .signup-main-container{
+        top: 13%;
+    }
+}
+
+@media screen and (max-height: 515px) {
+    .signup-main-container{
+        top: 17%;
+    }
+}
+
+@media screen and (max-height: 429px) {
+    .signup-main-container{
+        top: 21%;
+    }
+}
+
+@media screen and (max-height: 325px) {
+    .signup-main-container{
+        top: 27%;
+    }
+}
+
+@media screen and (max-height: 245px) {
+    .signup-main-container{
+        top: 33%;
+    }
+}
+
+@media screen and (max-height: 205px) {
+    .signup-main-container{
+        top: 39%;
+    }
+}

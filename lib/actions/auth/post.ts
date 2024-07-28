@@ -95,6 +95,8 @@ export const addPost = async (values: FormData) => {
         const imagesLength = +imagesLengthStr;
         const filesLengthStr = values.get("file-length") || 0;
         const filesLength = +filesLengthStr;
+        const createdFilesLengthStr = values.get("created-files-length") || 0;
+        const createdFilesLength = +createdFilesLengthStr;
 
         for (let i = 0; i < imagesLength; i++) {
             const image = values.get(`image-${i + 1}`);
@@ -138,9 +140,32 @@ export const addPost = async (values: FormData) => {
             };
         };
 
+        for (let i = 0; i < createdFilesLength; i++) {
+            const file = values.get(`created-files-${i + 1}`);
+
+            if (file instanceof File && file.size > 0) {
+                const fileContentType = "text/html";
+
+                const filename = `${nanoid()}.${fileContentType.split("/")[1]}`;
+
+                const blob = await put(filename, file, {
+                    contentType: fileContentType,
+                    access: "public",
+                });
+                console.log("blob", blob);
+
+                postData?.fileUrls.push({
+                    name: file?.name,
+                    type: "text/html",
+                    url: blob?.url,
+                    downloadUrl: blob?.downloadUrl,
+                });
+            };
+        };
+
         if (Object.keys(postData).length < 5) {
             return { error: "All fields are required" };
-        }
+        };
 
         await Post.create({
             ...postData,
@@ -209,7 +234,7 @@ export const disLikePost = async (values: LikeOrDisLikePost) => {
         const post = await Post.findById(values._id);
 
         const reactionIndex = post.reactions.indexOf(values.studentId);
-        
+
         if (post && reactionIndex != -1) {
             post.reactions.splice(reactionIndex, 1);
 
@@ -239,7 +264,7 @@ export const deletePost = async (value: string) => {
         };
 
         const post = await Post.findById(value);
-        
+
         if (post) {
             post.isDeleted = true;
 

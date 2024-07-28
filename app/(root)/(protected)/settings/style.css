@@ -1,0 +1,44 @@
+.setting-main-container{
+    position: absolute;
+    top: 9%;
+}
+
+.setting-card{
+    width: 25em;
+}
+
+@media screen and (max-height: 854px) {
+    .setting-main-container{
+        top: 13%;
+    }
+}
+
+@media screen and (max-height: 515px) {
+    .setting-main-container{
+        top: 17%;
+    }
+}
+
+@media screen and (max-height: 429px) {
+    .setting-main-container{
+        top: 21%;
+    }
+}
+
+@media screen and (max-height: 325px) {
+    .setting-main-container{
+        top: 27%;
+    }
+}
+
+@media screen and (max-height: 245px) {
+    .setting-main-container{
+        top: 33%;
+    }
+}
+
+@media screen and (max-height: 205px) {
+    .setting-main-container{
+        top: 39%;
+    }
+}

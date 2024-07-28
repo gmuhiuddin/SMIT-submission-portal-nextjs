@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { getTeacherClassroom } from '@/lib/actions/auth/classRoom';
 import { useSession } from 'next-auth/react';
 import { FormError } from "@/components/shared/form-error";
@@ -10,6 +10,7 @@ import { addPost } from '@/lib/actions/auth/post';
 import BlurLoader from '@/components/shared/blurLoader';
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import RichTextExample from '@/components/shared/TextEditor';
 
 interface ClassRoomId {
     class_room_id: string | number;
@@ -44,11 +45,18 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
     const [classRoom, setClassRoom] = useState<any>("");
     const [errMsg, setErr] = useState<string>("");
     const [successMsg, setSuccess] = useState<string>("");
-    const [filesData, setFilesData] = useState<ImagesData[]>([]);
     const [imageData, setImagesData] = useState<ImagesData[]>([]);
     const [files, setFiles] = useState<Images>({ files: [] });
     const [images, setImages] = useState<Images>({ files: [] });
     const [isPending, setIsPending] = useState<boolean>(false);
+    const [createFile, setCreateFile] = useState<boolean>(false);
+    const [createdFiles, setCreatedFiles] = useState<{
+        files: {
+            name?: string;
+            type?: string;
+            content?: string;
+        }[]
+    }>({ files: [] });
 
     const handleCreatePost = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -60,9 +68,16 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
             const formData = new FormData();
 
             formData.append('image-length', images.files.length.toString());
+            formData.append('created-files-length', createdFiles.files.length.toString());
             formData.append('file-length', files?.files?.length.toString());
             images?.files.forEach((element, index) => {
                 formData.append(`image-${index + 1}`, element);
+            });
+            createdFiles?.files.forEach((element, index) => {
+                if (element.content && element.name){
+                    const blob = new Blob([element?.content], { type: 'text/html' });
+                    formData.append(`created-files-${index + 1}`, blob, element.name);
+                };
             });
             files?.files.forEach((element, index) => {
                 formData.append(`file-${index + 1}`, element);
@@ -110,9 +125,6 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
             } else {
                 setFiles({ files: [...files?.files, file] });
                 const reader = new FileReader();
-                reader.onload = (e) => {
-                    setFilesData((prev) => ([...prev, { image: e.target?.result as string }]))
-                };
                 reader.readAsDataURL(file);
             }
         }
@@ -147,19 +159,30 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
     };
 
     const deleteFile = (index: number) => {
-        const filesCopy = [...filesData];
         const filesFileCopy = [...files.files];
 
         filesFileCopy.splice(index, 1);
-        filesCopy.splice(index, 1);
 
         setFiles({ files: filesFileCopy });
-        setFilesData(filesCopy);
+    };
+
+    const deleteCreatedFile = (index: number) => {
+        const filesFileCopy = [...createdFiles.files];
+
+        filesFileCopy.splice(index, 1);
+
+        setCreatedFiles({ files: filesFileCopy });
+    };
+
+    const handleChangeCreatedFiles = (data: { name: string; type: string; content: string }) => {
+        setCreatedFiles({ files: [...createdFiles?.files, data] });
     };
 
     if (!classRoom) return <p>loading</p>;
 
     if (!Object.keys(classRoom).length) return <p>404</p>;
+
+    if (createFile) return <RichTextExample setCreatedFiles={handleChangeCreatedFiles} closeRichEditor={() => setCreateFile(false)} />;
 
     return (
         <>
@@ -189,9 +212,23 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
                         })}
 
                         <input accept=".pdf,.doc,.gif,.txt" className="h-12" placeholder='File' onChange={handleChangeFile} type="file" />
+                        <p>or</p>
+                        <MaterialBtn
+                            className="mt-1 bg-black hover:bg-zinc-700 text-white px-4 py-2 rounded-md"
+                            onClick={() => setCreateFile(true)}
+                        >
+                            Create file
+                        </MaterialBtn>
                         {files?.files?.map((element, index) => {
                             return (
                                 <p key={index}>{element?.name} <span className='cursor-pointer' onClick={() => deleteFile(index)}>x</span></p>
+                            )
+                        })}
+                        {createdFiles?.files?.map((element, index) => {
+                            return (
+                                <p key={index}>{element?.name}
+                                    <iframe srcDoc={element.content} style={{ width: '100%', height: 'auto', border: '1px solid #ccc' }} />
+                                    <span className='cursor-pointer' onClick={() => deleteCreatedFile(index)}>x</span></p>
                             )
                         })}
                         <FormError message={errMsg} />
@@ -200,7 +237,7 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
                             className="mt-16 bg-black hover:bg-zinc-700 text-white px-4 py-2 rounded-md"
                             type="submit"
                         >
-                            Create assignment
+                            Create post
                         </MaterialBtn>
                     </form>
                 </div>

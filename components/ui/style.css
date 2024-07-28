@@ -228,7 +228,7 @@
   margin-right: 3px;
   z-index: 1;
   height: 45px;
-  cursor: none;
+  cursor: auto;
 }
 
 @media only screen and (max-width: 1071px) {

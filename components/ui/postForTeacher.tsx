@@ -43,8 +43,6 @@ interface Comment {
 }
 
 const Post: React.FC<PostProps> = ({ postObj }) => {
-    console.log(postObj);
-
     const { data: session, status, update } = useSession({ required: true });
     const user = session?.user;
 
