@@ -1,6 +1,6 @@
 import React from "react";
 import { FaTrash, FaExclamationTriangle } from "react-icons/fa";
-import { getTeacherAssignment } from "@/lib/actions/auth/assignment";
+import { getStudentAssignment } from "@/lib/actions/auth/assignment";
 
 interface Assignment {
     params: {
@@ -9,7 +9,7 @@ interface Assignment {
 }
 
 const Assignment: React.FC<Assignment> = async ({ params: { class_room_id } }) => {
-    const assignment: any = await getTeacherAssignment(class_room_id);
+    const assignment: any = await getStudentAssignment(class_room_id);
 
     if (!assignment?.success) return <p>404</p>;
 

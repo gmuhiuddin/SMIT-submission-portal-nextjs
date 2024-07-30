@@ -14,7 +14,8 @@ export const userSchema = new mongoose.Schema({
     type: String
   },
   image: {
-    type: String
+    type: String,
+    default: ""
   },
   role: {
     type: String,
@@ -45,7 +46,7 @@ userSchema.pre("save", function (next) {
   // };
 
   const originalValue = this.get('role');
-  
+
   if (this.isModified("role") && originalValue !== "undefined") {
     return { error: "Role cannot be changeble" };
   };

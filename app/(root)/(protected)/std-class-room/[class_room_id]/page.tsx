@@ -31,6 +31,7 @@ const ClassRoom: React.FC<ClassRoomInterface> = async ({ params: { class_room_id
     const user = await currentUser();
 
     const classRoom = await getStudentClassroom(class_room_id);
+
     if (!classRoom?.success) return <p>404</p>;
 
     const tabs = [

@@ -1,46 +1,36 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 interface Assignment {
     _id: string;
-    teacher: "123456",
-    classRoom: "123456",
-    dueDate: "2024-07-25",
-    title: "Olx clone",
-    description: "bla bla bla",
-    webScrnShot: "https://quiz.saylaniwelfare.com/images/smit.png",
-    content: "https://quiz.saylaniwelfare.com/images/smit.png"
+    teacher?: string | number,
+    classRoom?: string | number,
+    dueDate?: string,
+    title?: string,
+    description?: string,
+    formFields?: any;
 };
 
 interface AssignmentComponentProps {
-    asisgnments: Assignment[];
+    asisgnments?: Assignment[] | any;
 };
 
 const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ asisgnments }) => {
     console.log("asisgnments", asisgnments);
 
-    const assignmentsArr = [
-        {
-            teacher: "123456",
-            classRoom: "123456",
-            dueDate: "2024-07-25",
-            title: "Olx clone",
-            description: "bla bla bla",
-            webScrnShot: "https://quiz.saylaniwelfare.com/images/smit.png",
-            content: "https://quiz.saylaniwelfare.com/images/smit.png"
-        }
-    ];
-
     return (
         <div>
-            {assignmentsArr.map((element, index) => {
+            {asisgnments.length ? asisgnments.map((element: any, index: number) => {
                 return (
-                    <div key={index} className="w-full bg-green-400 p-2 rounded">
-                    {element.title}
+                    <div key={index}>
+                        {element.title}
+                        <Link href={`/std-assignment/${element._id}`}><Button className="ml-3">See activity</Button></Link>
                     </div>
                 )
-            })}
+            }) : "No assignment"}
         </div>
     );
 };

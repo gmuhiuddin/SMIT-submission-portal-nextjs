@@ -13,9 +13,11 @@ export const routes = {
   student: [
     "/student-dashboard",
     "/std-class-room/:class_room_id",
+    "/std-assignment/:class_room_id",
   ],
   teacher: [
     "/teacher-dashboard",
+    "/assignment/:class_room_id",
     "/create-classroom",
     "/class-room/:class_room_id",
     "/crate-assignment/:class_room_id",

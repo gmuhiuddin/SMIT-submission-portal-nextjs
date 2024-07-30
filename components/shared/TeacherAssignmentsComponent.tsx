@@ -6,13 +6,12 @@ import { Button } from "@/components/ui/button";
 
 interface Assignment {
     _id: string;
-    teacher: "123456",
-    classRoom: "123456",
-    dueDate: "2024-07-25",
-    title: "Olx clone",
-    description: "bla bla bla",
-    webScrnShot: "https://quiz.saylaniwelfare.com/images/smit.png",
-    content: "https://quiz.saylaniwelfare.com/images/smit.png"
+    teacher?: string | number,
+    classRoom?: string | number,
+    dueDate?: string,
+    title?: string,
+    description?: string,
+    formFields?: any;
 };
 
 interface AssignmentComponentProps {
