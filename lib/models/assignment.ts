@@ -26,6 +26,10 @@ const assignmentSchema = new Schema({
     formFields: {
         type: [],
         required: true
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false
     }
 },
     {

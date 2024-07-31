@@ -1,6 +1,7 @@
 "use server"
 
 import React from "react";
+import nodemailer from 'nodemailer';
 import { currentUser } from "@/lib/session";
 import connectDB from "@/lib/db";
 import { User } from "@/lib/models/auth.model";
@@ -27,6 +28,32 @@ interface Assignment {
     formFields: Field[];
 }
 
+const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
+    },
+});
+
+const sendEmailToStudentsForCreateingAssignment = async (classRoomId: FormDataEntryValue | null, dueDate: string) => {
+
+    const classRoom = await ClassRoom.findById(classRoomId).populate("students");
+
+    classRoom?.students.forEach(async (element: { email: any; }) => {
+
+        await transporter.sendMail({
+            from: '"SMIT-Student-submission-portal" <noreply@smit.com>', // Sender address
+            to: element?.email, // List of receivers
+            subject: "New assignment", // Subject line
+            text: `New assignment on your class room ${classRoom.title}. Assignment due date was ${dueDate} and time is 23:59`, // Plain text body
+        });
+    })
+
+};
+
 export const addAssignment = async (values: Assignment) => {
     try {
         const user = await currentUser();
@@ -47,9 +74,11 @@ export const addAssignment = async (values: Assignment) => {
             return { error: "All fields are required" };
         };
 
-        await Assignment.create({
+        const assignment = await Assignment.create({
             ...values, teacher: existingUser._id
         });
+
+        await sendEmailToStudentsForCreateingAssignment(assignment.classRoom, assignment.dueDate)
 
         return { success: "Assignment was create" }
     } catch (error) {
@@ -173,7 +202,7 @@ export const getStudentAssignment = async (assignmentId?: string | number) => {
         };
 
         const assignment = await Assignment.findOne({
-            _id: assignmentId, teacher: user._id,
+            _id: assignmentId
         });
 
         const classRoom = await ClassRoom.findOne({

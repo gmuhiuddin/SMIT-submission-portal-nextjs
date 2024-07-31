@@ -19,7 +19,6 @@ interface AssignmentComponentProps {
 };
 
 const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ asisgnments }) => {
-    console.log("asisgnments", asisgnments);
 
     return (
         <div>

@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const { model, Schema, models } = mongoose;
 
 const submissionSchema = new Schema({
-    formFieldReply: {
+    formFieldsReply: {
         type: String,
         required: true
     },
