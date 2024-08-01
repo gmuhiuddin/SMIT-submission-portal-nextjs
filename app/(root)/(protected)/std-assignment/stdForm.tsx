@@ -1,5 +1,7 @@
 "use client"
 
+import { addSubmission } from "@/lib/actions/auth/submission";
+import { useSession } from "next-auth/react";
 import React from "react";
 
 interface StdFormInterface {
@@ -7,6 +9,9 @@ interface StdFormInterface {
 }
 
 const StdForm: React.FC<StdFormInterface> = ({ assignment }) => {
+
+    const { data: session, status, update } = useSession({ required: true });
+  const user = session?.user;
 
     const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -27,7 +32,14 @@ const StdForm: React.FC<StdFormInterface> = ({ assignment }) => {
             };
         });
 
-        console.log((fields[0] as HTMLInputElement).value, fieldsOfAssignment, formDate.get("1"));
+       const submissionRes = await addSubmission({
+        formFieldsReply: formDate,
+        student: user?._id as string,
+        assignment: assignment.assignment._id,
+       });
+
+       console.log(submissionRes);
+       
     };
 
     return (

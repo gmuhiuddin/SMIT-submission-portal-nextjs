@@ -3,10 +3,7 @@ import mongoose from "mongoose";
 const { model, Schema, models } = mongoose;
 
 const submissionSchema = new Schema({
-    formFieldsReply: {
-        type: String,
-        required: true
-    },
+    formFieldsReply: [],
     assignment: {
         type: Schema.Types.ObjectId,
         ref: "post",
