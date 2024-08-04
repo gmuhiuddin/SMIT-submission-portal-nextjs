@@ -9,7 +9,7 @@ const SettingsPage = async () => {
     <Link href="/">
     <Button
         size="lg"
-        className="mt-1 absolute left-3 top-3 text-white px-4 py-2 rounded-md"
+        className="mt-1 absolute left-2 top-3 text-white px-4 py-2 rounded-md"
       >
         Go Dashboard
       </Button></Link>

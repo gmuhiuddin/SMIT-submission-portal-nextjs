@@ -1,5 +1,8 @@
 .signup-main-container{
     position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     top: 9%;
 }
 
@@ -33,12 +36,18 @@
 
 @media screen and (max-height: 245px) {
     .signup-main-container{
-        top: 33%;
+        top: 45%;
     }
 }
 
 @media screen and (max-height: 205px) {
     .signup-main-container{
-        top: 39%;
+        top: 49%;
+    }
+}
+
+@media screen and (max-height: 150px) {
+    .signup-main-container{
+        top: 55%;
     }
 }

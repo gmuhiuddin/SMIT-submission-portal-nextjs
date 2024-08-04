@@ -83,9 +83,12 @@ export const settings = async (values: SettingsInput) => {
   
      existingUser.name = values.name;
      existingUser.role = values.role;
+     console.log("role", values.role);
+     
      if(values?.isTwoFactorEnabled){
        existingUser.isTwoFactorEnabled = values.isTwoFactorEnabled
      };
+
      if(values?.email){
       existingUser.email = values.email
     };

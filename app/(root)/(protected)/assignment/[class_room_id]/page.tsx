@@ -19,7 +19,7 @@ const Assignment: React.FC<Assignment> = async ({ params: { class_room_id } }) =
                 Students
                 {assignment.students.map((element: any, index: number) => {
                     return (
-                        <div className="flex items-center p-4 border border-gray-300 rounded-lg shadow-md bg-white my-3">
+                        <div key={index} className="flex items-center p-4 border border-gray-300 rounded-lg shadow-md bg-white my-3">
                             <img src={element.image} alt={element.name} className="w-12 h-12 rounded-full object-cover mr-4" />
                             <div>
                                 <span className="block text-lg font-semibold">{element.name}  
@@ -46,7 +46,7 @@ const Assignment: React.FC<Assignment> = async ({ params: { class_room_id } }) =
                 Submissions
                 {assignment.submissions.length ? assignment.submissions.map((element: any, index: number) => {
                     return (
-                        <div className="flex items-center p-4 border border-gray-300 rounded-lg shadow-md bg-white my-3">
+                        <div key={index} className="flex items-center p-4 border border-gray-300 rounded-lg shadow-md bg-white my-3">
                             <img src={element.image} alt={element.name} className="w-12 h-12 rounded-full object-cover mr-4" />
                             <div>
                                 <span className="block text-lg font-semibold">{element.name}  
@@ -73,7 +73,7 @@ const Assignment: React.FC<Assignment> = async ({ params: { class_room_id } }) =
                 Comments
                 {assignment.comments.length ? assignment.comments.map((element: any, index: number) => {
                     return (
-                        <div className="flex items-center p-4 border border-gray-300 rounded-lg shadow-md bg-white my-3">
+                        <div key={index} className="flex items-center p-4 border border-gray-300 rounded-lg shadow-md bg-white my-3">
                             <img src={element.image} alt={element.name} className="w-12 h-12 rounded-full object-cover mr-4" />
                             <div>
                                 <span className="block text-lg font-semibold">{element.name}  
