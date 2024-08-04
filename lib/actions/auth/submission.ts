@@ -49,6 +49,13 @@ export const addSubmission = async (values: Submission) => {
             return { error: "Incorrect assignment" };
         };
 
+        const date = new Date();
+        const nowDate = `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? 0 + String(date.getMonth() + 1) : date.getMonth() + 1}-${date.getDate() < 10 ? 0 + String(date.getDate()) : date.getDate()}`;
+
+        if (assignment.dueDate < nowDate) {
+            return { error: "Assignment submission date was due!" };
+        };
+
         const submission = await Submission.findOne({
             student: values.student,
             assignment: values.assignment,
@@ -127,7 +134,7 @@ export const addSubmission = async (values: Submission) => {
     };
 };
 
-export const getSubmissions = async (postId: string) => {
+export const getStudentSubmission = async (assignmentId: string) => {
     try {
         const user = await currentUser();
 
@@ -139,28 +146,23 @@ export const getSubmissions = async (postId: string) => {
 
         const existingUser = await User.findById(user?._id);
 
-        if (!existingUser || existingUser.role == "student") {
+        if (!existingUser || existingUser.role == "teacher") {
             return { error: "Unauthorized" };
         };
 
-        const post = await Post.findOne({
-            _id: postId,
-            isDeleted: false
+        const submission = await Submission.findOne({
+            assignment: assignmentId,
+            student: user._id as string
         });
 
-        if (!post) {
-            return { error: "Incorrect post" };
+        if (!submission) {
+            return { error: "Submission not found1" };
         };
 
-        const comments = await Comment.find({
-            post: postId,
-        }).populate({
-            path: 'student',
-            select: 'name image'
-        });
-
-        return { success: "Comment sent successfully", comments: JSON.stringify(comments) };
+        return { success: "Submission fetched successfully", submission };
     } catch (error) {
         return { error: error instanceof Error ? error.message : "Something went wrong!" };
     };
 };
+
+export const updateSubmission = async () => {};

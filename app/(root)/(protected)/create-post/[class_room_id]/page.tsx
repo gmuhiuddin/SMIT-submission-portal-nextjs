@@ -74,7 +74,7 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
                 formData.append(`image-${index + 1}`, element);
             });
             createdFiles?.files.forEach((element, index) => {
-                if (element.content && element.name){
+                if (element.content && element.name) {
                     const blob = new Blob([element?.content], { type: 'text/html' });
                     formData.append(`created-files-${index + 1}`, blob, element.name);
                 };

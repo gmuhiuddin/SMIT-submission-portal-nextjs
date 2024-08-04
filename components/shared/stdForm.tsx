@@ -2,16 +2,24 @@
 
 import { addSubmission } from "@/lib/actions/auth/submission";
 import { useSession } from "next-auth/react";
-import React from "react";
+import React, { ChangeEvent, useState } from "react";
 
 interface StdFormInterface {
     assignment: any
 }
 
+interface Images {
+    files: File[];
+}
+
 const StdForm: React.FC<StdFormInterface> = ({ assignment }) => {
 
     const { data: session, status, update } = useSession({ required: true });
-  const user = session?.user;
+    const user = session?.user;
+
+    const [files, setFiles] = useState<Images>({ files: [] });
+    const [images, setImages] = useState<Images>({ files: [] });
+    const [err, setErr] = useState("");
 
     const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -22,30 +30,55 @@ const StdForm: React.FC<StdFormInterface> = ({ assignment }) => {
         const formDate = new FormData();
 
         fieldsOfAssignment.forEach((element: any, index: number) => {
-            if(element.type == "file" || element.type == "image"){
+            if (element.type == "file" || element.type == "image") {
                 const file = fields[index] as HTMLInputElement;
-                if(file.files?.length){
+                if (file.files?.length) {
                     formDate.append(element.id, file.files[0]);
                 };
-            }else{
+            } else {
                 formDate.append(element.id, (fields[index] as HTMLInputElement).value);
             };
         });
 
-       const submissionRes = await addSubmission({
-        formFieldsReply: formDate,
-        student: user?._id as string,
-        assignment: assignment.assignment._id,
-       });
+        const submissionRes = await addSubmission({
+            formFieldsReply: formDate,
+            student: user?._id as string,
+            assignment: assignment.assignment._id,
+        });
 
-       console.log(submissionRes);
-       
+        console.log(submissionRes);
+    };
+
+    async function handleChangeFile(e: ChangeEvent<HTMLInputElement>) {
+        const file = e.currentTarget.files && e.currentTarget.files[0];
+        if (file) {
+            if (file.size / 1024 / 1024 > 50) {
+                setErr('File size too big (max 50MB)')
+            } else {
+                setFiles({ files: [...files?.files, file] });
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+            }
+        }
+    };
+
+    async function handleChangeImage(e: ChangeEvent<HTMLInputElement>) {
+        const file = e.currentTarget.files && e.currentTarget.files[0];
+
+        if (file) {
+            if (file.size / 1024 / 1024 > 50) {
+                setErr('File size too big (max 50MB)')
+            } else {
+                setImages({ files: [...images?.files, file] });
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+            }
+        }
     };
 
     return (
         <form onSubmit={handleFormSubmit}>
             {assignment.assignment.formFields.map((field: any, index: number) => {
-                // console.log(element);
 
                 return (
                     <div key={field.id} className="field-wrapper">
@@ -58,13 +91,21 @@ const StdForm: React.FC<StdFormInterface> = ({ assignment }) => {
                                 {field.type === 'file' && (
                                     <div className="file-input-wrapper">
                                         <label className="file-input-label" htmlFor={`file-${field.id}`}>Choose File</label>
-                                        <input type="file" id={`file-${field.id}`} required={field.required} />
+                                        <input onChange={handleChangeFile} type="file" id={`file-${field.id}`} required={field.required} />
                                     </div>
                                 )}
                                 {field.type === 'image' && (
                                     <div className="file-input-wrapper">
                                         <label className="file-input-label" htmlFor={`image-${field.id}`}>Choose Image</label>
-                                        <input type="file" accept="image/*" id={`image-${field.id}`} required={field.required} />
+                                        <input onChange={handleChangeImage} type="file" accept="image/*" id={`image-${field.id}`} required={field.required} />
+                                        {images.files.map((element, index) => {
+                                            console.log(element);
+                                            
+                                            return(
+                                                <></>
+                                                // <img src={element.path}/>
+                                            );
+                                        })}
                                     </div>
                                 )}
                                 {field.type === 'radio' && (
@@ -114,7 +155,7 @@ const StdForm: React.FC<StdFormInterface> = ({ assignment }) => {
                     //         <span className="block text-sm text-gray-500">{element.email}</span>
                     //     </div>
                     // </div>
-                )
+                );
             })}
             <button type="submit">Submit</button>
         </form>

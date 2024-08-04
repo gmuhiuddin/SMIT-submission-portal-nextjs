@@ -13,10 +13,6 @@ const Assignment: React.FC<Assignment> = async ({ params: { class_room_id } }) =
 
     if (!assignment?.success) return <p>404</p>;
 
-    const sendWarningToStudent = () => {
-
-    };
-
     return (
         <div className="flex w-screen h-screen pt-16 justify-between p-3">
             <div className="p-3 overflow-y-auto">

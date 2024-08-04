@@ -51,21 +51,21 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
     const [description, setDescription] = useState<string | null>("");
     const [dueDate, setDueDate] = useState<string | null>("");
     const [classRoom, setClassRoom] = useState<any>("");
-    const [file, setFile] = useState<null | File>();
-    const [image, setImage] = useState<null | File>();
+    // const [file, setFile] = useState<null | File>();
+    // const [image, setImage] = useState<null | File>();
     const [err, setErr] = useState<string | null>();
     const [success, setSuccess] = useState<string | null>();
     const [fields, setFields] = useState<Field[]>([]);
-    const [fileData, setFileData] = useState<{
-        image: string | null
-    }>({
-        image: null,
-    });
-    const [imageData, setImageData] = useState<{
-        image: string | null
-    }>({
-        image: null,
-    });
+    // const [fileData, setFileData] = useState<{
+    //     image: string | null
+    // }>({
+    //     image: null,
+    // });
+    // const [imageData, setImageData] = useState<{
+    //     image: string | null
+    // }>({
+    //     image: null,
+    // });
     const [createForm, setCreateForm] = useState<boolean>(false);
     const [ assignmentCreatePending, setAssignmentCreatePending] = useState<boolean>(false);
 
@@ -110,25 +110,25 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
         };
     };
 
-    async function handleChangeImage(e: ChangeEvent<HTMLInputElement>) {
-        const file = e.currentTarget.files && e.currentTarget.files[0];
+    // async function handleChangeImage(e: ChangeEvent<HTMLInputElement>) {
+    //     const file = e.currentTarget.files && e.currentTarget.files[0];
 
-        if (file) {
-            if (file.size / 1024 / 1024 > 50) {
-                setErr('File size too big (max 50MB)')
-            } else {
-                setImage(file);
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    setImageData((prev) => ({ ...prev, image: e.target?.result as string }))
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-    };
+    //     if (file) {
+    //         if (file.size / 1024 / 1024 > 50) {
+    //             setErr('File size too big (max 50MB)')
+    //         } else {
+    //             setImage(file);
+    //             const reader = new FileReader();
+    //             reader.onload = (e) => {
+    //                 setImageData((prev) => ({ ...prev, image: e.target?.result as string }))
+    //             };
+    //             reader.readAsDataURL(file);
+    //         }
+    //     }
+    // };
 
     const date = new Date();
-    const minDateForDueDate = `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? 0 + String(date.getMonth() + 1) : date.getMonth() + 1}-${date.getDate() < 10 ? 0 + String(date.getDate() + 1) : date.getDate() + 1}`;;
+    const minDateForDueDate = `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? 0 + String(date.getMonth() + 1) : date.getMonth() + 1}-${date.getDate()+1 < 10 ? 0 + String(date.getDate() + 1) : date.getDate() + 1}`;
 
     if (!classRoom || assignmentCreatePending) return <p>loading</p>;
 

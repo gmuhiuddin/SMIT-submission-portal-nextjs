@@ -1,7 +1,9 @@
 import React from "react";
 import { FaTrash, FaExclamationTriangle } from "react-icons/fa";
 import { getStudentAssignment } from "@/lib/actions/auth/assignment";
-import StdForm from "../stdForm";
+import StdForm from "@/components/shared/stdForm";
+import { getStudentSubmission } from "@/lib/actions/auth/submission";
+import StdFormDisplay from "@/components/shared/stdFormDisplay";
 
 interface Assignment {
     params: {
@@ -13,6 +15,8 @@ const Assignment: React.FC<Assignment> = async ({ params: { class_room_id } }) =
     const assignment: any = await getStudentAssignment(class_room_id);
 
     if (!assignment?.success) return <p>404</p>;
+
+    const submission: any = await getStudentSubmission(class_room_id);
 
     return (
         <div className="flex w-screen h-screen pt-16 justify-between p-3">
@@ -26,7 +30,11 @@ const Assignment: React.FC<Assignment> = async ({ params: { class_room_id } }) =
             </div>
             <div className="">
                 Submission form
+                {submission.success?
+                <StdFormDisplay sumbissionFields={submission?.submission?.formFieldsReply} fields={assignment?.assignment?.formFields}/>
+                :
                 <StdForm assignment={assignment} />
+                }
             </div>
             {/* <div className="p-3 overflow-y-auto bg-black">
                 Comments
