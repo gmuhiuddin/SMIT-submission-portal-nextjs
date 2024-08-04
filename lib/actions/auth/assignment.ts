@@ -10,7 +10,7 @@ import Assignment from "@/lib/models/assignment";
 import Submissions from "@/lib/models/submission";
 import Comment from "@/lib/models/comment";
 
-type FieldType = 'text' | 'number' | 'file' | 'image' | 'radio' | 'checkbox' | 'select';
+type FieldType = 'text' | 'number' | 'file' | 'image' | 'files' | 'images' | 'radio' | 'checkbox' | 'select';
 
 interface Field {
     id: number;

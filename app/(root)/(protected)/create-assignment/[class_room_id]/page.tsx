@@ -32,7 +32,7 @@ interface ClassroomRes {
     classRoom?: any;
 }
 
-type FieldType = 'text' | 'number' | 'file' | 'image' | 'radio' | 'checkbox' | 'select';
+type FieldType = 'text' | 'number' | 'files' | 'images' | 'file' | 'image' | 'radio' | 'checkbox' | 'select';
 
 interface Field {
     id: number;

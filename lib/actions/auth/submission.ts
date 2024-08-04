@@ -65,52 +65,77 @@ export const addSubmission = async (values: Submission) => {
             return { error: "You submited this assignment" };
         };
 
-        const submissionFields: { name?: string; res?: string; type?: string; id: any; url?: string; downloadUrl?: string; }[] = [];
+        const submissionFields: { res?: string; images?: any; id: any; files?: any; }[] = [];
 
         assignment.formFields.forEach(async (element: any, index: number) => {
             const field = values.formFieldsReply.get(element.id);
 
-            if (element.required && !field) return { error: "Please fill all fields" };
+            if (element.required && !field) throw new Error("Please fill all fields");
 
             if (element.type == "file" || element.type == "image") {
 
                 if (element.type == "file") {
+                    const filesLength: any = field;
+                    const files: any = [];
 
-                    if (field instanceof File && field.size > 0) {
-                        const fileContentType = field?.type || "text/plain";
+                    for (let i = 0; i < filesLength; i++) {
+                        const file = values.formFieldsReply.get(`id-${element.id}-${i - 1}`);
+                        if (file instanceof File && file.size > 0) {
+                            const fileContentType = file?.type || "text/plain";
 
-                        const filename = `${nanoid()}.${fileContentType.split("/")[1]}`;
+                            const filename = `${nanoid()}.${fileContentType.split("/")[1]}`;
 
-                        const blob = await put(filename, field, {
-                            contentType: fileContentType,
-                            access: "public",
-                        });
+                            const blob = await put(filename, file, {
+                                contentType: fileContentType,
+                                access: "public",
+                            });
 
-                        submissionFields.push({
-                            name: field.name,
-                            type: field?.type || "text/plain",
-                            id: element.id,
-                            url: blob?.url,
-                            downloadUrl: blob?.downloadUrl,
-                        });
+                            files.push({
+                                name: file.name,
+                                type: file?.type || "text/plain",
+                                url: blob?.url,
+                                downloadUrl: blob?.downloadUrl,
+                            });
+                        };
                     };
+
+                    submissionFields.push({
+                        id: element.id,
+                        files: files
+                    });
                 } else {
-                    if (field instanceof File && field.size > 0) {
-                        const fileContentType = field?.type || "image/*";
+                    const filesLength: any = field;
+                    const images: any = [];
+console.log(filesLength);
 
-                        const filename = `${nanoid()}.${fileContentType.split("/")[1]}`;
+                    for (let i = 0; i < filesLength; i++) {
+                        const file = values.formFieldsReply.get(`id-${element.id}-${i}`);
+                        console.log(file);
+                        
+                        if (file instanceof File && file.size > 0) {
+                            const fileContentType = file?.type || "image/*";
 
-                        const blob = await put(filename, field, {
-                            contentType: fileContentType,
-                            access: "public",
-                        });
+                            const filename = `${nanoid()}.${fileContentType.split("/")[1]}`;
 
-                        submissionFields.push({
-                            name: field.name,
-                            id: element.id,
-                            url: blob?.url,
-                            downloadUrl: blob?.downloadUrl,
-                        });
+                            const blob = await put(filename, file, {
+                                contentType: fileContentType,
+                                access: "public",
+                            });
+
+                            images.push({
+                                name: file.name,
+                                type: file?.type || "images/*",
+                                url: blob?.url,
+                                downloadUrl: blob?.downloadUrl,
+                            });
+                        };
+
+                        if(filesLength-1 == i){
+                            submissionFields.push({
+                                id: element.id,
+                                images: images
+                            });
+                        };
                     };
                 };
             } else {
@@ -122,11 +147,13 @@ export const addSubmission = async (values: Submission) => {
 
         });
 
-        await Submission.create({
-            formFieldsReply: submissionFields,
-            student: values.student,
-            assignment: values.assignment,
-        });
+        // await Submission.create({
+        //     formFieldsReply: submissionFields,
+        //     student: values.student,
+        //     assignment: values.assignment,
+        // });
+        console.log("Submission", submissionFields);
+        
 
         return { success: "Submission successful" };
     } catch (error) {
@@ -165,4 +192,4 @@ export const getStudentSubmission = async (assignmentId: string) => {
     };
 };
 
-export const updateSubmission = async () => {};
+export const updateSubmission = async () => { };

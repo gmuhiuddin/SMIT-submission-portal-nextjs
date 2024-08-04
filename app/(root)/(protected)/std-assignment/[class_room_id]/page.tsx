@@ -30,11 +30,11 @@ const Assignment: React.FC<Assignment> = async ({ params: { class_room_id } }) =
             </div>
             <div className="">
                 Submission form
-                {submission.success?
+                {/* {submission.success? */}
                 <SubmissionFormDisplay sumbissionFields={submission?.submission?.formFieldsReply} fields={assignment?.assignment?.formFields}/>
-                :
-                <StdForm assignment={assignment} />
-                }
+                {/* :
+                // <StdForm assignment={assignment} />
+                */}
             </div>
             {/* <div className="p-3 overflow-y-auto bg-black">
                 Comments

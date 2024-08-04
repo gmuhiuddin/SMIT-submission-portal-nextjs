@@ -17,36 +17,19 @@ const StdForm: React.FC<StdFormInterface> = ({ assignment }) => {
     const { data: session, status, update } = useSession({ required: true });
     const user = session?.user;
 
+    const [submissionFields, setSubmissionFields] = useState<any>({});
     const [files, setFiles] = useState<Images>({ files: [] });
     const [images, setImages] = useState<Images>({ files: [] });
     const [err, setErr] = useState("");
 
     const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const fields = e.target as HTMLFormElement;
 
-        const fieldsOfAssignment = assignment.assignment.formFields;
-
-        const formDate = new FormData();
-
-        fieldsOfAssignment.forEach((element: any, index: number) => {
-            if (element.type == "file" || element.type == "image") {
-                const file = fields[index] as HTMLInputElement;
-                if (file.files?.length) {
-                    formDate.append(element.id, file.files[0]);
-                };
-            } else {
-                formDate.append(element.id, (fields[index] as HTMLInputElement).value);
-            };
-        });
-
-        const submissionRes = await addSubmission({
-            formFieldsReply: formDate,
-            student: user?._id as string,
-            assignment: assignment.assignment._id,
-        });
-
-        console.log(submissionRes);
+        // const submissionRes = await addSubmission({
+        //     formFieldsReply: formDate,
+        //     student: user?._id as string,
+        //     assignment: assignment.assignment._id,
+        // });
     };
 
     async function handleChangeFile(e: ChangeEvent<HTMLInputElement>) {
@@ -80,6 +63,30 @@ const StdForm: React.FC<StdFormInterface> = ({ assignment }) => {
         images.files.splice(index, 1);
     };
 
+    const deleteFile = (index: number) => {
+        files.files.splice(index, 1);
+    };
+
+    const handleChangeInput = (value: any, id: any) => {
+        const copySbmFld = [...submissionFields];
+
+        copySbmFld[id] = value;
+
+        setSubmissionFields(copySbmFld);
+    };
+
+    const handleMultipleImgChange = (value: any, id: any) => {
+        const copySbmFld = [...submissionFields];
+
+        const files = copySbmFld[id] || [];
+
+        files.push(value);
+
+        copySbmFld[id] = files;
+
+        setSubmissionFields(copySbmFld);
+    };
+
     return (
         <form onSubmit={handleFormSubmit}>
             {assignment.assignment.formFields.map((field: any, index: number) => {
@@ -90,19 +97,39 @@ const StdForm: React.FC<StdFormInterface> = ({ assignment }) => {
                             <label className="preview-label">
                                 {field.label}
                                 {field.required && ' *'}
-                                {field.type === 'text' && <input type="text" required={field.required} />}
-                                {field.type === 'number' && <input type="number" required={field.required} />}
+                                {field.type === 'text' && <input type="text" required={field.required} onChange={(e) => handleChangeInput(e.target.value, field.id)} />}
+                                {field.type === 'number' && <input type="number" required={field.required} onChange={(e) => handleChangeInput(e.target.value, field.id)} />}
                                 {field.type === 'file' && (
                                     <div className="file-input-wrapper">
                                         <label className="file-input-label" htmlFor={`file-${field.id}`}>Choose File</label>
-                                        <input onChange={handleChangeFile} type="file" id={`file-${field.id}`} required={field.required} />
-                                        {files.files.map((element, index) => {
-                                            
-                                            return(
-                                               <>
-                                                <p>{element.name}</p>
-                                                <p onClick={() => deleteImg(index)}>x</p>
-                                               </>
+                                        <input onChange={(e) => handleChangeInput(e.target?.files?.length && e.target.files[0], field.id)} type="file" id={`file-${field.id}`} />
+                                    </div>
+                                )}
+                                {field.type === 'files' && (
+                                    <div className="file-input-wrapper">
+                                        <label className="file-input-label" htmlFor={`file-${field.id}`}>Choose File</label>
+                                        <input onChange={(e) => handleMultipleImgChange(e.target?.files?.length && e.target.files[0], field.id)} type="file" id={`file-${field.id}`} />
+                                        {submissionFields[field.id].map((element: any, index: number) => {
+                                            return (
+                                                <>
+                                                    <p>{element.name}</p>
+                                                    <p onClick={() => deleteFile(index)}>x</p>
+                                                </>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                                {field.type === 'images' && (
+                                    <div className="file-input-wrapper">
+                                        <label className="file-input-label" htmlFor={`image-${field.id}`}>Choose Image</label>
+                                        <input onChange={(e) => handleMultipleImgChange(e.target?.files?.length && e.target.files[0], field.id)} type="file" accept="image/*" id={`image-${field.id}`} />
+                                        {submissionFields[field.id].map((element: any, index: number) => {
+
+                                            return (
+                                                <>
+                                                    <img width={25} src={URL.createObjectURL(element)} />
+                                                    <button onClick={() => deleteImg(index)}>x</button>
+                                                </>
                                             );
                                         })}
                                     </div>
@@ -110,16 +137,7 @@ const StdForm: React.FC<StdFormInterface> = ({ assignment }) => {
                                 {field.type === 'image' && (
                                     <div className="file-input-wrapper">
                                         <label className="file-input-label" htmlFor={`image-${field.id}`}>Choose Image</label>
-                                        <input onChange={handleChangeImage} type="file" accept="image/*" id={`image-${field.id}`} required={field.required} />
-                                        {images.files.map((element, index) => {
-                                            
-                                            return(
-                                               <>
-                                                <img width={15} src={URL.createObjectURL(element)}/>
-                                                <p onClick={() => deleteImg(index)}>x</p>
-                                               </>
-                                            );
-                                        })}
+                                        <input onChange={handleChangeImage} type="file" accept="image/*" id={`image-${field.id}`} />
                                     </div>
                                 )}
                                 {field.type === 'radio' && (
