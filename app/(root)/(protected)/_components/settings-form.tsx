@@ -55,14 +55,14 @@ export const SettingsForm = () => {
     }
   })
 
-  async function onSubmit(values: z.infer<typeof SettingsValidation>) {
-    // console.log(values)
+  async function onSubmit(values: z.infer<typeof SettingsValidation>) { 
     setError("")
     setSuccess("")
 
     startTransition(() => {
       settings(values)
         .then((data) => {
+console.log(data);
 
           if (data?.error) {
             setError(data.error)

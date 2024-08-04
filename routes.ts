@@ -24,6 +24,6 @@ export const routes = {
     "/create-post/:class_room_id",
   ],
   apiAuthPrefix: "/api/auth",
-  defaultLoginRedirect: "/settings",
+  defaultLoginRedirect: "/",
   defaultLogoutRedirect: "/signin"
 }

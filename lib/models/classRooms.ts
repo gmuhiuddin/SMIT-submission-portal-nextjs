@@ -16,7 +16,8 @@ const classRoomSchema = new Schema({
         required: true
     },
     teacher: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: "User",
         required: true
     },
     title: {

@@ -20,7 +20,7 @@ async function StudentDashboard() {
                     <Box key={index} className="m-1 class-room-card" sx={{ Py: 6, background: '#0976A9', color: 'white', borderRadius: '20px' }}>
                         <Typography sx={{ padding: '30px', cursor: 'pointer' }}>
                             <h1 className='text-3xl border-b-2 font-semibold pb-2'>{element?.title}</h1>
-                            <p className='text-2xl border-b-2 mt-2 font-semibold inline-block w-max mb-2 teacher-name'>SMIT-{element?.batch} ({user?.name})</p>
+                            <p className='text-2xl border-b-2 mt-2 font-semibold inline-block w-max mb-2 teacher-name'>SMIT-{element?.batch} ({element?.teacher.name})</p>
                             <p className='w-max '>{element?.timeAndLocation?.days} {element?.timeAndLocation?.time}</p>
                             <Link href={`/std-class-room/${element?._id}`}>
                                 <Button

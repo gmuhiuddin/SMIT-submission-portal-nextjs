@@ -76,6 +76,10 @@ const StdForm: React.FC<StdFormInterface> = ({ assignment }) => {
         }
     };
 
+    const deleteImg = (index: number) => {
+        images.files.splice(index, 1);
+    };
+
     return (
         <form onSubmit={handleFormSubmit}>
             {assignment.assignment.formFields.map((field: any, index: number) => {
@@ -92,6 +96,15 @@ const StdForm: React.FC<StdFormInterface> = ({ assignment }) => {
                                     <div className="file-input-wrapper">
                                         <label className="file-input-label" htmlFor={`file-${field.id}`}>Choose File</label>
                                         <input onChange={handleChangeFile} type="file" id={`file-${field.id}`} required={field.required} />
+                                        {files.files.map((element, index) => {
+                                            
+                                            return(
+                                               <>
+                                                <p>{element.name}</p>
+                                                <p onClick={() => deleteImg(index)}>x</p>
+                                               </>
+                                            );
+                                        })}
                                     </div>
                                 )}
                                 {field.type === 'image' && (
@@ -99,11 +112,12 @@ const StdForm: React.FC<StdFormInterface> = ({ assignment }) => {
                                         <label className="file-input-label" htmlFor={`image-${field.id}`}>Choose Image</label>
                                         <input onChange={handleChangeImage} type="file" accept="image/*" id={`image-${field.id}`} required={field.required} />
                                         {images.files.map((element, index) => {
-                                            console.log(element);
                                             
                                             return(
-                                                <></>
-                                                // <img src={element.path}/>
+                                               <>
+                                                <img width={15} src={URL.createObjectURL(element)}/>
+                                                <p onClick={() => deleteImg(index)}>x</p>
+                                               </>
                                             );
                                         })}
                                     </div>

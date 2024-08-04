@@ -3,7 +3,7 @@
 import { addSubmission } from "@/lib/actions/auth/submission";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
-import StdUpdateForm from "./stdUpdateForm";
+import StdUpdateForm from "./submissionUpdateForm";
 
 interface StdFormInterface {
     fields: any;

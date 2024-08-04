@@ -1,9 +1,9 @@
 import React from "react";
 import { FaTrash, FaExclamationTriangle } from "react-icons/fa";
 import { getStudentAssignment } from "@/lib/actions/auth/assignment";
-import StdForm from "@/components/shared/stdForm";
+import StdForm from "@/components/shared/submissionForm";
 import { getStudentSubmission } from "@/lib/actions/auth/submission";
-import StdFormDisplay from "@/components/shared/stdFormDisplay";
+import SubmissionFormDisplay from "@/components/shared/submissionFormDisplay";
 
 interface Assignment {
     params: {
@@ -31,7 +31,7 @@ const Assignment: React.FC<Assignment> = async ({ params: { class_room_id } }) =
             <div className="">
                 Submission form
                 {submission.success?
-                <StdFormDisplay sumbissionFields={submission?.submission?.formFieldsReply} fields={assignment?.assignment?.formFields}/>
+                <SubmissionFormDisplay sumbissionFields={submission?.submission?.formFieldsReply} fields={assignment?.assignment?.formFields}/>
                 :
                 <StdForm assignment={assignment} />
                 }

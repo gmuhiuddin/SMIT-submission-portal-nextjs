@@ -250,7 +250,7 @@ export const getStudentClassrooms = async () => {
 
     const classRooms = await ClassRoom.find({
       students: user._id,
-    });
+    }).populate("teacher");
 
     return { success: "Class was create", classRooms };
   } catch (error) {
@@ -277,7 +277,7 @@ export const getStudentClassroom = async (classRoomId?: string | number) => {
     const classRoom = await ClassRoom.findOne({
       _id: classRoomId,
       students: user?._id,
-    });
+    }).populate("teacher");
 
     const assignments = await Assignment.find({
       classRoom: classRoom._id,

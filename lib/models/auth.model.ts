@@ -13,10 +13,7 @@ export const userSchema = new mongoose.Schema({
   password: {
     type: String
   },
-  image: {
-    type: String,
-    default: "https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png"
-  },
+  image: String,
   role: {
     type: String,
     enum: ["superAdmin", "student", "teacher", "undefined"],
@@ -37,21 +34,20 @@ export const userSchema = new mongoose.Schema({
   lastActivity: String
 }, { timestamps: true })
 
-userSchema.pre("save", function (next) {
-  // if (!this.isModified("lastActivity")) {
-  //   const date = new Date();
-  //   const dateFormated = `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? "0"+date.getMonth() + 1 : date.getMonth() + 1}-${date.getDay() < 10 ? "0"+date.getDay() :date.getDay()}`;
-
-  //   this.lastActivity = dateFormated;
-  // };
-
-  const originalValue = this.get('role');
-
-  if (this.isModified("role") && originalValue !== "undefined") {
-    return { error: "Role cannot be changeble" };
-  };
-
-  next();
+userSchema.pre('save', function (next) {
+  if (!this.isNew && this.isModified('role')) {
+    this.model("User").findById(this._id)
+      .then((originalDoc: any) => {
+        if (originalDoc && originalDoc.role !== 'undefined') {
+          const err = new Error('Role cannot be changed once it is set');
+          return next(err);
+        }
+        next();
+      })
+      .catch((err: any) => next(err));
+  } else {
+    next();
+  }
 });
 
 const User = mongoose.models?.User || mongoose.model("User", userSchema)
