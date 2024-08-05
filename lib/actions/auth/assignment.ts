@@ -9,6 +9,7 @@ import ClassRoom from "@/lib/models/classRooms";
 import Assignment from "@/lib/models/assignment";
 import Submissions from "@/lib/models/submission";
 import Comment from "@/lib/models/comment";
+import { toObject } from "./helpingFuncs";
 
 type FieldType = 'text' | 'number' | 'file' | 'image' | 'files' | 'images' | 'radio' | 'checkbox' | 'select';
 
@@ -106,7 +107,7 @@ export const getTeacherAssignments = async (classRoomId?: string | number) => {
             classRoom: classRoomId, teacher: existingUser._id
         });
 
-        return { success: "Assignments fetched successfully", assignments: assignmentsRes }
+        return { success: "Assignments fetched successfully", assignments: assignmentsRes.map(toObject) }
     } catch (error) {
         return { error: error instanceof Error ? error.message : "Something went wrong!" };
     };
@@ -153,7 +154,7 @@ export const getTeacherAssignment = async (assignmentId?: string | number) => {
             assignment: assignment._id,
         });
 
-        return { success: "Assignment fetched successfully", assignment, students, classRoom, comments: comments || [], submissions }
+        return { success: "Assignment fetched successfully", assignment: toObject(assignment), students: students.map(toObject), classRoom: toObject(classRoom), comments: comments.map(toObject) || [], submissions: submissions.map(toObject) };
     } catch (error) {
         return { error: error instanceof Error ? error.message : "Something went wrong!" };
     };
@@ -205,12 +206,16 @@ export const getStudentAssignment = async (assignmentId?: string | number) => {
             _id: assignmentId
         });
 
+        if(!assignment) return {error: "Assignment was not found!"};
+
         const classRoom = await ClassRoom.findOne({
             _id: assignment.classRoom,
-            teacher: user?._id,
-        });
+            students: user._id
+        }).select("-students");
 
-        return { success: "Assignment fetched successfully", assignment, classRoom }
+        if(!classRoom) return {error: "Class was deleted"};
+
+        return { success: "Assignment fetched successfully", assignment: toObject(assignment), classRoom: toObject(classRoom) }
     } catch (error) {
         return { error: error instanceof Error ? error.message : "Something went wrong!" };
     };

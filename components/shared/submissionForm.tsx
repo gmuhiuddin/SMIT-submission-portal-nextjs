@@ -18,57 +18,43 @@ const StdForm: React.FC<StdFormInterface> = ({ assignment }) => {
     const user = session?.user;
 
     const [submissionFields, setSubmissionFields] = useState<any>({});
-    const [files, setFiles] = useState<Images>({ files: [] });
-    const [images, setImages] = useState<Images>({ files: [] });
     const [err, setErr] = useState("");
 
     const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        const astFormFields = assignment?.assignment?.formFields;
 
-        // const submissionRes = await addSubmission({
-        //     formFieldsReply: formDate,
-        //     student: user?._id as string,
-        //     assignment: assignment.assignment._id,
-        // });
-    };
+        const sbmData = new FormData();
 
-    async function handleChangeFile(e: ChangeEvent<HTMLInputElement>) {
-        const file = e.currentTarget.files && e.currentTarget.files[0];
-        if (file) {
-            if (file.size / 1024 / 1024 > 50) {
-                setErr('File size too big (max 50MB)')
+        astFormFields.forEach((element: any) => {
+            const field = submissionFields[element.id];
+
+            if (element.required && !field) return setErr("All fields are required");
+
+            if (element.type == "Multiple Files" || element.type == "Multiple Images") {
+                const fileLength = field.length;
+
+                sbmData.append(element.id, fileLength);
+
+                field.forEach((file: any, index: any) => {
+                    sbmData.append(`${element.id}-${index}`, file);
+                });
             } else {
-                setFiles({ files: [...files?.files, file] });
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-            }
-        }
-    };
+                sbmData.append(element.id, field);
+            };
+        });
 
-    async function handleChangeImage(e: ChangeEvent<HTMLInputElement>) {
-        const file = e.currentTarget.files && e.currentTarget.files[0];
+        const submissionRes = await addSubmission({
+            formFieldsReply: sbmData,
+            student: user?._id as string,
+            assignment: assignment.assignment._id,
+        });
 
-        if (file) {
-            if (file.size / 1024 / 1024 > 50) {
-                setErr('File size too big (max 50MB)')
-            } else {
-                setImages({ files: [...images?.files, file] });
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-            }
-        }
-    };
-
-    const deleteImg = (index: number) => {
-        images.files.splice(index, 1);
-    };
-
-    const deleteFile = (index: number) => {
-        files.files.splice(index, 1);
+        console.log(submissionRes);
     };
 
     const handleChangeInput = (value: any, id: any) => {
-        const copySbmFld = [...submissionFields];
+        const copySbmFld = { ...submissionFields };
 
         copySbmFld[id] = value;
 
@@ -76,13 +62,23 @@ const StdForm: React.FC<StdFormInterface> = ({ assignment }) => {
     };
 
     const handleMultipleImgChange = (value: any, id: any) => {
-        const copySbmFld = [...submissionFields];
+        const copySbmFld = { ...submissionFields };
 
         const files = copySbmFld[id] || [];
+
+        if (!value) return;
 
         files.push(value);
 
         copySbmFld[id] = files;
+
+        setSubmissionFields(copySbmFld);
+    };
+
+    const handleDeleteImageInMultipleImages = (id: any, index: any) => {
+        const copySbmFld = { ...submissionFields };
+
+        copySbmFld[id].splice(index, 1);
 
         setSubmissionFields(copySbmFld);
     };
@@ -102,33 +98,34 @@ const StdForm: React.FC<StdFormInterface> = ({ assignment }) => {
                                 {field.type === 'file' && (
                                     <div className="file-input-wrapper">
                                         <label className="file-input-label" htmlFor={`file-${field.id}`}>Choose File</label>
-                                        <input onChange={(e) => handleChangeInput(e.target?.files?.length && e.target.files[0], field.id)} type="file" id={`file-${field.id}`} />
+                                        <input accept=".pdf,.doc,.gif,.txt" onChange={(e) => handleChangeInput(e.target?.files?.length && e.target.files[0], field.id)} type="file" id={`file-${field.id}`} />
                                     </div>
                                 )}
-                                {field.type === 'files' && (
+                                {field.type === "Multiple Files" && (
                                     <div className="file-input-wrapper">
                                         <label className="file-input-label" htmlFor={`file-${field.id}`}>Choose File</label>
-                                        <input onChange={(e) => handleMultipleImgChange(e.target?.files?.length && e.target.files[0], field.id)} type="file" id={`file-${field.id}`} />
-                                        {submissionFields[field.id].map((element: any, index: number) => {
+                                        <input accept=".pdf,.doc,.gif,.txt" onChange={(e) => handleMultipleImgChange(e.target?.files?.length && e.target.files[0], field.id)} type="file" id={`file-${field.id}`} />
+                                        {submissionFields[field.id]?.map((element: any, index: number) => {
+
                                             return (
                                                 <>
                                                     <p>{element.name}</p>
-                                                    <p onClick={() => deleteFile(index)}>x</p>
+                                                    <p onClick={() => handleDeleteImageInMultipleImages(field.id, index)}>x</p>
                                                 </>
                                             );
                                         })}
                                     </div>
                                 )}
-                                {field.type === 'images' && (
+                                {field.type === "Multiple Images" && (
                                     <div className="file-input-wrapper">
                                         <label className="file-input-label" htmlFor={`image-${field.id}`}>Choose Image</label>
                                         <input onChange={(e) => handleMultipleImgChange(e.target?.files?.length && e.target.files[0], field.id)} type="file" accept="image/*" id={`image-${field.id}`} />
-                                        {submissionFields[field.id].map((element: any, index: number) => {
+                                        {submissionFields[field.id]?.map((element: any, index: number) => {
 
                                             return (
                                                 <>
                                                     <img width={25} src={URL.createObjectURL(element)} />
-                                                    <button onClick={() => deleteImg(index)}>x</button>
+                                                    <button onClick={() => handleDeleteImageInMultipleImages(field.id, index)}>x</button>
                                                 </>
                                             );
                                         })}
@@ -137,7 +134,7 @@ const StdForm: React.FC<StdFormInterface> = ({ assignment }) => {
                                 {field.type === 'image' && (
                                     <div className="file-input-wrapper">
                                         <label className="file-input-label" htmlFor={`image-${field.id}`}>Choose Image</label>
-                                        <input onChange={handleChangeImage} type="file" accept="image/*" id={`image-${field.id}`} />
+                                        <input onChange={(e) => handleChangeInput(e.target?.files?.length && e.target.files[0], field.id)} type="file" accept="image/*" id={`image-${field.id}`} />
                                     </div>
                                 )}
                                 {field.type === 'radio' && (

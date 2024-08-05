@@ -13,7 +13,7 @@ import Post from "@/lib/models/post";
 import Comment from "@/lib/models/comment";
 
 interface Comment {
-    studentId: string;
+    studentId?: string;
     postId: string;
     txt: string;
 }
@@ -34,7 +34,7 @@ export const sendComment = async (values: Comment) => {
             return { error: "Unauthorized" };
         };
 
-        const post = await Post.findOne({
+        const post = await Assignment.findOne({
             _id: values.postId,
             isDeleted: false
         });
@@ -44,7 +44,7 @@ export const sendComment = async (values: Comment) => {
         };
 
         await Comment.create({
-            student: values.studentId,
+            student: existingUser._id,
             post: values.postId,
             txt: values.txt
         });

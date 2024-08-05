@@ -11,6 +11,8 @@ async function StudentDashboard() {
 
     const classRooms = await getStudentClassrooms();
 
+    if(!classRooms) return <>Check your connnection</>;
+
     return (
         <div className="flex justify-center flex-wrap class-room-main-container">
 

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Model } from "mongoose";
 
 const { model, Schema, models } = mongoose;
 
@@ -20,6 +20,6 @@ const submissionSchema = new Schema({
     });
 
 
-const Submission = models?.submission || model("submission", submissionSchema);
+const Submission: Model<typeof submissionSchema> = models?.submission || model("submission", submissionSchema);
 
 export default Submission;

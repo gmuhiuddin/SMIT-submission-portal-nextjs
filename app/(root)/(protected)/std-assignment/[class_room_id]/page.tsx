@@ -4,6 +4,8 @@ import { getStudentAssignment } from "@/lib/actions/auth/assignment";
 import StdForm from "@/components/shared/submissionForm";
 import { getStudentSubmission } from "@/lib/actions/auth/submission";
 import SubmissionFormDisplay from "@/components/shared/submissionFormDisplay";
+import SendCommentComp from "@/components/shared/SendCommentComp";
+import { useSession } from "next-auth/react";
 
 interface Assignment {
     params: {
@@ -12,10 +14,15 @@ interface Assignment {
 }
 
 const Assignment: React.FC<Assignment> = async ({ params: { class_room_id } }) => {
+    // const { data: session, status, update } = useSession({ required: true });
+//   const user = session?.user;
+
     const assignment: any = await getStudentAssignment(class_room_id);
 
+    if(!assignment) return <>Check your connections</>;
+    
     if (!assignment?.success) return <p>404</p>;
-
+    
     const submission: any = await getStudentSubmission(class_room_id);
 
     return (
@@ -28,13 +35,17 @@ const Assignment: React.FC<Assignment> = async ({ params: { class_room_id } }) =
                 <br />
                 Due date: {assignment.assignment.dueDate}
             </div>
+            <div className="p-3 overflow-y-auto">
+                Comment
+                <SendCommentComp assignmentId={assignment.assignment._id} />
+            </div>
             <div className="">
                 Submission form
-                {/* {submission.success? */}
+                {submission.success?
                 <SubmissionFormDisplay sumbissionFields={submission?.submission?.formFieldsReply} fields={assignment?.assignment?.formFields}/>
-                {/* :
-                // <StdForm assignment={assignment} />
-                */}
+                :
+                <StdForm assignment={assignment} />
+                }
             </div>
             {/* <div className="p-3 overflow-y-auto bg-black">
                 Comments
