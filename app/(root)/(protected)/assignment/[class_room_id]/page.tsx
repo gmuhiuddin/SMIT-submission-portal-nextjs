@@ -23,7 +23,6 @@ const Assignment: React.FC<Assignment> = async ({ params: { class_room_id } }) =
             <div className="">
                 Submissions
                 {assignment.submissions.length ? assignment.submissions.map((element: any, index: number) => {
-                    console.log(element);
 
                     return (
                         <div key={index} className="flex items-center p-4 border border-gray-300 rounded-lg shadow-md bg-white my-3">

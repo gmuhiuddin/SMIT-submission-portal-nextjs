@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { sendWarningToStudent } from "@/lib/actions/auth/student";
+import { ExitStudentFromClassroom, sendWarningToStudent } from "@/lib/actions/auth/student";
 import { FaExclamationTriangle, FaTrash } from "react-icons/fa";
 
 interface StudentCart {
@@ -18,6 +18,12 @@ const StudentCart: React.FC<StudentCart> = ({ showWarnOrDelBtn, students, classR
         console.log(res);
     };
 
+    const removeStdFromClassRoom = async (_id: any) => {
+        const res = await ExitStudentFromClassroom(_id, classRoomId);
+
+        console.log(res);
+    };
+
     return (
         <>
             {students.map((element: any, index: number) => {
@@ -29,13 +35,13 @@ const StudentCart: React.FC<StudentCart> = ({ showWarnOrDelBtn, students, classR
                                 {showWarnOrDelBtn &&
                                     <>
                                         <button
-                                              onClick={() => sendWarnToStudent(element?._id)}
+                                            onClick={() => sendWarnToStudent(element?._id)}
                                             className="text-yellow-500 hover:text-yellow-700"
                                         >
                                             <FaExclamationTriangle className="ml-20 w-4 h-4" />
                                         </button>
                                         <button
-                                            //   onClick={onDelete}
+                                            onClick={() => removeStdFromClassRoom(element?._id)}
                                             className="text-red-500 hover:text-red-700"
                                         >
                                             <FaTrash className="ml-2 w-4 h-4" />

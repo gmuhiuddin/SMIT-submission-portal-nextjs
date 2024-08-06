@@ -43,7 +43,7 @@ export const addSubmission = async (values: Submission) => {
 
         const assignment = await Assignment.findOne({
             _id: values.assignment,
-            // isDeleted: false
+            isDeleted: false
         });
 
         if (!assignment) {
