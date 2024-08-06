@@ -31,6 +31,7 @@ export const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  warnSend: String,
   lastActivity: String
 }, { timestamps: true })
 

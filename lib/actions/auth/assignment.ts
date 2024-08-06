@@ -152,6 +152,9 @@ export const getTeacherAssignment = async (assignmentId?: string | number) => {
 
         const submissions = await Submissions.find({
             assignment: assignment._id,
+        }).populate({
+            path: 'student',
+            select: 'name image'
         });
 
         return { success: "Assignment fetched successfully", assignment: toObject(assignment), students: students.map(toObject), classRoom: toObject(classRoom), comments: comments.map(toObject) || [], submissions: submissions.map(toObject) };

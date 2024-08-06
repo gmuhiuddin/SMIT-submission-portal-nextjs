@@ -20,7 +20,6 @@ interface AssignmentComponentProps {
 };
 
 const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ asisgnments, classRoomId }) => {
-    console.log("asisgnments", asisgnments);
 
     return (
         <div>
