@@ -6,7 +6,7 @@ const submissionSchema = new Schema({
     formFieldsReply: [],
     assignment: {
         type: Schema.Types.ObjectId,
-        ref: "post",
+        ref: "assignment",
         required: true
     },
     student: {

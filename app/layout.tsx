@@ -8,6 +8,7 @@ import ThemeProvider from "@/providers/theme-provider"
 import { Navbar } from "@/components/shared/navbar"
 import { Footer } from "@/components/shared/footer"
 import { Toaster } from "@/components/ui/toaster"
+// import { CheckDailyAssignmentSubmissionDate } from "@/lib/actions/auth/scheduleWork"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -22,6 +23,7 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const session = await auth()
+  // CheckDailyAssignmentSubmissionDate();
 
   return (
     <SessionProvider session={session}>

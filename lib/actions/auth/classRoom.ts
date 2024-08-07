@@ -11,6 +11,7 @@ import ClassRoom from "@/lib/models/classRooms";
 import nodemailer from "nodemailer";
 import Post from "@/lib/models/post";
 import Assignment from "@/lib/models/assignment";
+import { toObject } from "./helpingFuncs";
 // import { sendVerificationEmail } from "@/lib/mail"
 
 // type SettingsInput = z.infer<typeof SettingsValidation> & {
@@ -107,7 +108,7 @@ export const addClassRoom = async (values: ClassRoom) => {
       };
     });
 
-    return { success: "Class was create", classRoom };
+    return { success: "Class was create", classRoom: toObject(classRoom) };
   } catch (error) {
     console.log("error", error);
   }
@@ -163,7 +164,7 @@ export const editClassRoom = async (values: EditClassRoom) => {
       };
     });
 
-    return { success: "Class was create", classRoom };
+    return { success: "Class was create", classRoom: toObject(classRoom) };
   } catch (error) {
     console.log("error", error);
   }
@@ -189,7 +190,7 @@ export const getTeacherClassrooms = async () => {
       teacher: user._id,
     });
 
-    return { success: "Class was create", classRooms };
+    return { success: "Class was create", classRooms: classRooms.map(toObject) };
   } catch (error) {
     console.log("error", error);
   }
@@ -226,7 +227,7 @@ export const getTeacherClassroom = async (classRoomId?: string | number) => {
       isDeleted: false
     });
 
-    return { success: "Class was create", classRoom, students, posts };
+    return { success: "Class was create", classRoom: toObject(classRoom), students: students.map(toObject), posts: posts.map(toObject) };
   } catch (error) {
     console.log("error", error);
   }
@@ -252,7 +253,7 @@ export const getStudentClassrooms = async () => {
       students: user._id,
     }).populate("teacher");
 
-    return { success: "Class was create", classRooms };
+    return { success: "Class was create", classRooms: classRooms.map(toObject) };
   } catch (error) {
     console.log("error", error);
   }
@@ -288,7 +289,7 @@ export const getStudentClassroom = async (classRoomId?: string | number) => {
       isDeleted: false
     });
 
-    return { success: "Class was create", classRoom, posts, assignments };
+    return { success: "Class was create", classRoom: toObject(classRoom), posts: posts.map(toObject), assignments: assignments.map(toObject) };
   } catch (error) {
     console.log("error", error);
   }

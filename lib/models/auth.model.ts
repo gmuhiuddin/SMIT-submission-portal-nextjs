@@ -31,7 +31,13 @@ export const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  warnSend: String,
+  warnSend: {
+    type: [{
+      warnDate: String,
+      classroomId: String,
+    }],
+    default: []
+  },
   lastActivity: String
 }, { timestamps: true })
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { ExitStudentFromClassroom, sendWarningToStudent } from "@/lib/actions/auth/student";
 import { FaExclamationTriangle, FaTrash } from "react-icons/fa";
 
@@ -12,16 +12,29 @@ interface StudentCart {
 
 const StudentCart: React.FC<StudentCart> = ({ showWarnOrDelBtn, students, classRoomId }) => {
 
+    const [success, setSuccess] = useState<string>("");
+    const [err, setErr] = useState<string>("");
+
     const sendWarnToStudent = async (_id: any) => {
         const res = await sendWarningToStudent(_id, classRoomId);
+console.log(res);
 
-        console.log(res);
+        // if (res.success) {
+        //     setSuccess(res.success as string);
+        // } else {
+        //     setErr(res.error as string);
+        // };
     };
 
     const removeStdFromClassRoom = async (_id: any) => {
         const res = await ExitStudentFromClassroom(_id, classRoomId);
-
         console.log(res);
+
+        // if (res.success) {
+        //     setSuccess(res.success as string);
+        // } else {
+        //     setErr(res.error as string);
+        // };
     };
 
     return (

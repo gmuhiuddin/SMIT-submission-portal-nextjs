@@ -24,6 +24,10 @@ const classRoomSchema = new Schema({
         type: String,
         required: true
     },
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
     students: [{type: Schema.Types.ObjectId, ref: "User"}],
 }, {
     timestamps: true

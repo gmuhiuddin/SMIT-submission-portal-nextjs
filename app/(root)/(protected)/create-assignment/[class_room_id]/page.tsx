@@ -128,7 +128,8 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
     // };
 
     const date = new Date();
-    const minDateForDueDate = `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? 0 + String(date.getMonth() + 1) : date.getMonth() + 1}-${date.getDate()+1 < 10 ? 0 + String(date.getDate() + 1) : date.getDate() + 1}`;
+    date.setDate(date.getDate()+1);
+    const minDateForDueDate = `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? 0 + String(date.getMonth() + 1) : date.getMonth() + 1}-${date.getDate() < 10 ? 0 + String(date.getDate()) : date.getDate()}`;
 
     if (!classRoom || assignmentCreatePending) return <p>loading</p>;
 

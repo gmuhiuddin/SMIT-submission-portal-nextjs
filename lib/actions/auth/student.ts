@@ -47,12 +47,28 @@ export const sendWarningToStudent = async (studentId: any, classroomId: any) => 
             role: "student"
         });
 
+        if (!student) {
+            return { error: "Incorrect student" }
+        };
+
         const date = new Date();
         const todayDate = `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? 0 + String(date.getMonth() + 1) : date.getMonth() + 1}-${date.getDate() < 10 ? 0 + String(date.getDate()) : date.getDate()}`;
 
-        if (student.warnSend == todayDate) {
+        if (student.warnSend.find((warn: any) => warn?.classroomId == course._id && warn?.warnDate == todayDate)) {
             return { error: "Student have a warning" }
         };
+
+        const indexOfWarn = student.warnSend.findIndex((warn: any) => warn?.classroomId == course._id);
+
+        indexOfWarn != "-1" ? student.warnSend.splice(indexOfWarn, 1, {
+            warnDate: todayDate,
+            classroomId: course._id
+        }) : student.warnSend.push({
+            warnDate: todayDate,
+            classroomId: course._id
+        });
+
+        await student.save();
 
         await transporter.sendMail({
             from: '"SMIT-Student-submission-portal" <noreply@smit.com>', // Sender address
@@ -60,10 +76,6 @@ export const sendWarningToStudent = async (studentId: any, classroomId: any) => 
             subject: "Warning", // Subject line
             text: `Teacher send you warning for not responding on class room.`, // Plain text body
         });
-
-        student.warnSend = todayDate;
-
-        await student.save();
 
         return { success: "Warning was send successfully" };
     } catch (error) {
@@ -101,9 +113,15 @@ export const ExitStudentFromClassroom = async (studentId: any, classroomId: any)
             role: "student"
         });
 
-        if (!student.warnSend) {
+        if (!student.warnSend.find((warn: any) => warn?.classroomId == course._id)) {
             return { error: "Please send warning first" };
         };
+
+        const stdIndex = course.students.indexOf(studentId);
+
+        course.students.splice(stdIndex, 1);
+
+        await course.save();
 
         await transporter.sendMail({
             from: '"SMIT-Student-submission-portal" <noreply@smit.com>', // Sender address
@@ -112,13 +130,7 @@ export const ExitStudentFromClassroom = async (studentId: any, classroomId: any)
             text: `Teacher remove you from classroom`, // Plain text body
         });
 
-        const stdIndex = course.students.indexOf(studentId);
-
-        course.students.splice(stdIndex, 1);
-
-        await course.save();
-
-        return { success: "Warning was send successfully" };
+        return { success: "Student remove successfully" };
     } catch (error) {
         return { error: error instanceof Error ? error : "Something went wrong!" };
     };
