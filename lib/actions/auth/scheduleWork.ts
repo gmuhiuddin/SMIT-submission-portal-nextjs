@@ -56,7 +56,7 @@ export const CheckDailyAssignmentSubmissionDate = async () => {
                             html: `
                             <p>Submit the assignment for your class ${classRoom.title}. The assignment was due on ${ast.dueDate} at 23:59.</p>
                             <p>
-                              <a href="https://localhost:3000/std-assignment/${ast._id}" style="text-decoration: none;">
+                              <a href="http://localhost:3000/std-assignment/${ast._id}" style="text-decoration: none;">
                                 <button style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
                                   See Assignment
                                 </button>

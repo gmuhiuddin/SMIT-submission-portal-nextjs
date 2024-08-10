@@ -26,7 +26,6 @@ const StudentToggle: React.FC<StudentToggle> = ({ students, submissions, classRo
 
     return (
         <>
-            <br />
             <button onClick={() => setShowUnsbmStd(!showUnsbmStd)}>Show {showUnsbmStd ? "all" :
                 "not"} submited students</button>
             {showUnsbmStd ?

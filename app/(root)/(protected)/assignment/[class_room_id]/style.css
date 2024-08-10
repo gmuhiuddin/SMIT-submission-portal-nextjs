@@ -1,0 +1,92 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+}
+
+.modal-container {
+    background-color: white;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+}
+
+.modal-content {
+    padding: 1rem;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.assignment-main-container {
+    position: absolute;
+    top: 7%;
+}
+
+.class-room-card {
+    width: 25em;
+}
+
+@media screen and (max-height: 854px) {
+    .assignment-main-container {
+        top: 13%;
+    }
+}
+
+@media screen and (max-height: 515px) {
+    .assignment-main-container {
+        top: 17%;
+    }
+}
+
+@media screen and (max-height: 455px) {
+    .assignment-main-container {
+        top: 21%;
+    }
+}
+
+@media screen and (max-height: 325px) {
+    .assignment-main-container {
+        top: 27%;
+    }
+}
+
+@media screen and (max-height: 245px) {
+    .assignment-main-container {
+        top: 33%;
+    }
+}
+
+@media screen and (max-height: 205px) {
+    .assignment-main-container {
+        top: 39%;
+    }
+}

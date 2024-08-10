@@ -25,27 +25,27 @@ const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ assignments }
     const [asgs, setAsgs] = useState<any>(null);
 
     useEffect(() => {
-        if(assignments.length){
+        if (assignments.length) {
             const fetchData = async () => {
                 const data = await Promise.all(assignments.map(async (element: any) => {
                     const studentSubmission = await getStudentSubmission(element._id);
-    
+
                     return {
                         ...element,
                         isSubmited: studentSubmission.success ? true : false,
                     };
                 }));
-    
+
                 setAsgs(data);
             };
 
             fetchData();
-        }else{
+        } else {
             setAsgs([]);
         };
 
     }, []);
-    
+
     if (!asgs) return <>Loading...</>;
 
     return (
@@ -53,8 +53,8 @@ const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ assignments }
             {asgs.length ? asgs.map((element: any, index: number) => {
                 return (
                     <StudentAssignmentCard
-                    key={index}
-                    astId={element?._id}
+                        key={index}
+                        astId={element?._id}
                         title={element?.title}
                         description={element?.description}
                         isSubmitted={element?.isSubmited}

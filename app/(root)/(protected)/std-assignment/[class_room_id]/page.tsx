@@ -5,7 +5,6 @@ import { getStudentAssignment } from "@/lib/actions/auth/assignment";
 import StdForm from "@/components/shared/submissionForm";
 import { getStudentSubmission } from "@/lib/actions/auth/submission";
 import SubmissionFormDisplay from "@/components/shared/submissionFormDisplay";
-import SendCommentComp from "@/components/shared/SendCommentComp";
 import AssignmentDetailPage from "@/components/shared/studentAstDetail";
 import { currentUser } from "@/lib/session";
 

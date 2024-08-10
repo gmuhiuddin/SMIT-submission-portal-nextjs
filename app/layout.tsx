@@ -18,13 +18,14 @@ export const metadata: Metadata = {
   description: "Sign-Up and Sign-In with Nextjs",
 }
 
+CheckDailyAssignmentSubmissionDate();
+
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   const session = await auth()
-  CheckDailyAssignmentSubmissionDate();
 
   return (
     <SessionProvider session={session}>

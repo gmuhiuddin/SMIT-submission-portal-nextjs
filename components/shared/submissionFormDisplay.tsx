@@ -63,29 +63,32 @@ const StdFormDisplay: React.FC<StdFormInterface> = ({ fields, sumbissionFields }
                          {field.type === 'number' && <input disabled type="number"
                              value={getField(field.id).value}
                              required={field.required} />}
+                              {field.type == 'url' && <input disabled type="url"
+                             value={getField(field.id).value}
+                             required={field.required} />}
                          {field.type === 'file' && (
-                             <div className="file-input-wrapper">
-                                 <label className="file-input-label" htmlFor={`file-${field.id}`}>File</label>
-                                 <p>{getField(field.id).name}</p>
-                             </div>
+                              <div className="file-input-wrapper">
+                              <p className="flex items-center">{getField(field.id).name} <Link href={getField(field.id).downloadUrl}><FaDownload style={{ cursor: 'pointer', marginLeft: "3px" }} /></Link></p>
+                              <br />
+                          </div>
                          )}
                          {field.type === 'Multiple Files' && (
                              <div className="file-input-wrapper">
                                  <p>{getField(field.id).files.map((element: any, index: number) => {
-                                    return <p key={index}>{element.name}</p>
+                                    return <p key={index} className="flex items-center">{element.name} <Link href={element.downloadUrl}><FaDownload style={{ cursor: 'pointer', marginLeft: "3px" }} /></Link></p>
                                  })}</p>
                              </div>
                          )}
                          {field.type === 'image' && (
                              <div className="file-input-wrapper">
-                                 <p>{getField(field.id).name} <Link href={getField(field.id).downloadUrl}><FaDownload style={{ cursor: 'pointer' }} /></Link></p>
+                                 <p className="flex items-center">{getField(field.id).name} <Link href={getField(field.id).downloadUrl}><FaDownload style={{ cursor: 'pointer', marginLeft: "3px" }} /></Link></p>
                                  <br />
                              </div>
                          )}
                          {field.type === 'Multiple Images' && (
                              <div className="file-input-wrapper">
-                                 <p>{getField(field.id).images.map((element: any, index: number) => {
-                                    return <p key={index}>{element.name}</p>
+                                 <p>{getField(field.id).files.map((element: any, index: number) => {
+                                    return <p key={index} className="flex items-center">{element.name} <Link href={element.downloadUrl}><FaDownload style={{ cursor: 'pointer', marginLeft: "3px" }} /></Link></p>
                                  })}</p>
                              </div>
                          )}
