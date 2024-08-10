@@ -249,11 +249,23 @@ export const getStudentClassrooms = async () => {
       return { error: "Unauthorized" };
     }
 
-    const classRooms = await ClassRoom.find({
+    const classRooms: any = await ClassRoom.find({
       students: user._id,
     }).populate("teacher");
 
-    return { success: "Class was create", classRooms: classRooms.map(toObject) };
+    const classRoomsWithWarn = classRooms.map((element: any) => {
+      const copyElement = { ...element._doc };
+
+      if (existingUser.warnSend.some((warn: any) => warn.classroomId == element._id.toString())) {
+        copyElement.warnHave = true;
+      } else {
+        copyElement.warnHave = false;
+      };
+
+      return copyElement;
+    });
+
+    return { success: "Class was create", classRooms: classRoomsWithWarn };
   } catch (error) {
     console.log("error", error);
   }

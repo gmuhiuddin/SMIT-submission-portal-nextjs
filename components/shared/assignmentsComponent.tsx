@@ -1,8 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import StudentAssignmentCard from "../ui/studentAssignmentCard";
+import { getStudentSubmission } from "@/lib/actions/auth/submission";
 
 interface Assignment {
     _id: string;
@@ -15,19 +17,48 @@ interface Assignment {
 };
 
 interface AssignmentComponentProps {
-    asisgnments?: Assignment[] | any;
+    assignments?: Assignment[] | any;
 };
 
-const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ asisgnments }) => {
+const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ assignments }) => {
+
+    const [asgs, setAsgs] = useState<any>(null);
+
+    useEffect(() => {
+        if(assignments.length){
+            const fetchData = async () => {
+                const data = await Promise.all(assignments.map(async (element: any) => {
+                    const studentSubmission = await getStudentSubmission(element._id);
+    
+                    return {
+                        ...element,
+                        isSubmited: studentSubmission.success ? true : false,
+                    };
+                }));
+    
+                setAsgs(data);
+            };
+
+            fetchData();
+        }else{
+            setAsgs([]);
+        };
+
+    }, []);
+    
+    if (!asgs) return <>Loading...</>;
 
     return (
         <div>
-            {asisgnments.length ? asisgnments.map((element: any, index: number) => {
+            {asgs.length ? asgs.map((element: any, index: number) => {
                 return (
-                    <div key={index}>
-                        {element.title}
-                        <Link href={`/std-assignment/${element._id}`}><Button className="ml-3">See activity</Button></Link>
-                    </div>
+                    <StudentAssignmentCard
+                    astId={element?._id}
+                        title={element?.title}
+                        description={element?.description}
+                        isSubmitted={element?.isSubmited}
+                        hasWarning={false}
+                    />
                 )
             }) : "No assignment"}
         </div>

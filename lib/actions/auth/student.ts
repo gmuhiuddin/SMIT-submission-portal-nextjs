@@ -6,6 +6,7 @@ import connectDB from "@/lib/db";
 import { User } from "@/lib/models/auth.model";
 import ClassRoom from "@/lib/models/classRooms";
 import { currentUser } from "@/lib/session";
+import { toObject } from "./helpingFuncs";
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -123,6 +124,12 @@ export const ExitStudentFromClassroom = async (studentId: any, classroomId: any)
 
         await course.save();
 
+        const indexOfWarn = student.warnSend.findIndex((warn: any) => warn?.classroomId == course._id);
+
+        student.warnSend.splice(indexOfWarn, 1);
+
+        await student.save();
+
         await transporter.sendMail({
             from: '"SMIT-Student-submission-portal" <noreply@smit.com>', // Sender address
             to: student?.email, // List of receivers
@@ -133,5 +140,58 @@ export const ExitStudentFromClassroom = async (studentId: any, classroomId: any)
         return { success: "Student remove successfully" };
     } catch (error) {
         return { error: error instanceof Error ? error : "Something went wrong!" };
+    };
+};
+
+export const getStudents = async (classroomId: any) => {
+    try {
+        const user = await currentUser();
+    
+        if (!user) {
+            return { error: "Unauthorized" }
+        };
+    
+        await connectDB();
+    
+        const existingUser = await User.findById(user?._id);
+    
+        if (!existingUser || existingUser.role == "student") {
+            return { error: "Unauthorized" }
+        };
+    
+        const classRoom = await ClassRoom.findById(classroomId).populate({
+            path: 'students',
+            select: 'name image'
+        });
+
+        if(!classRoom) return { error: "Incorrect class room!"};
+    
+        return { success: "Students fetched successfully", students: classRoom.students.map(toObject)};
+    } catch (error) {
+        return { error: error instanceof Error ? error.message : "Something went wrong!" };
+    };
+};
+
+export const getStudentWarn = async (classroomId: any) => {
+    try {
+        const user = await currentUser();
+    
+        if (!user) {
+            return { error: "Unauthorized" }
+        };
+    
+        await connectDB();
+    
+        const existingUser = await User.findById(user?._id);
+    
+        if (!existingUser || existingUser.role == "student") {
+            return { error: "Unauthorized" }
+        };
+
+        const warnHave = existingUser.warnSend.some((std: any) => std.classroomId == classroomId);
+    
+        return { success: "Students fetched successfully", warnHave: warnHave};
+    } catch (error) {
+        return { error: error instanceof Error ? error.message : "Something went wrong!" };
     };
 };

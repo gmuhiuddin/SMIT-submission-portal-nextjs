@@ -186,4 +186,30 @@ export const getStudentSubmission = async (assignmentId: string) => {
     };
 };
 
+export const getStudentsSubmission = async (assignmentId: string) => {
+    try {
+        const user = await currentUser();
+
+        if (!user) {
+            return { error: "Unauthorized" };
+        };
+
+        await connectDB();
+
+        const existingUser = await User.findById(user?._id);
+
+        if (!existingUser || existingUser.role == "student") {
+            return { error: "Unauthorized" };
+        };
+
+        const submissions = await Submission.find({
+            assignment: assignmentId
+        });
+
+        return { success: "submissions fetched successfully", submissions: submissions.map(toObject) };
+    } catch (error) {
+        return { error: error instanceof Error ? error.message : "Something went wrong!" };
+    };
+};
+
 export const updateSubmission = async () => { };

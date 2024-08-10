@@ -41,7 +41,7 @@ const ClassRoom: React.FC<ClassRoomInterface> = async ({ params: { class_room_id
     const assignments = await getTeacherAssignments(class_room_id);
     
     const tabs = [
-        { label: 'Assignments', content: <TeacherAssignmentsComponent asisgnments={assignments?.assignments} classRoomId={class_room_id} />, textColor: '#007B83' },
+        { label: 'Assignments', content: <TeacherAssignmentsComponent assignments={assignments?.assignments} classRoomId={class_room_id} />, textColor: '#007B83' },
         { label: 'Posts', content:  <TeacherPostsComponent posts={classRoom.posts} classRoomId={class_room_id} />, textColor: '#007B83' },
       ];
 

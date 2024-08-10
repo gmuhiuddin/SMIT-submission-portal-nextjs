@@ -12,12 +12,12 @@ const TeacherDashboard = async () => {
   const classRooms = await getTeacherClassrooms();
 
   return (
-    <div className="flex justify-center flex-wrap class-room-main-container">
+    <div className="flex px-6 flex-wrap w-full class-room-main-container">
 
       {classRooms?.classRooms && classRooms.classRooms.length ? classRooms?.classRooms?.map((element, index) => {
         return (
 
-          <Box key={index} className="m-1 class-room-card" sx={{ Py: 6, background: '#0976A9', color: 'white', borderRadius: '20px' }}>
+          <Box key={index} className="m-1 class-room-card " sx={{ Py: 6, background: '#0976A9', color: 'white', borderRadius: '20px' }}>
             <Typography sx={{ padding: '30px', cursor: 'pointer' }}>
               <h1 className='text-3xl border-b-2 font-semibold pb-2'>{element?.title}</h1>
               <p className='text-2xl border-b-2 mt-2 font-semibold inline-block w-max mb-2 teacher-name'>SMIT-{element?.batch} ({user?.name})</p>

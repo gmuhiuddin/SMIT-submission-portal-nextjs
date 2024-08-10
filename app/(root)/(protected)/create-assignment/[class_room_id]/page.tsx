@@ -219,3 +219,119 @@ const CreateAssignment: React.FC<CreateAssignmentPorps> = ({ params: { class_roo
 };
 
 export default CreateAssignment;
+
+// components/CreateAssignment.tsx
+// "use client";
+
+// import React, { useState } from 'react';
+// import { TextField, Button, Box, Typography, IconButton } from '@mui/material';
+// // import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+// import { DatePicker } from '@mui/x-date-pickers';
+// import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+// import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+
+// interface DynamicField {
+//   id: number;
+//   label: string;
+//   value: string;
+// }
+
+// const CreateAssignment: React.FC = () => {
+//   const [title, setTitle] = useState('');
+//   const [description, setDescription] = useState('');
+//   const [dueDate, setDueDate] = useState<Date | null>(null);
+//   const [dynamicFields, setDynamicFields] = useState<DynamicField[]>([]);
+
+//   const addField = () => {
+//     setDynamicFields([...dynamicFields, { id: Date.now(), label: '', value: '' }]);
+//   };
+
+//   const removeField = (id: number) => {
+//     setDynamicFields(dynamicFields.filter(field => field.id !== id));
+//   };
+
+//   const handleFieldChange = (id: number, label: string, value: string) => {
+//     setDynamicFields(
+//       dynamicFields.map(field => (field.id === id ? { ...field, label, value } : field))
+//     );
+//   };
+
+//   const handleSubmit = () => {
+//     // Handle form submission
+//     console.log({ title, description, dueDate, dynamicFields });
+//   };
+
+//   return (
+//     <Box sx={{ maxWidth: 600, margin: 'auto', mt: 4 }}>
+//       <Typography variant="h4" component="h1" gutterBottom>
+//         Create Assignment
+//       </Typography>
+//       <TextField
+//         fullWidth
+//         label="Title"
+//         value={title}
+//         onChange={(e) => setTitle(e.target.value)}
+//         margin="normal"
+//       />
+//       <TextField
+//         fullWidth
+//         label="Description"
+//         value={description}
+//         onChange={(e) => setDescription(e.target.value)}
+//         margin="normal"
+//         multiline
+//         rows={4}
+//       />
+//       {/* <DatePicker
+//         label="Due Date"
+//         value={dueDate}
+//         onChange={(newValue: any) => setDueDate(newValue)}
+//         renderInput={(params: any) => <TextField {...params} fullWidth margin="normal" />}
+//       /> */}
+
+//       <Box mt={2}>
+//         <Typography variant="h6">Custom Fields</Typography>
+//         {dynamicFields.map((field, index) => (
+//           <Box key={field.id} display="flex" alignItems="center" mt={2}>
+//             <TextField
+//               label="Field Label"
+//               value={field.label}
+//               onChange={(e) => handleFieldChange(field.id, e.target.value, field.value)}
+//               margin="normal"
+//               fullWidth
+//             />
+//             <TextField
+//               label="Field Value"
+//               value={field.value}
+//               onChange={(e) => handleFieldChange(field.id, field.label, e.target.value)}
+//               margin="normal"
+//               fullWidth
+//             />
+//             <IconButton onClick={() => removeField(field.id)}>
+//               <DeleteOutlineIcon />
+//             </IconButton>
+//           </Box>
+//         ))}
+//         <Button
+//           startIcon={<AddCircleOutlineIcon />}
+//           variant="outlined"
+//           onClick={addField}
+//           sx={{ mt: 2 }}
+//         >
+//           Add Field
+//         </Button>
+//       </Box>
+
+//       <Button
+//         variant="contained"
+//         color="primary"
+//         onClick={handleSubmit}
+//         sx={{ mt: 4 }}
+//       >
+//         Create Assignment
+//       </Button>
+//     </Box>
+//   );
+// };
+
+// export default CreateAssignment;
