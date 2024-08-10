@@ -23,15 +23,17 @@ const StudentToggle: React.FC<StudentToggle> = ({ students, submissions, classRo
 
         return stds;
     };
-    
+
     return (
         <>
-        {
-            showUnsbmStd ?
-            <StudentCart students={getUnSbmStd()} showWarnOrDelBtn={true} classRoomId={classRoomId} />
-            :
-            <StudentCart students={students} showWarnOrDelBtn={true} classRoomId={classRoomId} />
-        }
+            <br />
+            <button onClick={() => setShowUnsbmStd(!showUnsbmStd)}>Show {showUnsbmStd ? "all" :
+                "not"} submited students</button>
+            {showUnsbmStd ?
+                <StudentCart students={getUnSbmStd()} showWarnOrDelBtn={true} classRoomId={classRoomId} />
+                :
+                <StudentCart students={students} showWarnOrDelBtn={true} classRoomId={classRoomId} />
+            }
         </>
     )
 };

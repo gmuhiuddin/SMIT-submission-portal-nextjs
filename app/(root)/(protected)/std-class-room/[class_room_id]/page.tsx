@@ -15,17 +15,6 @@ interface ClassRoomInterface {
     params: ClassRoomId;
 }
 
-interface Assignment {
-    _id: string;
-    teacher: string;
-    classRoom: string;
-    dueDate: string;
-    title: string;
-    description: string;
-    webScrnShot: string;
-    content: string;
-}
-
 const ClassRoom: React.FC<ClassRoomInterface> = async ({ params: { class_room_id } }) => {
 
     const user = await currentUser();

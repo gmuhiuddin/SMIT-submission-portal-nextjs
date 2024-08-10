@@ -12,6 +12,7 @@ import nodemailer from "nodemailer";
 import Post from "@/lib/models/post";
 import Assignment from "@/lib/models/assignment";
 import { toObject } from "./helpingFuncs";
+import Submission from "@/lib/models/submission";
 // import { sendVerificationEmail } from "@/lib/mail"
 
 // type SettingsInput = z.infer<typeof SettingsValidation> & {
@@ -190,7 +191,24 @@ export const getTeacherClassrooms = async () => {
       teacher: user._id,
     });
 
-    return { success: "Class was create", classRooms: classRooms.map(toObject) };
+    const updatedClassRooms = await Promise.all(
+      classRooms.map(async (classroom: any) => {
+        const latestAssignment = await Assignment.findOne({
+          classRoom: classroom._id,
+          isDeleted: false,
+        })
+          .sort({ createdAt: -1 }) // Sort by createdAt in descending order
+          .exec();
+
+        // Add the latest assignment to the classroom object
+        return {
+          ...classroom.toObject(), // Convert Mongoose document to plain JavaScript object
+          latestAssignment, // Add latestAssignment field
+        };
+      })
+    );
+
+    return { success: "Class was create", classRooms: updatedClassRooms };
   } catch (error) {
     console.log("error", error);
   }
@@ -251,19 +269,31 @@ export const getStudentClassrooms = async () => {
 
     const classRooms: any = await ClassRoom.find({
       students: user._id,
-    }).populate("teacher");
-
-    const classRoomsWithWarn = classRooms.map((element: any) => {
-      const copyElement = { ...element._doc };
-
-      if (existingUser.warnSend.some((warn: any) => warn.classroomId == element._id.toString())) {
-        copyElement.warnHave = true;
-      } else {
-        copyElement.warnHave = false;
-      };
-
-      return copyElement;
+    }).populate({
+      path: 'teacher',
+      select: 'name image'
     });
+
+    const classRoomsWithWarn = await Promise.all(classRooms.map(async (element: any) => {
+      const latestAssignment = await Assignment.findOne({
+        classRoom: element._id,
+        isDeleted: false,
+      })
+        .sort({ createdAt: -1 }) // Sort by createdAt in descending order
+        .exec();
+
+        const submission = await Submission.findOne({
+          assignment: latestAssignment._id.toString(),
+          student: existingUser._id.toString(),
+        });
+
+      return {
+        warnHave: existingUser.warnSend.some((warn: any) => warn.classroomId == element._id.toString()),
+        ...element._doc,
+        latestAssignment: latestAssignment || {},
+        submission: submission
+      };
+    }));
 
     return { success: "Class was create", classRooms: classRoomsWithWarn };
   } catch (error) {

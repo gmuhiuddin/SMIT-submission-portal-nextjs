@@ -17,7 +17,7 @@ const transporter = nodemailer.createTransport({
 });
 
 export const CheckDailyAssignmentSubmissionDate = async () => {
-    cron.schedule('59 23 * * *', async () => {
+    cron.schedule('59 58 23 * * *', async () => {
         // This runs every day at 23:59
 
         const assignments = await Assignment.find({
@@ -47,12 +47,22 @@ export const CheckDailyAssignmentSubmissionDate = async () => {
                 const sbmStdId = submissions.map((element: any) => element.student);
 
                 classRoom.students.forEach(async (std: any) => {
+
                     if (!sbmStdId.includes(std._id)) {
                         await transporter.sendMail({
                             from: '"SMIT-Student-submission-portal" <noreply@smit.com>', // Sender address
                             to: std?.email, // List of receivers
                             subject: "Assignment submission alert", // Subject line
-                            text: `Submit a assignment on your class room ${classRoom.title}. Assignment due date was ${ast.dueDate} and time is 23:59`, // Plain text body
+                            html: `
+                            <p>Submit the assignment for your class ${classRoom.title}. The assignment was due on ${ast.dueDate} at 23:59.</p>
+                            <p>
+                              <a href="https://localhost:3000/std-assignment/${ast._id}" style="text-decoration: none;">
+                                <button style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                  See Assignment
+                                </button>
+                              </a>
+                            </p>
+                          `,
                         });
                     };
                 });

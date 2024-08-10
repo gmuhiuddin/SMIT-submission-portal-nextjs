@@ -8,7 +8,7 @@ import { faThumbsUp, faShareSquare, faComment, faPaperPlane, faHeart, faFaceSadT
 import './style.css';
 import { likePost, disLikePost } from '@/lib/actions/auth/post';
 import { useSession } from 'next-auth/react';
-import { sendComment } from '@/lib/actions/auth/comment'
+import { sendCommentOnPost } from '@/lib/actions/auth/comment'
 import styles from './DownloadableImage.module.css';
 
 interface ImageUrl {
@@ -99,7 +99,7 @@ const Post: React.FC<PostProps> = ({ postObj }) => {
         const res: {
             success?: string;
             error?: string;
-        } = await sendComment({
+        } = await sendCommentOnPost({
             txt: inputValue,
             studentId: user?._id as string,
             postId: postObj?._id as string,

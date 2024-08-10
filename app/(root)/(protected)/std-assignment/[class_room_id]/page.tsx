@@ -1,11 +1,13 @@
 import React from "react";
+import { useSession } from "next-auth/react";
 import { FaTrash, FaExclamationTriangle } from "react-icons/fa";
 import { getStudentAssignment } from "@/lib/actions/auth/assignment";
 import StdForm from "@/components/shared/submissionForm";
 import { getStudentSubmission } from "@/lib/actions/auth/submission";
 import SubmissionFormDisplay from "@/components/shared/submissionFormDisplay";
 import SendCommentComp from "@/components/shared/SendCommentComp";
-import { useSession } from "next-auth/react";
+import AssignmentDetailPage from "@/components/shared/studentAstDetail";
+import { currentUser } from "@/lib/session";
 
 interface Assignment {
     params: {
@@ -14,20 +16,20 @@ interface Assignment {
 }
 
 const Assignment: React.FC<Assignment> = async ({ params: { class_room_id } }) => {
-    // const { data: session, status, update } = useSession({ required: true });
-//   const user = session?.user;
+    const user = await currentUser();
 
     const assignment: any = await getStudentAssignment(class_room_id);
 
-    if(!assignment) return <>Check your connections</>;
-    
+    if (!assignment) return <>Check your connections</>;
+
     if (!assignment?.success) return <p>404</p>;
-    
+
     const submission: any = await getStudentSubmission(class_room_id);
 
     return (
         <div className="flex w-screen h-screen pt-16 justify-between p-3">
-            <div className="p-3 overflow-y-auto">
+            <AssignmentDetailPage title={assignment.assignment.title} description={assignment.assignment.description} dueDate={assignment.assignment.dueDate} formFields={assignment.assignment.formFields} userId={user?._id as string} astId={assignment.assignment._id} />
+            {/* <div className="p-3 overflow-y-auto">
                 Assignment detail
                 Title: {assignment.assignment.title}
                 <br />
@@ -46,7 +48,7 @@ const Assignment: React.FC<Assignment> = async ({ params: { class_room_id } }) =
                 :
                 <StdForm assignment={assignment} />
                 }
-            </div>
+            </div> */}
             {/* <div className="p-3 overflow-y-auto bg-black">
                 Comments
                 {assignment.comments.length ? assignment.comments.map((element: any, index: number) => {

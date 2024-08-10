@@ -18,7 +18,44 @@ interface Comment {
     txt: string;
 }
 
-export const sendComment = async (values: Comment) => {
+export const sendCommentOnPost = async (values: Comment) => {
+    try {
+        const user = await currentUser();
+
+        if (!user) {
+            return { error: "Unauthorized" };
+        };
+
+        await connectDB();
+
+        const existingUser = await User.findById(user?._id);
+
+        if (!existingUser || existingUser.role == "teacher") {
+            return { error: "Unauthorized" };
+        };
+
+        const post = await Post.findOne({
+            _id: values.postId,
+            isDeleted: false
+        });
+
+        if (!post) {
+            return { error: "Incorrect post" };
+        };
+
+        await Comment.create({
+            student: existingUser._id,
+            post: values.postId,
+            txt: values.txt
+        });
+
+        return { success: "Comment sent successfully" };
+    } catch (error) {
+        return { error: error instanceof Error ? error.message : "Something went wrong!" };
+    };
+};
+
+export const sendCommentOnAssignment = async (values: Comment) => {
     try {
         const user = await currentUser();
 

@@ -5,44 +5,30 @@ import { IconButton, Card, CardActions, CardContent, CardMedia, Typography, Butt
 import { getTeacherClassrooms } from '@/lib/actions/auth/classRoom';
 import { currentUser } from '@/lib/session';
 import "./style.css";
+import TeacherClassroomCard from '@/components/shared/teacherClassroomCard';
 
 const TeacherDashboard = async () => {
-  const user = await currentUser();
+  const user: any = await currentUser();
 
-  const classRooms = await getTeacherClassrooms();
+  const classRooms: any = await getTeacherClassrooms();
+
+  if (!classRooms) return <>Check your internet connection</>;
 
   return (
-    <div className="flex px-6 flex-wrap w-full class-room-main-container">
+    <div className="flex p-6 justify-center flex-wrap w-full class-room-main-container gap-4">
 
-      {classRooms?.classRooms && classRooms.classRooms.length ? classRooms?.classRooms?.map((element, index) => {
+      {classRooms?.classRooms && classRooms.classRooms.length ? classRooms?.classRooms?.map((element: any, index: number) => {
         return (
-
-          <Box key={index} className="m-1 class-room-card " sx={{ Py: 6, background: '#0976A9', color: 'white', borderRadius: '20px' }}>
-            <Typography sx={{ padding: '30px', cursor: 'pointer' }}>
-              <h1 className='text-3xl border-b-2 font-semibold pb-2'>{element?.title}</h1>
-              <p className='text-2xl border-b-2 mt-2 font-semibold inline-block w-max mb-2 teacher-name'>SMIT-{element?.batch} ({user?.name})</p>
-              <p className='w-max '>{element?.timeAndLocation?.days} {element?.timeAndLocation?.time}</p>
-              <Link href={`/class-room/${element?._id}`}>
-                <Button
-                  variant='contained'
-                  sx={{ background: '#8BC34A', py: 2, px: 4, mt: 2, borderRadius: '30px', ":hover": { background: '#4CAF50' } }}>
-                  See Activity</Button>
-              </Link>
-              <Link href={`/edit-classroom/${element?._id}`}>
-                <Button
-                  variant='contained'
-                  sx={{ background: '#8BC34A', py: 2, px: 4, mt: 2, ml: 2, borderRadius: '30px', ":hover": { background: '#4CAF50' } }}>
-                  Edit class</Button>
-              </Link>
-            </Typography>
-            <CardMedia
-              sx={{ height: 'auto' }}
-              image="/static/images/cards/contemplative-reptile.jpg"
-              title="green iguana"
-            />
-            <CardContent className='cursor-pointer' >
-            </CardContent>
-          </Box>
+          <TeacherClassroomCard
+            key={index}
+            title={element.title}
+            batch={`SMIT-${element.batch}`}
+            timing={element.timeAndLocation.time}
+            days={element.timeAndLocation.days}
+            lastActivity={element.latestAssignment.title}
+            hasNewAssignment={true}
+            classroomId={element?._id}
+          />
         )
       })
         :

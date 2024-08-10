@@ -74,11 +74,11 @@ export const addSubmission = async (values: Submission) => {
             if (element.required && !field) return console.log("All fields are required");
 
             if (element.type == "Multiple Files" || element.type == "Multiple Images" || element.type == "file" || element.type == "image") {
-                if (element.type == "file" || element.type == "image") {
+                if (element.type == "file") {
 
                     if (field instanceof File && field.size > 0) {
 
-                        const fileContentType = field?.type || element.type == "file" ? "text/plain" : "images/*";
+                        const fileContentType = field?.type || "text/plain";
 
                         const filename = `${nanoid()}.${fileContentType.split("/")[1]}`;
 
@@ -95,7 +95,28 @@ export const addSubmission = async (values: Submission) => {
                             downloadUrl: blob?.downloadUrl,
                         });
                     };
-                } else {
+                } else if (element.type == "image") {
+
+                    if (field instanceof File && field.size > 0) {
+
+                        const fileContentType = field?.type || "images/*";
+
+                        const filename = `${nanoid()}.${fileContentType.split("/")[1]}`;
+
+                        const blob = await put(filename, field, {
+                            contentType: fileContentType,
+                            access: "public",
+                        });
+
+                        submissionFields.push({
+                            id: element.id,
+                            name: field.name,
+                            type: fileContentType,
+                            url: blob?.url,
+                            downloadUrl: blob?.downloadUrl,
+                        });
+                    };
+                } else if (element.type == "Multiple Images") {
                     // Multiple images uploading work
 
                     const filesOrImages: any = [];
@@ -107,7 +128,46 @@ export const addSubmission = async (values: Submission) => {
 
                         if (file instanceof File && file.size > 0) {
 
-                            const fileContentType = file?.type || element.type == "file" ? "text/plain" : "images/*";
+                            const fileContentType = file?.type || "images/*";
+
+                            const filename = `${nanoid()}.${fileContentType.split("/")[1]}`;
+
+                            const blob = await put(filename, file, {
+                                contentType: fileContentType,
+                                access: "public",
+                            });
+
+                            filesOrImages.push({
+                                name: file.name,
+                                type: blob.contentType,
+                                url: blob.url,
+                                downloadUrl: blob.downloadUrl,
+                            });
+                        };
+                    };
+
+                    element.type == "Multiple Files" ?
+                        submissionFields.push({
+                            id: element.id,
+                            files: filesOrImages
+                        }) :
+                        submissionFields.push({
+                            id: element.id,
+                            images: filesOrImages
+                        });
+                } else if (element.type == "Multiple Files") {
+                    // Multiple images uploading work
+
+                    const filesOrImages: any = [];
+                    let filesLength: any = field;
+                    filesLength = +filesLength;
+
+                    for (let i = 0; i < filesLength; i++) {
+                        const file = values.formFieldsReply.get(`${element.id}-${i}`);
+
+                        if (file instanceof File && file.size > 0) {
+
+                            const fileContentType = file?.type || "text/plain";
 
                             const filename = `${nanoid()}.${fileContentType.split("/")[1]}`;
 
@@ -148,6 +208,12 @@ export const addSubmission = async (values: Submission) => {
             student: values.student,
             assignment: values.assignment,
         });
+
+        const indexOfWarn = existingUser.warnSend.findIndex((warn: any) => warn.classroomId == assignment.classRoom);
+
+        existingUser.warnSend.splice(indexOfWarn, 1);
+
+        await existingUser.save();
 
         return { success: "Submission successful", submission: toObject(submissionData) };
     } catch (error) {

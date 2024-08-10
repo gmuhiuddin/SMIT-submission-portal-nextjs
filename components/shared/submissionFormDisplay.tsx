@@ -2,7 +2,9 @@
 
 import { addSubmission } from "@/lib/actions/auth/submission";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import React, { useState } from "react";
+import { FaDownload  } from "react-icons/fa";
 
 interface StdFormInterface {
     fields: any;
@@ -76,7 +78,8 @@ const StdFormDisplay: React.FC<StdFormInterface> = ({ fields, sumbissionFields }
                          )}
                          {field.type === 'image' && (
                              <div className="file-input-wrapper">
-                                 <p>{getField(field.id).name}</p>
+                                 <p>{getField(field.id).name} <Link href={getField(field.id).downloadUrl}><FaDownload style={{ cursor: 'pointer' }} /></Link></p>
+                                 <br />
                              </div>
                          )}
                          {field.type === 'Multiple Images' && (

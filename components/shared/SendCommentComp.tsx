@@ -15,6 +15,8 @@ const SendCommentComp: React.FC<SendComment> = ({assignmentId}) => {
 
     const handleSendComment = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setSuccess("");
+        setErr("");
 
         const res = await sendComment({
             postId: assignmentId,
@@ -22,6 +24,7 @@ const SendCommentComp: React.FC<SendComment> = ({assignmentId}) => {
         });
 
         if(res.success){
+            setCommentTxt("");
             setSuccess("Comment sent successful");
         }else{
             setErr(res.error || "Some thing went wrong!");
@@ -30,7 +33,7 @@ const SendCommentComp: React.FC<SendComment> = ({assignmentId}) => {
 
     return(
         <form onSubmit={handleSendComment}>
-            <input type='text' onChange={(e) => setCommentTxt(e.target.value)} placeholder='Commect' />
+            <input type='text' value={commentTxt} onChange={(e) => setCommentTxt(e.target.value)} placeholder='Commect' />
             <button type="submit">Send</button>
         </form>
     )

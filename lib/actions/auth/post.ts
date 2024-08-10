@@ -152,7 +152,6 @@ export const addPost = async (values: FormData) => {
                     contentType: fileContentType,
                     access: "public",
                 });
-                console.log("blob", blob);
 
                 postData?.fileUrls.push({
                     name: file?.name,

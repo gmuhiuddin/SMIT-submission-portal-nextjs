@@ -1,0 +1,37 @@
+.container {
+  display: flex;
+}
+
+.formSection {
+  width: 67%;
+  padding: 1rem;
+}
+
+.detailsSection {
+  width: 33%;
+  padding: 1rem;
+  border-left: 1px solid #ddd;
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+}
+
+.fileUpload {
+  margin-top: 1rem;
+}
+
+.textarea {
+  width: 100%;
+  height: 100px;
+  margin-bottom: 1rem;
+}
+
+.button {
+  padding: 0.5rem 1rem;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}

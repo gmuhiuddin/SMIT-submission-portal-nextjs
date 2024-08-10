@@ -10,7 +10,7 @@ export const Navbar = async () => {
   const session = await auth()
   
   return (
-    <header className="w-full fixed z-10 top-0 bg-gray-100 dark:bg-gray-900 border-b border-gray-200">
+    <header className="w-full fixed bg-[#f8fafc] z-10 top-0 dark:bg-gray-900 border-b border-gray-200">
       <nav className="h-16 px-4 flex items-center">
         <Link href="/">
           <img width={89} src="https://quiz.saylaniwelfare.com/images/smit.png" alt="SMIT-logo" />
