@@ -53,6 +53,7 @@ const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ assignments }
             {asgs.length ? asgs.map((element: any, index: number) => {
                 return (
                     <StudentAssignmentCard
+                    key={index}
                     astId={element?._id}
                         title={element?.title}
                         description={element?.description}

@@ -77,7 +77,7 @@ const TeacherClassroomCard: React.FC<TeacherClassroomCardProps> = ({
                     Last Activity: {lastActivity}
                 </div>
                 {hasNewAssignment && (
-                    <FaClipboardList className="text-blue-500" title="New Assignment" />
+                    <FaClipboardList className="text-blue-500" title="Assignment" />
                 )}
             </div>
         </div>

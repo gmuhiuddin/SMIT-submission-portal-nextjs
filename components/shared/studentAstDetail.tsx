@@ -181,7 +181,7 @@ const AssignmentDetailPage: React.FC<AssignmentDetailProps> = ({ title, descript
         return (
           <div className="file-field">
             <div className='w-full flex flex-grow'>
-              {getFormFieldById(field.id) && getFormFieldById(field.id).map((element: any) => (<img src={URL.createObjectURL(element)} alt={element.name} />))}
+              {getFormFieldById(field.id) && getFormFieldById(field.id).map((element: any, index: number) => (<img key={index} src={URL.createObjectURL(element)} alt={element.name} />))}
             </div>
             <label htmlFor={field.id} className="block text-base font-medium rounded text-gray-700 p-4 bg-[#bef264] cursor-pointer">{field.label} {field.type == "Multiple Files" ? "files" : "images"}{field.required && "*"}</label>
             <input
@@ -244,8 +244,8 @@ const AssignmentDetailPage: React.FC<AssignmentDetailProps> = ({ title, descript
         return (
           <div className="submitted-field mb-4" key={field.id}>
             <label className="text-sm font-medium text-gray-700">{field.label}</label>
-            {value.map((element: any) => {
-              return <img src={element.url} alt={element.name} />
+            {value.map((element: any, index: number) => {
+              return <img key={index} src={element.url} alt={element.name} />
             })}
           </div>
         );
