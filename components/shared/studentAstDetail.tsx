@@ -1,6 +1,8 @@
 "use client";
 
+import { sendCommentOnAssignment } from '@/lib/actions/auth/comment';
 import { addSubmission } from '@/lib/actions/auth/submission';
+import CustomAlert from '../ui/customAlert';
 import React, { useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 
@@ -11,6 +13,7 @@ interface AssignmentDetailProps {
   formFields: FormField[];
   userId: string | number | any;
   astId: string | number | any;
+  submission: any;
 }
 
 interface FormField {
@@ -21,7 +24,7 @@ interface FormField {
   required: boolean;
 }
 
-const AssignmentDetailPage: React.FC<AssignmentDetailProps> = ({ title, description, dueDate, formFields, astId, userId }) => {
+const AssignmentDetailPage: React.FC<AssignmentDetailProps> = ({ title, description, dueDate, formFields, astId, userId, submission }) => {
   const [formData, setFormData] = useState<any>({});
   const [comment, setComment] = useState('');
   const [err, setErr] = useState('');
@@ -51,41 +54,60 @@ const AssignmentDetailPage: React.FC<AssignmentDetailProps> = ({ title, descript
     e.preventDefault();
     const astFormFields = formFields;
 
-        const sbmData = new FormData();
+    const sbmData = new FormData();
 
-        astFormFields.forEach((element: any) => {
-            const field = formData[element.id];
+    astFormFields.forEach((element: any) => {
+      const field = formData[element.id];
 
-            if (element.required && !field) return setErr("All fields are required");
-            if (element.type == "Multiple Images" && element.required && !field.length) return setErr("All fields are required");
-            if (element.type == "Multiple Files" && element.required && !field.length) return setErr("All fields are required");
+      if (element.required && !field) return setErr("All fields are required");
+      if (element.type == "Multiple Images" && element.required && !field.length) return setErr("All fields are required");
+      if (element.type == "Multiple Files" && element.required && !field.length) return setErr("All fields are required");
 
-            if (element.type == "Multiple Files" || element.type == "Multiple Images") {
-                const fileLength = field.length;
+      if (element.type == "Multiple Files" || element.type == "Multiple Images") {
+        const fileLength = field.length;
 
-                sbmData.append(element.id, fileLength);
+        sbmData.append(element.id, fileLength);
 
-                field.forEach((file: any, index: any) => {
-                    sbmData.append(`${element.id}-${index}`, file);
-                });
-            } else {
-                sbmData.append(element.id, field);
-            };
+        field.forEach((file: any, index: any) => {
+          sbmData.append(`${element.id}-${index}`, file);
         });
+      } else {
+        sbmData.append(element.id, field);
+      };
+    });
 
-        const submissionRes = await addSubmission({
-            formFieldsReply: sbmData,
-            student: userId as string,
-            assignment: astId,
-        });
+    const submissionRes: any = await addSubmission({
+      formFieldsReply: sbmData,
+      student: userId as string,
+      assignment: astId,
+    });
 
-        console.log(submissionRes);
+    if (submissionRes.success) {
+      setSuccess("Submission sucessfully");
+    } else {
+      setErr(submissionRes.error || "Some thing went wrong!");
+    };
   };
 
-  const handleCommentSubmit = (e: React.FormEvent) => {
+  const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle comment submission logic here
-    console.log('Comment:', comment);
+    setSuccess("");
+    setErr("");
+
+    const res = await sendCommentOnAssignment({
+      postId: astId,
+      txt: comment
+    });
+
+    if (res.success) {
+      setComment("");
+      setSuccess("Comment sent successful");
+    } else {
+      setTimeout(() => {
+      setComment("");
+      }, 1000);
+      setErr(res.error || "Some thing went wrong!");
+    };
   };
 
   const getFormFieldById = (id: any) => {
@@ -177,9 +199,68 @@ const AssignmentDetailPage: React.FC<AssignmentDetailProps> = ({ title, descript
     }
   };
 
+  const renderSubmittedField = (field: FormField, value: any) => {
+    switch (field.type) {
+      case 'text':
+      case 'url':
+      case 'number':
+        return (
+          <div className="submitted-field mb-4" key={field.id}>
+            <label className="text-sm font-medium text-gray-700">{field.label}</label>
+            <p className="text-gray-600">{value.value}</p>
+          </div>
+        );
+      case 'select':
+      case 'radio':
+        return (
+          <div className="submitted-field mb-4" key={field.id}>
+            <label className="text-sm font-medium text-gray-700">{field.label}</label>
+            <p className="text-gray-600">{value.value}</p>
+          </div>
+        );
+      case 'checkbox':
+        return (
+          <div className="submitted-field mb-4" key={field.id}>
+            <label className="text-sm font-medium text-gray-700">{field.label}</label>
+            <ul className="list-disc list-inside">
+              {value.map((option: string, index: number) => (
+                <li key={index} className="text-gray-600">{option}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      case 'image':
+      // case 'Multiple Images':
+      case 'file':
+        // case 'Multiple Files':
+        return (
+          <div className="submitted-field mb-4" key={field.id}>
+            <label className="text-sm font-medium text-gray-700">{field.label}</label>
+            <img width={55} src={value.url} alt={value.name} />
+          </div>
+        );
+      case 'Multiple Images':
+      case 'Multiple Files':
+        return (
+          <div className="submitted-field mb-4" key={field.id}>
+            <label className="text-sm font-medium text-gray-700">{field.label}</label>
+            {value.map((element: any) => {
+              return <img src={element.url} alt={element.name} />
+            })}
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const getSubmitedField = (id: any) => {
+    return submission.formFieldsReply.find((sbm: any) => sbm.id == id);
+  };
+
   return (
     <div className="assignment-detail-page flex flex-col lg:flex-row w-full">
-      <div className="assignment-top-content bg-white shadow-lg rounded-lg p-8 flex flex-col w-full lg:w-96">
+      <div className="assignment-top-content p-6 bg-white shadow-lg rounded-lg flex flex-col w-full lg:w-96">
         <div className="assignment-details mb-6">
           <h3 className="text-xl font-bold text-gray-800 mb-2">{title}</h3>
           <p className="text-gray-600 mb-1">Description: {description}</p>
@@ -192,7 +273,7 @@ const AssignmentDetailPage: React.FC<AssignmentDetailProps> = ({ title, descript
               id="comment"
               value={comment}
               onChange={handleCommentChange}
-              className="border border-slate-500 px-3 py-1 rounded-md focus:outline-none focus:border-slate-950 w-80 lg:w-full"
+              className="border border-slate-500 px-3 py-1 rounded-md focus:outline-none focus:border-slate-950 min-h-20 w-80 lg:w-full"
               rows={3}
               placeholder="Enter your comment"
             />
@@ -206,29 +287,40 @@ const AssignmentDetailPage: React.FC<AssignmentDetailProps> = ({ title, descript
           </form>
         </div>
       </div>
-      {/* Main Content - Dynamic Form */}
-      <main className="assignment-form-container bg-white shadow-lg rounded-lg p-8 lg:w-3/4 lg:mr-4 flex-1">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">Assignment Submission</h2>
-        <form onSubmit={handleSubmit} >
-          <div className='flex items-center flex-wrap'>
-            {formFields.map((field) => (
-              <div key={field.id} className="form-group m-2">
-                <p>{field.label}</p>
-                {renderFormField(field)}
-              </div>
-            ))}
-          </div>
-          <br />
-          <div className="col-span-full">
-            <button
-              type="submit"
-              className=" bg-[#bef264] text-black font-bold py-2 px-4 rounded hover:bg-[#a3d636] transition-all ml-2"
-            >
-              Submit Assignment
-            </button>
-          </div>
-        </form>
+
+
+      <main className="assignment-form-container bg-white shadow-lg rounded-lg p-8 lg:w-3/4 flex-1">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">{submission ? "Your submission" : "Assignment Submission"}</h2>
+        {submission ?
+          <>
+            {formFields.map((field) => {
+              return getSubmitedField(field.id) ? renderSubmittedField(field, getSubmitedField(field.id)) : null
+            })}
+          </>
+          :
+          <form onSubmit={handleSubmit} >
+            <div className='flex items-center flex-wrap'>
+              {formFields.map((field) => (
+                <div key={field.id} className="form-group m-2">
+                  <p>{field.label}</p>
+                  {renderFormField(field)}
+                </div>
+              ))}
+            </div>
+            <br />
+            <div className="col-span-full">
+              <button
+                type="submit"
+                className=" bg-[#bef264] text-black font-bold py-2 px-4 rounded hover:bg-[#a3d636] transition-all ml-2"
+              >
+                Submit Assignment
+              </button>
+            </div>
+          </form>
+        }
       </main>
+      {success && <CustomAlert isErrMsg={false} txt={success}/>}
+      {err && <CustomAlert isErrMsg={true} txt={err}/>}
     </div>
   );
 };

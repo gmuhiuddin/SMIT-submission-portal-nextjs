@@ -43,6 +43,15 @@ export const sendCommentOnPost = async (values: Comment) => {
             return { error: "Incorrect post" };
         };
 
+        const comments = await Comment.find({
+            student: existingUser._id,
+            post: values.postId,
+        });
+
+        if (comments.length > 3) {
+            return { error: "Your comment limits exceeded" };
+        };
+
         await Comment.create({
             student: existingUser._id,
             post: values.postId,
@@ -78,6 +87,15 @@ export const sendCommentOnAssignment = async (values: Comment) => {
 
         if (!post) {
             return { error: "Incorrect post" };
+        };
+
+        const comments = await Comment.find({
+            student: existingUser._id,
+            post: values.postId,
+        });
+
+        if (comments.length > 3) {
+            return { error: "Your comment limits exceeded" };
         };
 
         await Comment.create({

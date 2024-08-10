@@ -27,8 +27,8 @@ const Assignment: React.FC<Assignment> = async ({ params: { class_room_id } }) =
     const submission: any = await getStudentSubmission(class_room_id);
 
     return (
-        <div className="flex w-screen h-screen pt-16 justify-between p-3">
-            <AssignmentDetailPage title={assignment.assignment.title} description={assignment.assignment.description} dueDate={assignment.assignment.dueDate} formFields={assignment.assignment.formFields} userId={user?._id as string} astId={assignment.assignment._id} />
+        <div className="flex w-screen h-screen pt-16 justify-between">
+            <AssignmentDetailPage title={assignment.assignment.title} description={assignment.assignment.description} dueDate={assignment.assignment.dueDate} formFields={assignment.assignment.formFields} userId={user?._id as string} astId={assignment.assignment._id} submission={submission.submission} />
             {/* <div className="p-3 overflow-y-auto">
                 Assignment detail
                 Title: {assignment.assignment.title}
