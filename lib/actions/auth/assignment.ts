@@ -11,7 +11,17 @@ import Submissions from "@/lib/models/submission";
 import Comment from "@/lib/models/comment";
 import { toObject } from "./helpingFuncs";
 
-type FieldType = 'text' | 'number' | 'file' | 'image' | 'files' | 'images' | 'radio' | 'checkbox' | 'select';
+type FieldType =
+    | "url"
+    | "text"
+    | "image"
+    | "file"
+    | "images"
+    | "files"
+    | "number"
+    | "radio"
+    | "checkbox"
+    | "select";
 
 interface Field {
     id: number;

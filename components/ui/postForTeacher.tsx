@@ -11,6 +11,7 @@ import { getComment as getCommentsFromDb } from '@/lib/actions/auth/comment'
 import styles from './DownloadableImage.module.css';
 import './style.css';
 import { deletePost } from '@/lib/actions/auth/post';
+import CustomAlert from './customAlert';
 
 interface ImageUrl {
     url?: string;
@@ -147,6 +148,7 @@ const Post: React.FC<PostProps> = ({ postObj }) => {
 
                 </div>
             </div>
+            {err && <CustomAlert isErrMsg={true} txt={err} />}
         </div>
     );
 };

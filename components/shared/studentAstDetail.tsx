@@ -4,7 +4,8 @@ import { sendCommentOnAssignment } from '@/lib/actions/auth/comment';
 import { addSubmission } from '@/lib/actions/auth/submission';
 import CustomAlert from '../ui/customAlert';
 import React, { useState } from 'react';
-import { FaBars, FaTimes } from 'react-icons/fa';
+import { FaBars, FaCheckCircle, FaExclamationTriangle, FaTimes } from 'react-icons/fa';
+import BlurLoader from './blurLoader';
 
 interface AssignmentDetailProps {
   title: string;
@@ -29,7 +30,11 @@ const AssignmentDetailPage: React.FC<AssignmentDetailProps> = ({ title, descript
   const [comment, setComment] = useState('');
   const [err, setErr] = useState('');
   const [success, setSuccess] = useState('');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isPending, setIsPending] = useState(false);
+  const [isCommentPending, setIsCommentPending] = useState(false);
+
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? 0 + String(date.getMonth() + 1) : date.getMonth() + 1}-${date.getDate() < 10 ? 0 + String(date.getDate()) : date.getDate()}`;
 
   const handleFieldChange = (id: string, value: any) => {
     if (!value || !id) return;
@@ -52,6 +57,7 @@ const AssignmentDetailPage: React.FC<AssignmentDetailProps> = ({ title, descript
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsPending(true);
     const astFormFields = formFields;
 
     const sbmData = new FormData();
@@ -84,13 +90,16 @@ const AssignmentDetailPage: React.FC<AssignmentDetailProps> = ({ title, descript
 
     if (submissionRes.success) {
       setSuccess("Submission sucessfully");
+      window.location.reload();
     } else {
       setErr(submissionRes.error || "Some thing went wrong!");
+    setIsPending(false);
     };
   };
 
   const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsCommentPending(true);
     setSuccess("");
     setErr("");
 
@@ -102,10 +111,12 @@ const AssignmentDetailPage: React.FC<AssignmentDetailProps> = ({ title, descript
     if (res.success) {
       setComment("");
       setSuccess("Comment sent successful");
+      setIsCommentPending(false);
     } else {
       setTimeout(() => {
-      setComment("");
+        setComment("");
       }, 1000);
+      setIsCommentPending(false);
       setErr(res.error || "Some thing went wrong!");
     };
   };
@@ -260,7 +271,8 @@ const AssignmentDetailPage: React.FC<AssignmentDetailProps> = ({ title, descript
 
   return (
     <div className="assignment-detail-page flex flex-col lg:flex-row w-full">
-      <div className="assignment-top-content p-6 bg-white shadow-lg rounded-lg flex flex-col w-full lg:w-96">
+      {isPending && <BlurLoader />}
+      <div className="assignment-top-content p-6 bg-white shadow-lg rounded-lg flex flex-col w-full max-[1023px]:items-center lg:w-96">
         <div className="assignment-details mb-6">
           <h3 className="text-xl font-bold text-gray-800 mb-2">{title}</h3>
           <p className="text-gray-600 mb-1">Description: {description}</p>
@@ -279,8 +291,9 @@ const AssignmentDetailPage: React.FC<AssignmentDetailProps> = ({ title, descript
             />
             <br />
             <button
+              disabled={isCommentPending}
               type="submit"
-              className="bg-blue-500 text-white font-bold py-2 px-4 rounded mt-4 hover:bg-blue-600 transition-all"
+              className="bg-blue-500 text-white font-bold py-2 px-4 rounded mt-4 hover:bg-blue-600 transition-all disabled:bg-blue-300"
             >
               Submit Comment
             </button>
@@ -288,15 +301,14 @@ const AssignmentDetailPage: React.FC<AssignmentDetailProps> = ({ title, descript
         </div>
       </div>
 
-
-      <main className="assignment-form-container bg-white shadow-lg rounded-lg p-8 lg:w-3/4 flex-1">
+      <main className="assignment-form-container max-[1023px]:w-full flex flex-col bg-white shadow-lg rounded-lg px-12 py-4 lg:w-3/4 flex-1">
         <h2 className="text-2xl font-bold text-gray-800 mb-6">{submission ? "Your submission" : "Assignment Submission"}</h2>
         {submission ?
-          <>
+          <div>
             {formFields.map((field) => {
               return getSubmitedField(field.id) ? renderSubmittedField(field, getSubmitedField(field.id)) : null
             })}
-          </>
+          </div>
           :
           <form onSubmit={handleSubmit} >
             <div className='flex items-center flex-wrap'>
@@ -309,18 +321,20 @@ const AssignmentDetailPage: React.FC<AssignmentDetailProps> = ({ title, descript
             </div>
             <br />
             <div className="col-span-full">
-              <button
-                type="submit"
-                className=" bg-[#bef264] text-black font-bold py-2 px-4 rounded hover:bg-[#a3d636] transition-all ml-2"
-              >
-                Submit Assignment
-              </button>
+              {dueDate < todayDate ?
+                <p className='ml-2 text-red-500 text-lg flex items-center'><FaExclamationTriangle className='mr-2' /> Submission date due!</p>
+                : <button
+                  type="submit"
+                  className=" bg-[#bef264] text-black font-bold py-2 px-4 rounded hover:bg-[#a3d636] transition-all ml-2"
+                >
+                  Submit Assignment
+                </button>}
             </div>
           </form>
         }
       </main>
-      {success && <CustomAlert isErrMsg={false} txt={success}/>}
-      {err && <CustomAlert isErrMsg={true} txt={err}/>}
+      {success && <CustomAlert isErrMsg={false} txt={success} />}
+      {err && <CustomAlert isErrMsg={true} txt={err} />}
     </div>
   );
 };
