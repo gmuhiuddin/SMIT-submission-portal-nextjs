@@ -27,7 +27,7 @@ const TeacherAssignmentDetail: React.FC<Assignment> = ({ assignment }) => {
         setErr("");
         setSuccess("");
 
-        const res = await sendWarningToStudent(_id, assignment.assignment.clsasRoom);
+        const res = await sendWarningToStudent(_id, assignment.assignment.classRoom);
 
         if (res.success) {
             setSuccess(res.success as string);
@@ -40,7 +40,7 @@ const TeacherAssignmentDetail: React.FC<Assignment> = ({ assignment }) => {
         setErr("");
         setSuccess("");
 
-        const res = await ExitStudentFromClassroom(_id, assignment.assignment.clsasRoom);
+        const res = await ExitStudentFromClassroom(_id, assignment.assignment.classRoom);
 
         if (res.success) {
             setSuccess(res.success as string);
@@ -150,29 +150,31 @@ const TeacherAssignmentDetail: React.FC<Assignment> = ({ assignment }) => {
             {/* Students Component */}
             <div className="md:w-4/12 w-full p-3 overflow-y-auto bg-gray-100 md:bg-transparent order-2 md:order-1">
                 <h2 className="text-lg font-semibold mb-3">Students</h2>
-                {!showAllStudents && limitedStudents.map((student: any, index: number) => (
-                    <div key={index} className="flex items-center p-2 border border-gray-300 rounded-lg shadow-md bg-white my-2 w-full">
-                        <img src={student.image} alt={student.name} className="w-10 h-10 rounded-full object-cover mr-3" />
-                        <div className="w-9/12 break-words">
-                            <span className="block text-md font-semibold">{student.name}
-                                <button
-                                    onClick={() => sendWarnToStudent(student?._id)}
-                                    className="text-yellow-500 hover:text-yellow-700"
-                                >
-                                    <FaExclamationTriangle className="ml-2 w-4 h-4" />
-                                </button>
-                                <button
-                                    onClick={() => removeStdFromClassRoom(student?._id)}
-                                    className="text-red-500 hover:text-red-700"
-                                >
-                                    <FaTrash className="ml-2 w-4 h-4" />
-                                </button>
-                            </span>
-                            <span className="block w-full text-sm text-gray-500 break-words">{student.email}</span>
-                        </div>
-                    </div>
-                ))}
-                {showAllStudents && <StudentToggle students={assignment.students} classRoomId={assignment.classRoom._id} submissions={assignment.submissions} />}
+                {!showAllStudents ? 
+                <StudentToggle students={limitedStudents} classRoomId={assignment.classRoom._id} submissions={assignment.submissions} />
+                // limitedStudents.map((student: any, index: number) => (
+                //     <div key={index} className="flex items-center p-2 border border-gray-300 rounded-lg shadow-md bg-white my-2 w-full">
+                //         <img src={student.image} alt={student.name} className="w-10 h-10 rounded-full object-cover mr-3" />
+                //         <div className="w-9/12 break-words">
+                //             <span className="block text-md font-semibold">{student.name}
+                //                 <button
+                //                     onClick={() => sendWarnToStudent(student?._id)}
+                //                     className="text-yellow-500 hover:text-yellow-700"
+                //                 >
+                //                     <FaExclamationTriangle className="ml-2 w-4 h-4" />
+                //                 </button>
+                //                 <button
+                //                     onClick={() => removeStdFromClassRoom(student?._id)}
+                //                     className="text-red-500 hover:text-red-700"
+                //                 >
+                //                     <FaTrash className="ml-2 w-4 h-4" />
+                //                 </button>
+                //             </span>
+                //             <span className="block w-full text-sm text-gray-500 break-words">{student.email}</span>
+                //         </div>
+                //     </div>
+                // ))
+                : showAllStudents && <StudentToggle students={assignment.students} classRoomId={assignment.classRoom._id} submissions={assignment.submissions} />}
                 {!showAllStudents && assignment.students.length > 3 && (
                     <button className="text-blue-500 underline mt-2" onClick={() => setShowAllStudents(true)}>Show More Students</button>
                 )}

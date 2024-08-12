@@ -39,7 +39,7 @@ const CustomAlert: React.FC<CustomAlertInterface> = ({ txt, isErrMsg }) => {
       transition: 'opacity 0.5s ease-in-out',
       pointerEvents: visible ? 'auto' : 'none',
     }}>
-      {isErrMsg ? <FaExclamationTriangle /> : <FaCheckCircle />} {txt}
+      {isErrMsg ? <FaExclamationTriangle className="mr-2" /> : <FaCheckCircle className="mr-2" />} {txt}
     </div>
   );
 };
