@@ -25,7 +25,7 @@ const TeacherDashboard = async () => {
             batch={`SMIT-${element.batch}`}
             timing={element.timeAndLocation.time}
             days={element.timeAndLocation.days}
-            lastActivity={element.latestAssignment.title}
+            lastActivity={element.latestAssignment?.title || "null"}
             hasNewAssignment={true}
             classroomId={element?._id}
           />

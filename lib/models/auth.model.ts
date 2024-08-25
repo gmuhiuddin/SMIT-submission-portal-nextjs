@@ -16,7 +16,7 @@ export const userSchema = new mongoose.Schema({
   image: String,
   role: {
     type: String,
-    enum: ["superAdmin", "student", "teacher", "undefined"],
+    enum: ["admin", "student", "teacher", "undefined"],
     default: "undefined"
   },
   provider: {

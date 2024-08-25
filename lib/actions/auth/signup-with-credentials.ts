@@ -18,9 +18,9 @@ export const signUpWithCredentials = async (values: SignUpWithCredentialsInput) 
 
   if (!validatedFields.success) {
     return { error: "Invalid fields!" }
-  }
+  };
   
-  const { email, password, name } = validatedFields.data
+  const { email, password, name } = validatedFields.data;
 
   await connectDB()
 
@@ -34,7 +34,49 @@ export const signUpWithCredentials = async (values: SignUpWithCredentialsInput) 
   const salt = await bcrypt.genSalt(10)
   const hashedPassword = await bcrypt.hash(password, salt)
 
-  const user = new User({ name, email, password: hashedPassword })
+  const user = new User({ name, email, role: "student", password: hashedPassword })
+  await user.save()
+
+  const verificationToken = await  generateToken({email})
+  // console.log({verificationToken})
+
+  await sendVerificationEmail(
+    email,
+    verificationToken
+  )
+
+  // const verificationToken = await generateVerificationToken(email)
+  
+  // await sendVerificationEmail(
+  //   verificationToken.email,
+  //   verificationToken.token
+  // )
+  
+  return { success: "Confirmation email sent!" }
+}
+
+export const createTeacher = async (values: SignUpWithCredentialsInput) => {
+  const validatedFields = SignUpValidation.safeParse(values)
+
+  if (!validatedFields.success) {
+    return { error: "Invalid fields!" }
+  };
+  
+  const { email, password, name } = validatedFields.data;
+
+  await connectDB()
+
+  const existingUser = await User.findOne({email})
+  if (existingUser) {
+    const error = existingUser.provider === "credentials" 
+      ? "Email already exists" 
+      : "Email has already been used for third-party login"
+    return { error }
+  }
+  const salt = await bcrypt.genSalt(10)
+  const hashedPassword = await bcrypt.hash(password, salt)
+
+  const user = new User({ name, email, role: "teacher", password: hashedPassword })
   await user.save()
 
   const verificationToken = await  generateToken({email})

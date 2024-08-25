@@ -6,10 +6,10 @@ import { User } from "@/lib/models/auth.model"
 // import { User, VerificationToken } from "@/lib/models/auth.model"
 
 export const newVerification = async (token: string) => {
-  const res = await verifyToken(token)
+  const res: any = await verifyToken(token)
   // console.log({res})
-
-  if (isTokenError(res)) {
+  
+  if (await isTokenError(res)) {
     return { error: res.error }
   }
   

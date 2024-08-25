@@ -55,14 +55,14 @@ export const SettingsForm = () => {
     }
   })
 
-  async function onSubmit(values: z.infer<typeof SettingsValidation>) { 
+  async function onSubmit(values: z.infer<typeof SettingsValidation>) {
     setError("")
     setSuccess("")
 
     startTransition(() => {
       settings(values)
         .then((data) => {
-console.log(data);
+          console.log(data);
 
           if (data?.error) {
             setError(data.error)
@@ -77,7 +77,7 @@ console.log(data);
 
   if (status === "loading") {
     return <div>Loading...</div>
-  }
+  };
 
   return (
     <Card className="w-[350px] mt-2">
@@ -129,24 +129,24 @@ console.log(data);
                 </>
               )}
               <FormField
-                    name="role"
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Student / Teacher</FormLabel>
-                        <FormControl>
-                          <SelectTag
-                            disabled={isPending}
-                            // placeholder="your password"
-                            role={user?.role}
-                            {...field}
-                            optValues={["teacher", "student"]}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                name="role"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Student / Teacher</FormLabel>
+                    <FormControl>
+                      <SelectTag
+                        disabled={isPending}
+                        // placeholder="your password"
+                        role={user?.role}
+                        {...field}
+                        optValues={["teacher", "student"]}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               {/* <FormField
                 control={form.control}
                 name="role"

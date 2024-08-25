@@ -3,7 +3,8 @@ import { Document } from "mongoose"
 export enum UserRole {
   STUDENT = "student",
   TEACHER = "teacher",
-  UNDEFINED = "undefined"
+  UNDEFINED = "undefined",
+  ADMIN = "admin"
 }
 
 export enum UserProvider {

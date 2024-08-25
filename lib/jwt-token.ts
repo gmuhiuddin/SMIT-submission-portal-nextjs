@@ -1,3 +1,5 @@
+"use server";
+
 import jwt, { JwtPayload, TokenExpiredError } from "jsonwebtoken"
 import crypto from "crypto"
 
@@ -19,6 +21,24 @@ export const isTokenError = (res: IPayload | IError): res is IError => {
 export const generateToken = async (payload: { email: string }, expiresIn: string = "1h") => {
   return jwt.sign(payload, process.env.TOKEN_SECRET!,{ expiresIn }) // jwt.io
 }
+
+export const getEmailFromToken = (token: string) => {
+  try {
+    const decoded = jwt.verify(token, process.env.TOKEN_SECRET!);
+
+    return decoded;
+  } catch (error) {
+    if (error instanceof TokenExpiredError) {
+      return { error: "Token has expired!" }
+    } else {
+      return { error: "Invalid token!" }
+    };
+  }
+};
+
+export const generateTeacherCreationToken = async (payload: { email: string }, expiresIn: string = "24h") => {
+  return jwt.sign(payload, process.env.TOKEN_SECRET!,{ expiresIn }) // jwt.io
+};
 
 export const verifyToken = async (token: string): Promise<IPayload | IError> => {
   try {
@@ -46,7 +66,7 @@ export const generateCode = async (email: string) => {
     email,
     token,
     expires
-  })
+  });
 
   await twoFactorToken.save()
 

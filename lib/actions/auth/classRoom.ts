@@ -214,6 +214,47 @@ export const getTeacherClassrooms = async () => {
   }
 };
 
+export const getAdminsClassrooms = async () => {
+  try {
+    const user = await currentUser();
+
+    if (!user) {
+      return { error: "Unauthorized" };
+    };
+
+    await connectDB();
+
+    const existingUser = await User.findById(user?._id);
+
+    if (!existingUser || existingUser.role !== "admin") {
+      return { error: "Unauthorized" };
+    };
+
+    const classRooms = await ClassRoom.find();
+
+    const updatedClassRooms = await Promise.all(
+      classRooms.map(async (classroom: any) => {
+        const latestAssignment = await Assignment.findOne({
+          classRoom: classroom._id,
+          isDeleted: false,
+        })
+          .sort({ createdAt: -1 }) // Sort by createdAt in descending order
+          .exec();
+
+        // Add the latest assignment to the classroom object
+        return {
+          ...classroom.toObject(), // Convert Mongoose document to plain JavaScript object
+          latestAssignment, // Add latestAssignment field
+        };
+      })
+    );
+
+    return { success: "Class was create", classRooms: updatedClassRooms };
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
 export const getTeacherClassroom = async (classRoomId?: string | number) => {
   try {
     const user = await currentUser();

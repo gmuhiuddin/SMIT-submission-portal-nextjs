@@ -30,7 +30,8 @@ export async function POST(
     email: profile.email,
     image: profile.picture,
     provider: account.provider,
-    emailVerified: new Date()
+    emailVerified: new Date(),
+    role: "student"
   })
   
   await newUser.save()

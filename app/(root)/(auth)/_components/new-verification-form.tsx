@@ -27,13 +27,18 @@ export const NewVerificationForm = () => {
 
     newVerification(token)
       .then((data) => {
+        console.log(data);
+        
         if (data?.error) {
           setError(data.error)
         } else if (data?.success) {
           setSuccess(data.success)
         }
       })
-      .catch(() => setError("Something went wrong"))
+      .catch((error) => {
+        console.log(error);
+        setError("Something went wrong")
+      })
   }, [token, success, error])
 
   useEffect(() => {

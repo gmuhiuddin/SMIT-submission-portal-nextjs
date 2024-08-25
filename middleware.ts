@@ -20,6 +20,7 @@ export default withAuthMiddleware(async (req) => {
   const isAuthRoute = routes.auth.some(route => matchRoute(nextUrl.pathname, route));
   const isPublicRoute = routes.public.some(route => matchRoute(nextUrl.pathname, route));
   const isTeacherRoute = routes.teacher.some(route => matchRoute(nextUrl.pathname, route));
+  const isAdminRoute = routes.admin.some(route => matchRoute(nextUrl.pathname, route));
   const isStudentRoute = routes.student.some(route => matchRoute(nextUrl.pathname, route));
   const defaultUrl = new URL(routes.defaultLoginRedirect, nextUrl);
 
@@ -31,12 +32,16 @@ export default withAuthMiddleware(async (req) => {
     return Response.redirect(new URL(`/${userRole}-dashboard`, nextUrl))
   };
 
-  if (userRole == "student" && isTeacherRoute) {
+  if (userRole == "student" && (isTeacherRoute || isAdminRoute)) {
     return Response.redirect(new URL("/student-dashboard", nextUrl))
   };
 
-  if (userRole == "teacher" && isStudentRoute) {
+  if (userRole == "teacher" && (isStudentRoute || isAdminRoute)) {
     return Response.redirect(new URL("/teacher-dashboard", nextUrl))
+  };
+
+  if (userRole == "admin" && (isTeacherRoute || isStudentRoute)) {
+    return Response.redirect(new URL("/admin-dashboard", nextUrl));
   };
 
   if (isApiAuthRoute) {
@@ -48,7 +53,7 @@ export default withAuthMiddleware(async (req) => {
       return Response.redirect(defaultUrl)
     }
     return undefined
-  }
+  };
 
   if (!isPublicRoute && !isLoggedIn) {
     let callbackUrl = nextUrl.pathname
@@ -62,7 +67,7 @@ export default withAuthMiddleware(async (req) => {
   }
 
   return undefined
-})
+});
 
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)']

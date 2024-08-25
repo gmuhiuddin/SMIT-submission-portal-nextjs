@@ -18,6 +18,7 @@ export const Navbar = async () => {
         {/* <MainNav /> */}
         <div className="ml-auto flex items-center space-x-4">
           {session?.user?.role == "teacher" && <Link href="/create-classroom"><Button size="lg">Create classroom</Button></Link>}
+          {session?.user?.role == "admin" && <Link href="/create-teacher"><Button size="lg">Create teacher</Button></Link>}
           <UserButton />
           {/* <ModeToggle /> */}
         </div>

@@ -41,6 +41,22 @@ export const sendPasswordResetEmail = async (
   await transporter.sendMail(mailOptions)
 }
 
+export const sendTeacherCreationEmail = async (
+  email: string, 
+  token: string
+) => {
+  const resetLink = `${baseURL}/new-teacher?token=${token}`
+
+  const mailOptions = {
+    from: emailUser,
+    to: email,
+    subject: "SMIT admins give a opportunity for teacher",
+    html: `<p>Click <a href="${resetLink}">here</a> to become a teacher. Opportunity was expires in 24 hours.</p>`
+  }
+
+  await transporter.sendMail(mailOptions)
+};
+
 export const sendTwoFactorTokenEmail = async (
   email: string,
   token: string

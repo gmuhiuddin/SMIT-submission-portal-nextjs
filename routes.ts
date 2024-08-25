@@ -8,6 +8,7 @@ export const routes = {
     "/signup",
     "/reset",
     "/new-password",
+    "/new-teacher",
     "/error"
   ],
   student: [
@@ -22,6 +23,10 @@ export const routes = {
     "/class-room/:class_room_id",
     "/crate-assignment/:class_room_id",
     "/create-post/:class_room_id",
+  ],
+  admin: [
+    "/admin-dashboard",
+    "/create-teacher",
   ],
   apiAuthPrefix: "/api/auth",
   defaultLoginRedirect: "/",

@@ -278,4 +278,4 @@ export const getStudentsSubmission = async (assignmentId: string) => {
     };
 };
 
-export const updateSubmission = async () => { };
+export const updateSubmission = async () => {};

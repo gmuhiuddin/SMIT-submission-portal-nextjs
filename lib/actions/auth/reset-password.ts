@@ -35,7 +35,7 @@ export const resetPassword = async (values: ResetPasswordInput) => {
   await sendPasswordResetEmail(
     email,
     passwordResetToken
-  )
+  );
 
   // const passwordResetToken = await generatePasswordResetToken(email)
   
