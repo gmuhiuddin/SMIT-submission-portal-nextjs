@@ -15,7 +15,7 @@ export interface IError {
 }
 
 export const isTokenError = (res: IPayload | IError): res is IError => {
-  return (res as IError).error !== undefined
+  return (res as IError).error !== undefined;
 }
 
 export const generateToken = async (payload: { email: string }, expiresIn: string = "1h") => {
@@ -43,7 +43,7 @@ export const generateTeacherCreationToken = async (payload: { email: string }, e
 export const verifyToken = async (token: string): Promise<IPayload | IError> => {
   try {
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET!) as IPayload
-    return decoded
+    return decoded;
   } catch (error) {
     if (error instanceof TokenExpiredError) {
       return { error: "Token has expired!" }

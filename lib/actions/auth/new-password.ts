@@ -15,7 +15,7 @@ export const newPassword = async (
   values: NewPasswordInput,
   token?: string | null
 ) => {
-  const validatedFields = NewPasswordValidation.safeParse(values)
+  const validatedFields = NewPasswordValidation.safeParse(values);
 
   if (!validatedFields.success) {
     return { error: "Invalid fields!" }
@@ -25,16 +25,16 @@ export const newPassword = async (
     return { error: "Missing token!" }
   }
 
-  const res = await verifyToken(token)
-  // console.log({res})
+  const res: any = await verifyToken(token);
+  const checkTokenIsError = await isTokenError(res);
 
-  if (isTokenError(res)) {
-    return { error: res.error }
-  }
+  if (checkTokenIsError) {
+    return { error: res.error || "Error in checking token" }
+  };
 
   await connectDB()
-  
-  const existingUser =await User.findOne({email: res.email})
+
+  const existingUser = await User.findOne({ email: res?.email })
 
   if (!existingUser) {
     return { error: "Email does not exist!" }
@@ -52,7 +52,7 @@ export const newPassword = async (
   return { success: "Password updated!" }
 
   // await connectDB()
-  
+
   // const existingToken = await PasswordResetToken.findOne({token})
 
   // if (!existingToken) {
@@ -73,7 +73,7 @@ export const newPassword = async (
 
   // const salt = await bcrypt.genSalt(10)
   // const hashedPassword = await bcrypt.hash(newPassword, salt)
-  
+
   // await User.findByIdAndUpdate(existingUser._id,
   //   { password: hashedPassword }
   // )

@@ -39,20 +39,21 @@ export const NewPasswordForm = () => {
   })
 
   async function onSubmit(values: z.infer<typeof NewPasswordValidation>) {
-    // console.log(values)
-    setError("")
-    setSuccess("")
+    setError("");
+    setSuccess("");
 
     startTransition(() => {
       newPassword(values, token)
         .then((data) => {
+          console.log(data);
+          
           if (data?.error) {
             setError(data.error)
           } else if (data?.success) {
             setSuccess(data.success)
           }
         })
-        .catch(() => setError("Something went wrong"))
+        .catch((e) => setError(e.message ||   "Something went wrong"));
     })
   }
 
