@@ -103,7 +103,7 @@ const Post: React.FC<PostProps> = ({ postObj }) => {
                     {postObj?.imageUrls?.map((element, index) => {
                         return (
                             <div key={index} className={styles.imageContainer}>
-                                <img src={element.url} alt={element.name} />
+                                <img src={element?.url} alt={element.name} />
                                 <a target="_blank" href={element.downloadUrl} download className={styles.downloadIcon}>
                                     <FontAwesomeIcon icon={faDownload} size="2x" />
                                 </a>
@@ -137,10 +137,10 @@ const Post: React.FC<PostProps> = ({ postObj }) => {
                         return (
                             <div key={index} className='p-3 w-full shadow-inner rounded'>
                                 <span className='flex items-center'>
-                                    <img src={element.student.image} className='rounded-full h-10' />
-                                    <p className='ml-3'>{element.student.name}</p>
+                                    <img src={element?.student?.image} className='rounded-full h-10' />
+                                    <p className='ml-3'>{element?.student?.name}</p>
                                 </span>
-                                <p className='std-comment-txt'>{element.txt}
+                                <p className='std-comment-txt'>{element?.txt}
                                 </p>
                             </div>
                         )

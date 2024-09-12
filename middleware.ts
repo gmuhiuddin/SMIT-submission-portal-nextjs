@@ -45,13 +45,13 @@ export default withAuthMiddleware(async (req) => {
   };
 
   if (isApiAuthRoute) {
-    return undefined
+    return undefined;
   };
 
   if (isAuthRoute) {
     if (isLoggedIn) {
       return Response.redirect(defaultUrl)
-    }
+    };
     return undefined
   };
 
@@ -64,9 +64,9 @@ export default withAuthMiddleware(async (req) => {
       `/signin?callbackUrl=${encodedCallbackUrl}`,
       nextUrl
     ))
-  }
+  };
 
-  return undefined
+  return undefined;
 });
 
 export const config = {

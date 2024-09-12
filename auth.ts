@@ -9,4 +9,4 @@ export const {
   signOut
 } = NextAuth({
   ...authConfig
-})
+});
