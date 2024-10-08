@@ -76,16 +76,17 @@ export const createTeacher = async (values: SignUpWithCredentialsInput) => {
   const salt = await bcrypt.genSalt(10)
   const hashedPassword = await bcrypt.hash(password, salt)
 
-  const user = new User({ name, email, role: "teacher", password: hashedPassword })
+  const user = new User({ name, email, role: "teacher", emailVerified: new Date(), password: hashedPassword });
+
   await user.save()
 
-  const verificationToken = await  generateToken({email})
+  // const verificationToken = await  generateToken({email});
   // console.log({verificationToken})
 
-  await sendVerificationEmail(
-    email,
-    verificationToken
-  )
+  // await sendVerificationEmail(
+  //   email,
+  //   verificationToken
+  // );
 
   // const verificationToken = await generateVerificationToken(email)
   
@@ -94,5 +95,5 @@ export const createTeacher = async (values: SignUpWithCredentialsInput) => {
   //   verificationToken.token
   // )
   
-  return { success: "Confirmation email sent!" }
+  return { success: "Congratulation now you are become teacher!" }
 }

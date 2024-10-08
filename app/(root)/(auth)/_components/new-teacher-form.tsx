@@ -292,7 +292,7 @@ export const NewTeacherForm = () => {
             confirmPassword: ""
         }
     });
-    
+
     // Decode token to get email
     useEffect(() => {
         if (token) {
@@ -302,11 +302,11 @@ export const NewTeacherForm = () => {
         };
     }, [token]);
 
-    async function checkEmailWasExist(email: any){
+    async function checkEmailWasExist(email: any) {
         const teacherExist: any = await checkTeacherWasExist(email as string);
-        
+
         setInitialLoading(false);
-        
+
         if (teacherExist?.error) return setError(teacherExist?.error);
 
         setEmailExist(teacherExist.isTeacherExist);
@@ -314,7 +314,7 @@ export const NewTeacherForm = () => {
 
     async function getEmail() {
         const email: any = await getEmailFromToken(token as string);
-                
+
         if (email?.error) return setError(email?.error);
 
         checkEmailWasExist(email.email);
@@ -326,19 +326,19 @@ export const NewTeacherForm = () => {
     async function onSubmit(values: z.infer<typeof createTeacherValidation>) {
         setError("");
         setSuccess("");
-        
+
         startTransition(() => {
             createTeacher(values)
-            .then((data: any) => {
-                console.log(data);
-                
-              if (data?.error) {
-                setError(data.error);
-              } else if (data?.success) {
-                setSuccess(data?.success);
-              }
-            })
-            .catch(() => setError("Something went wrong"));
+                .then((data: any) => {
+                    console.log(data);
+
+                    if (data?.error) {
+                        setError(data.error);
+                    } else if (data?.success) {
+                        setSuccess(data?.success);
+                    }
+                })
+                .catch(() => setError("Something went wrong"));
         });
     }
 
@@ -346,7 +346,7 @@ export const NewTeacherForm = () => {
 
     if (error == "Token has expired!" || error == "Invalid token!") return <>You loose a opportunity of teaching</>
 
-    if (emailExist) return <>Teacher was created go to <a href="/signin">login</a></>
+    if (emailExist) return <h1>Teacher was created go to <a href="/signin"> login</a></h1>
 
     return (
         <Card className="w-[350px] mt-2">
@@ -433,6 +433,7 @@ export const NewTeacherForm = () => {
                         </div>
                         <FormError message={error} />
                         <FormSuccess message={success} />
+                        {success && <a className="text-center block" href="/signin">Go to login</a>}
                         <Button
                             size="lg"
                             className="w-full my-6"
