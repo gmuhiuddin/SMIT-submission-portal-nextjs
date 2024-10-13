@@ -5,6 +5,7 @@ import cron from 'node-cron';
 import Assignment from "@/lib/models/assignment";
 import ClassRoom from "@/lib/models/classRooms";
 import Submission from "@/lib/models/submission";
+import dayjs from 'dayjs';
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -24,11 +25,9 @@ export const CheckDailyAssignmentSubmissionDate = async () => {
             isDeleted: false
         });
 
-        const date = new Date();
-        date.setDate(date.getDate() + 1);
-        const dueDateOfAst = `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? 0 + String(date.getMonth() + 1) : date.getMonth() + 1}-${date.getDate() < 10 ? 0 + String(date.getDate()) : date.getDate()}`;
+        const dueDateOfAst = dayjs().add(1, 'day').format('YYYY-MM-DD');
 
-        assignments.forEach(async ast => {
+        await Promise.all(assignments.map(async ast => {
 
             if (ast.dueDate == dueDateOfAst) {
 
@@ -46,7 +45,7 @@ export const CheckDailyAssignmentSubmissionDate = async () => {
 
                 const sbmStdId = submissions.map((element: any) => element.student);
 
-                classRoom.students.forEach(async (std: any) => {
+                await Promise.all(classRoom.students.map(async (std: any) => {
 
                     if (!sbmStdId.includes(std._id)) {
                         await transporter.sendMail({
@@ -65,8 +64,8 @@ export const CheckDailyAssignmentSubmissionDate = async () => {
                           `,
                         });
                     };
-                });
+                }));
             };
-        });
+        }));
     });
 };
