@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import StudentCart from "../ui/studentCart";
+import { Button } from "@mui/material";
 
 interface StudentToggle {
     students: any;
@@ -13,7 +14,7 @@ const StudentToggle: React.FC<StudentToggle> = ({ students, submissions, classRo
     const [showUnsbmStd, setShowUnsbmStd] = useState(false);
 
     const getUnSbmStd = () => {
-        const sbmStdId = submissions.map((element: any) => element.student._id);
+        const sbmStdId = submissions.map((element: any) => element?.student?._id);
 
         const stds: any = [];
 
@@ -26,8 +27,10 @@ const StudentToggle: React.FC<StudentToggle> = ({ students, submissions, classRo
 
     return (
         <>
-            <button onClick={() => setShowUnsbmStd(!showUnsbmStd)}>Show {showUnsbmStd ? "all" :
-                "not"} submited students</button>
+            <Button onClick={() => setShowUnsbmStd(!showUnsbmStd)}>Show {showUnsbmStd ? "all" :
+                "not"} submited students</Button>
+                <p>{showUnsbmStd ? "Not submited" :
+                "Submited"} students</p>
             {showUnsbmStd ?
                 <StudentCart students={getUnSbmStd()} showWarnOrDelBtn={true} classRoomId={classRoomId} />
                 :

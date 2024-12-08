@@ -190,8 +190,8 @@ const TeacherAssignmentDetail: React.FC<Assignment> = ({ assignment }) => {
                     <div key={index} className="flex items-center p-4 border border-gray-300 rounded-lg shadow-md bg-white my-3">
                         <div>
                             <span className="flex text-lg font-semibold">
-                                <img src={element.student.image} alt={element.student.name} className="w-12 h-12 rounded-full object-cover mr-3" />
-                                {element.student.name}
+                                <img src={element?.student?.image} alt={element.student?.name} className="w-12 h-12 rounded-full object-cover mr-3" />
+                                {element?.student?.name}
                             </span>
                             <span className="block text-sm text-gray-500 mt-1">
                                 <SubmissionFormDisplay fields={assignment.assignment.formFields} sumbissionFields={element.formFieldsReply} />
